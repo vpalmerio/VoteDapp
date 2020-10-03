@@ -26,7 +26,6 @@ contract VoteDappRegular {
         uint256 votes; //amount of votes recieved for the option
         mapping(address => uint256) Votes; //how much one person voted for an option, used for people to get their money back
                                            //if the option they voted for did not win
-        //address[] voters; //people who voted for specific option 
     }
     
     //stores pollData
@@ -39,8 +38,6 @@ contract VoteDappRegular {
         bool returnMoneyOnCmpltn; //return everyones money instead of collecting winners money upon completion of poll
         string[] arrOptions; //an array of available options for the poll
         mapping(string => Options) options; //a mapping in order to store data for each option
-        
-        //mapping(address => bool) pollVoterData; //could be used to check people who can vote...
         
         mapping(address => _voterData) voterData; //used to track how much votes someone submited for the whole poll and whether they retrieved
                                                   //money from an ended poll
@@ -265,17 +262,13 @@ contract VoteDappRegular {
     
     //view functions (for web3)
     
-    //function requestVoterData(string pollName, address voter) {
-    // find out if people want this   
-    //}
-    
     //used to check how much money a voter can retrieve from a poll
     function checkGetYourMoney(string memory pollName) external view returns (uint256) {
         require(Polls[pollName].exists, "Poll does not exist.");
         
         require(!Polls[pollName].open, "Poll is not closed."); //checks if poll exists and if its open
         
-        if (Polls[pollName].voterData[msg.sender].retrievedMoney || Polls[pollName].cost > 0) {
+        if (Polls[pollName].voterData[msg.sender].retrievedMoney || Polls[pollName].cost == 0) {
             return 0;
         }
         
@@ -362,7 +355,10 @@ contract VoteDappRegular {
     }
     
     function isAllowedToVote(string memory pollName, address voter) view external returns (bool) {
-        require(Polls[pollName].privatePoll, "This poll is not restricted.");
+        
+        if(!Polls[pollName].privatePoll) {
+            return true;
+        }
         
         return Polls[pollName].voterData[voter].allowedToVote;
     }

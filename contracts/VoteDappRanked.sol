@@ -1,20 +1,3 @@
-//struct for voter data, store votes in there
-//an array for all the voters in that poll
-//a struct for poll data including the above
-//a function that can sort the results of 50 voters max each time the function is called
-//only first choice would count, but if the first choice does not have more than %50, then get rid of looser in everybodies first choice and try again
-//maybe store choices as numbers for easy use
-
-
-
-//maybe to find winners, put different choices into temporary arrays, and the "looser's array" will be reset to find second choices
-//maybe put peoples choices into arrays (check to make sure they are valid first)
-
-//To do:
-//figure out what to do with ties of winner and ties of loosers (reorganizeing a tie of loosers)
-//change amountofvotes and looservotes to something to do with id's
-//TEST EVERYTHING
-
 pragma solidity ^0.7.0;
 pragma experimental ABIEncoderV2;
 
@@ -41,7 +24,6 @@ contract VoteDappRanked {
         
         mapping(address => _voterData) voterData; //stores the choices of the user in order using array ([0] is first, [1] is second, etc)
         
-        //mapping(address => bool) pollVoterData; //could be used to check people who can vote...
         
         address[] voters; //people who voted, needed for requestWinner
         
@@ -136,16 +118,17 @@ contract VoteDappRanked {
             require(Polls[pollName].voterData[msg.sender].allowedToVote, "You are not allowed to vote.");
         }
         
+        //error here
         string [] memory arrOptions = Polls[pollName].arrOptions;
         
-        for(uint256 x = 0; x<arrOptions.length; x++) {
+        for(uint256 i=0; i<orderofoptions.length; i++) {
             
-            for (uint256 i=0; i<orderofoptions.length; i++) {
+            for (uint256 x = 0; x<arrOptions.length; x++) {
             
                 if (keccak256(abi.encodePacked(arrOptions[x])) == keccak256(abi.encodePacked(orderofoptions[i]))) {
                     break;
                 }
-                if (i==orderofoptions.length - 1) {
+                if (x==arrOptions.length - 1) {
 
                     revert("One of your options is invalid.");
                 }
@@ -190,15 +173,16 @@ contract VoteDappRanked {
     }
     
     function isAllowedToVote(string memory pollName, address voter) view external returns (bool) {
-        require(Polls[pollName].privatePoll, "This poll is not restricted.");
+        
+        if(!Polls[pollName].privatePoll) {
+            return true;
+        }
         
         return Polls[pollName].voterData[voter].allowedToVote;
     }
     
     
-    //find out how much gas this costs
-    //test this
-    //fix ties of two or more
+    
     function requestWinner(string memory pollName) view public returns (string [] memory) {
         
         //cheap workaround
@@ -365,16 +349,6 @@ contract VoteDappRanked {
                     
                 
                 }
-                
-                //does not work 
-                    //use the k variable of the "mother for-loop" in order to determine what choice needs to be "moved up"
-                    //if (winnerNumbers[0][p] == looservotes) {
-                    //    winnerNumbers[0][p] = winnerNumbers[k+1][p];
-                    //}
-                    //above does not work because if somebody voted for someone originally in second place, 
-                    //and then a second for loop went through and the second place person was looser, then there first
-                    //choice would be set to a third choice without regard for their second choice
-                
                 
             }
         

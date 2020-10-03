@@ -6,11 +6,6 @@ import "./VoteDappStorageV2.sol";
 
 import "./SafeMath.sol";
 
-//quadratic voting:
-//Test quadratic voting
-
-//bug, when putting 1 vote, you might be able to vote more than max votes allows, bug happens with max votes of 3, test more
-
 
 //Notes:
 //for qvoting, people could vote for another option, but would still have to pay more money for their next vote
@@ -146,9 +141,7 @@ contract VoteDappQuadratic {
             require(Polls[pollName].voterData[msg.sender].allowedToVote, "You are not allowed to vote.");
         }
         
-        //bug, when putting 1 vote, you might be able to vote more than max votes allows
         //get all the total votes in a poll made previously plus the votes being used now
-        
         uint256 previousAmountPaid = 0;
         
         for(uint256 a = 0; a<arrOptions.length; a++) {
@@ -331,7 +324,10 @@ contract VoteDappQuadratic {
     }
     
     function isAllowedToVote(string memory pollName, address voter) view external returns (bool) {
-        require(Polls[pollName].privatePoll, "This poll is not restricted.");
+        
+        if(!Polls[pollName].privatePoll) {
+            return true;
+        }
         
         return Polls[pollName].voterData[voter].allowedToVote;
     }

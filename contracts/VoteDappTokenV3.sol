@@ -10,14 +10,9 @@ contract VoteDappToken {
     
     string  public name = "VoteDapp Token";
     string  public symbol = "VDA";
-    string  public standard = "NOT AN ERC20 STANDARD TOKEN";
+    string  public standard = "ERC20";
+    uint256 public totalSupply;
     
-    address admin;
-    
-    uint256 public tokenPrice;
-    uint256 public tokensSold;
-    uint256 public tokensInCirculation;
-
     event Transfer(
         address indexed _from,
         address indexed _to,
@@ -38,41 +33,10 @@ contract VoteDappToken {
     mapping(address => mapping(address => uint256)) public allowance;
 
     //does not work in ganache
-    constructor (uint256 _tokenPrice) {
-
-        admin = msg.sender;
-        
-        tokenPrice = _tokenPrice;
+    constructor (uint256 _initialSupply) {
+        balanceOf[msg.sender] = _initialSupply;
+        totalSupply = _initialSupply;
     
-    }
-    
-    
-    function buyTokens(uint256 amount) external payable {
-        require(msg.value == amount.mul(tokenPrice), "You did not send the correct amount of ether.");
-
-        balanceOf[msg.sender] = balanceOf[msg.sender].add(amount);
-
-        tokensSold = tokensSold.add(amount);
-        
-        tokensInCirculation = tokensInCirculation.add(amount);
-
-        emit Sell(msg.sender, amount);
-    }
-    
-    //return token
-    function returnTokens(uint256 amount) external returns (bool) {
-        
-        require(balanceOf[msg.sender] >= amount, "You do not have that much tokens.");
-        
-        balanceOf[msg.sender] = balanceOf[msg.sender].sub(amount);
-        
-        //tranfers in units of wei
-        msg.sender.transfer(amount.mul(tokenPrice));
-        
-        tokensInCirculation = tokensInCirculation.sub(amount);
-        
-        return true;
-        
     }
     
     //for poeple who want to transfer their own coins

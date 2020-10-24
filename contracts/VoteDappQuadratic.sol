@@ -1,7 +1,7 @@
 pragma solidity ^0.7.0;
 pragma experimental ABIEncoderV2;
 
-import "./VoteDappTokenV2.sol";
+import "./VoteDappTokenV3.sol";
 import "./VoteDappStorageV2.sol";
 
 import "./SafeMath.sol";
@@ -33,6 +33,7 @@ contract VoteDappQuadratic {
     //stores poll data
     struct pollData {
         address owner;
+        address recipient; //who receives the funds after poll ends
         string description;
         bool exists;
         bool open;
@@ -74,7 +75,7 @@ contract VoteDappQuadratic {
     
     function createPoll(
         string memory pollName, string memory description, string[] memory toptions, uint256 maxVotes,
-        bool returnMoneyOnCmpltn, bool privatePoll, address[] memory allowedVoters
+        bool returnMoneyOnCmpltn, bool privatePoll, address[] memory allowedVoters, address recipient
         ) external {
         require(!Polls[pollName].exists, "Another poll already has that name."); //makes sure name doesn't already exist
         
@@ -96,8 +97,9 @@ contract VoteDappQuadratic {
         }
         
         
-        
         Polls[pollName].owner = msg.sender;
+        
+        Polls[pollName].recipient = recipient;
         
         if(keccak256(abi.encodePacked(description)) != keccak256(abi.encodePacked(""))) {
             Polls[pollName].description = description;
@@ -168,6 +170,8 @@ contract VoteDappQuadratic {
         Polls[pollName].options[option].amount = Polls[pollName].options[option].amount.add(votes); //sets the votes for the option
         
         Polls[pollName].options[option].amountPaid = Polls[pollName].options[option].amountPaid.add(c); //sets the votes for the option
+        
+        emit pollVoted(pollName, option, msg.sender);
     }
     
     function endPoll(string memory pollName) external {
@@ -184,7 +188,11 @@ contract VoteDappQuadratic {
                 totalAmountforPayment = totalAmountforPayment.add(Polls[pollName].options[winners[i]].amountPaid);
                 //if there are ties, the owner gets the money from all the options that tied
             }
-            require(token.transfer(msg.sender, totalAmountforPayment), "Transaction failed."); 
+            
+            require(token.transfer(Polls[pollName].recipient, totalAmountforPayment), "Transaction failed."); 
+            //tranfer all money to owner of the poll
+            //if there are ties, the owner gets the money from all the options that tied
+            
         }
         
         

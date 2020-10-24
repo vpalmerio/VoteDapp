@@ -1,7 +1,7 @@
 pragma solidity ^0.7.0;
 pragma experimental ABIEncoderV2;
 
-import "./VoteDappTokenV2.sol";
+import "./VoteDappTokenV3.sol";
 import "./VoteDappStorageV2.sol";
 
 import "./SafeMath.sol";
@@ -31,6 +31,7 @@ contract VoteDappRegular {
     //stores pollData
     struct pollData {
         address owner; //owner and creator of the poll
+        address recipient; //who gets the funds after poll is over (if votes cost money)
         string description; //description of the poll (is set by creator/owner of poll)
         bool exists; //used to check if poll exists
         bool open; //used to close and open poll
@@ -77,7 +78,7 @@ contract VoteDappRegular {
     
     function createPoll(
         string memory pollName, string memory description, string[] memory toptions, uint256 maxVotes, uint256 votecost,
-        bool returnMoneyOnCmpltn, bool privatePoll, address[] memory allowedVoters
+        bool returnMoneyOnCmpltn, bool privatePoll, address[] memory allowedVoters, address recipient
         ) external {
         require(!Polls[pollName].exists, "Another poll already has that name."); //makes sure name doesn't already exist
         
@@ -98,8 +99,6 @@ contract VoteDappRegular {
             require(allowedVoters.length == 0, "Can't be public and restrict voters.");
         }
         
-        
-        
         Polls[pollName].owner = msg.sender;
         
         if(keccak256(abi.encodePacked(description)) != keccak256(abi.encodePacked(""))) {
@@ -116,6 +115,8 @@ contract VoteDappRegular {
             Polls[pollName].cost = votecost;
             if(returnMoneyOnCmpltn == true) {
                 Polls[pollName].returnMoneyOnCmpltn = true;
+            } else {
+                Polls[pollName].recipient = recipient;
             }
         }
         
@@ -162,9 +163,6 @@ contract VoteDappRegular {
         
         v = v.add(votes);
         require(v <= Polls[pollName].maxVotes, "You have specified too much votes than you are allowed.");
-    
-        //trigger event
-        emit pollVoted(pollName, option, msg.sender);
         
         //used to transact VOTT from voter to this contract
         if (Polls[pollName].cost > 0) {
@@ -186,6 +184,9 @@ contract VoteDappRegular {
         
         //adds amount of votes to vote counter in option data (used to count total votes)
         Polls[pollName].options[option].votes = Polls[pollName].options[option].votes.add(votes);
+        
+        //trigger event
+        emit pollVoted(pollName, option, msg.sender);
     
     }
     
@@ -213,9 +214,11 @@ contract VoteDappRegular {
                 totalWinnerVotes = totalWinnerVotes.add(Polls[pollName].options[winners[i]].votes); 
                 
             }
-            //tranfer all money to owner of the poll
-            require(token.transfer(msg.sender, totalWinnerVotes.mul(Polls[pollName].cost)), "Transaction failed."); 
-            //if there are ties, the owner gets the money from all the options that tied
+            
+            address recipient = Polls[pollName].recipient;
+          
+            require(token.transfer(recipient, totalWinnerVotes.mul(Polls[pollName].cost)), "Transaction failed."); 
+            
         } 
         
         emit pollModified(pollName, "Ended", msg.sender);

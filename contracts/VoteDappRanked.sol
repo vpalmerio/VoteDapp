@@ -37,7 +37,7 @@ contract VoteDappRanked {
     
     event pollVoted(
         string indexed _pollName,
-        string _option,
+        string[] _option,
         address _voter
     );
 
@@ -141,6 +141,8 @@ contract VoteDappRanked {
         //push voter to list of people that voted
         Polls[pollName].voters.push(msg.sender);
         
+        
+        emit pollVoted(pollName, orderofoptions, msg.sender);
     }
     
     function endPoll(string memory pollName) external {
@@ -162,6 +164,50 @@ contract VoteDappRanked {
         return Polls[pollName].arrOptions; //returns all elements in the array of people who voted for specific option
     }
     
+    function requestOptionVotes(string memory pollName, string memory option) view external returns (uint256 [] memory) {
+        require(Polls[pollName].exists, "Poll does not exist."); //checks if poll exists
+        
+        string [] memory arrOptions = Polls[pollName].arrOptions;
+        
+        for (uint256 x = 0; x<arrOptions.length; x++) {
+        
+            if (keccak256(abi.encodePacked(arrOptions[x])) == keccak256(abi.encodePacked(option))) {
+                break;
+            }
+            if (x==arrOptions.length - 1) {
+
+                revert("One of your options is invalid.");
+            }
+        }
+        
+        uint256 id = Polls[pollName].optionId[option];
+        
+        uint256 [] memory optionPlaces  = new uint256[] (arrOptions.length);
+        
+        //sorts through all the voters
+        for (uint256 i = 0; i<Polls[pollName].voters.length; i++) {
+            
+            //sorts through all the choices and puts them into array
+            
+           
+            for (uint256 j = 0; j<Polls[pollName].voterData[Polls[pollName].voters[i]].choices.length; j++) {
+                //finds id of the choice of the voter and puts it into array
+                
+                                                                                        ///Polls[pollName].voters[i]
+                                                                ///Polls[pollName].choices[][j]
+                if(id == Polls[pollName].optionId[Polls[pollName].voterData[Polls[pollName].voters[i]].choices[j]]) {
+                    
+                    optionPlaces[j]++;
+                    
+                }
+                
+            }
+        }
+        
+        return optionPlaces;
+        
+    }
+    
     function getPollList() view external returns (string [] memory) {
         return listofPolls;
     }
@@ -180,8 +226,6 @@ contract VoteDappRanked {
         
         return Polls[pollName].voterData[voter].allowedToVote;
     }
-    
-    
     
     function requestWinner(string memory pollName) view public returns (string [] memory) {
         

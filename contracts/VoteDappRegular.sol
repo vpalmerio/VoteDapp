@@ -1,5 +1,5 @@
 pragma solidity ^0.7.0;
-pragma experimental ABIEncoderV2;
+pragma abicoder v2;
 
 import "./VoteDappTokenV3.sol";
 import "./VoteDappStorageV2.sol";
@@ -33,10 +33,9 @@ contract VoteDappRegular {
         address owner; //owner and creator of the poll
         address recipient; //who gets the funds after poll is over (if votes cost money)
         string description; //description of the poll (is set by creator/owner of poll)
-        bool exists; //used to check if poll exists
         bool open; //used to close and open poll
         bool privatePoll; //used as option to restrict which people can vote
-        bool returnMoneyOnCmpltn; //return everyones money instead of collecting winners money upon completion of poll
+        bool returnMoneyOnCompletion; //return everyones money instead of collecting winners money upon completion of poll
         string[] arrOptions; //an array of available options for the poll
         mapping(string => Options) options; //a mapping in order to store data for each option
         
@@ -47,11 +46,13 @@ contract VoteDappRegular {
         
     }
     
-    //used to show how a poll was modified, either by starting it or ending it 
-    event pollModified(
+    event pollCreated(
         string indexed _pollName,
-        string modified, //can be "Started" or "Ended"
         address _owner
+    );
+    
+    event pollEnded(
+        string indexed _pollName
     );
     
     //shows when a person voted
@@ -71,6 +72,11 @@ contract VoteDappRegular {
     
     VoteDappStorage nameStorage;
     
+    modifier pollExists(string memory pollName) {
+        require(Polls[pollName].owner != address(0), "Poll does not exist.");
+        _;
+    }
+    
     constructor (address _token, address _storage) {
         token = VoteDappToken(_token); //stores token addres to interact with token contract
         nameStorage = VoteDappStorage(_storage); //used to check if name exists across any of the "suite" of "poll contracts"
@@ -78,9 +84,9 @@ contract VoteDappRegular {
     
     function createPoll(
         string memory pollName, string memory description, string[] memory toptions, uint256 maxVotes, uint256 votecost,
-        bool returnMoneyOnCmpltn, bool privatePoll, address[] memory allowedVoters, address recipient
+        bool returnMoneyOnCompletion, bool privatePoll, address[] memory allowedVoters, address recipient
         ) external {
-        require(!Polls[pollName].exists, "Another poll already has that name."); //makes sure name doesn't already exist
+        require(Polls[pollName].owner == address(0), "Another poll already has that name."); //makes sure name doesn't already exist
         
         require(maxVotes >= 1, "You must allow for one or more votes.");
         
@@ -105,16 +111,14 @@ contract VoteDappRegular {
             Polls[pollName].description = description;
         }
         
-        Polls[pollName].exists = true;
-        
         Polls[pollName].maxVotes = maxVotes;
         
         Polls[pollName].arrOptions = toptions;
         
         if(votecost > 0) {
             Polls[pollName].cost = votecost;
-            if(returnMoneyOnCmpltn == true) {
-                Polls[pollName].returnMoneyOnCmpltn = true;
+            if(returnMoneyOnCompletion == true) {
+                Polls[pollName].returnMoneyOnCompletion = true;
             } else {
                 Polls[pollName].recipient = recipient;
             }
@@ -122,12 +126,9 @@ contract VoteDappRegular {
         
         Polls[pollName].open = true;
         
-        
-        
-        
         listofPolls.push(pollName); //pushes pollName to a list of all polls
         
-        emit pollModified(pollName, "Created", msg.sender);
+        emit pollCreated(pollName, msg.sender);
     }
     
     
@@ -190,10 +191,8 @@ contract VoteDappRegular {
     
     }
     
-    function endPoll(string memory pollName) external {
+    function endPoll(string memory pollName) external pollExists(pollName) {
         
-        //could be removed since .open could be used to check if the poll exists and if its open or closed
-        require(Polls[pollName].exists, "Poll does not exist.");
         require(Polls[pollName].open, "Poll already closed.");
         require(Polls[pollName].owner==msg.sender, "You are not the owner of this poll.");
         
@@ -201,7 +200,7 @@ contract VoteDappRegular {
         Polls[pollName].open = false;
         
         //used to transact VOTT from voter to this contract
-        if (Polls[pollName].cost > 0 && Polls[pollName].returnMoneyOnCmpltn == false) {
+        if (Polls[pollName].cost > 0 && Polls[pollName].returnMoneyOnCompletion == false) {
             //get the winners for this poll
             string [] memory winners = requestWinner(pollName);
             
@@ -221,13 +220,12 @@ contract VoteDappRegular {
             
         } 
         
-        emit pollModified(pollName, "Ended", msg.sender);
+        emit pollEnded(pollName);
         
     }
     
     //used for specific voter to get their money back if the options they chose did not win
-    function getYourMoney(string memory pollName) external {
-        require(Polls[pollName].exists, "Poll does not exist.");
+    function getYourMoney(string memory pollName) external pollExists(pollName) {
         
         require(!Polls[pollName].open, "You cannot charge back if poll is open."); //checks if poll exists and if its open
         
@@ -249,7 +247,7 @@ contract VoteDappRegular {
         //get the winners
         string [] memory winners = requestWinner(pollName);
         
-        if(!Polls[pollName].returnMoneyOnCmpltn) {
+        if(!Polls[pollName].returnMoneyOnCompletion) {
             //for each winner, subtract the votes submitted by the voter
             for(uint256 i = 0; i<winners.length; i++) {
                 v = v.sub(Polls[pollName].options[winners[i]].Votes[msg.sender]);
@@ -265,10 +263,16 @@ contract VoteDappRegular {
     
     //view functions (for web3)
     
+    function getPollOwner(string memory pollName) external view returns (address) {
+        return Polls[pollName].owner;
+    }
+    
+    function getPollDescription(string memory pollName) external view pollExists(pollName) returns (string memory) {
+        return Polls[pollName].description;
+    }
+    
     //used to check how much money a voter can retrieve from a poll
-    function checkGetYourMoney(string memory pollName) external view returns (uint256) {
-        require(Polls[pollName].exists, "Poll does not exist.");
-        
+    function checkGetYourMoney(string memory pollName) external view pollExists(pollName) returns (uint256) {
         require(!Polls[pollName].open, "Poll is not closed."); //checks if poll exists and if its open
         
         if (Polls[pollName].voterData[msg.sender].retrievedMoney || Polls[pollName].cost == 0) {
@@ -287,7 +291,7 @@ contract VoteDappRegular {
         //get the winners
         string [] memory winners = requestWinner(pollName);
         
-        if(!Polls[pollName].returnMoneyOnCmpltn) {
+        if(!Polls[pollName].returnMoneyOnCompletion) {
             //for each winner, subtract the votes submitted by the voter
             for(uint256 i = 0; i<winners.length; i++) {
                 v = v.sub(Polls[pollName].options[winners[i]].Votes[msg.sender]);
@@ -300,8 +304,7 @@ contract VoteDappRegular {
     }
     
     //request the amount of votes a certain option received
-    function requestOptionVotes(string memory pollName, string memory option) view external returns (uint256) {
-        require(Polls[pollName].exists, "Poll does not exist."); //checks if poll exists
+    function requestOptionVotes(string memory pollName, string memory option) view external pollExists(pollName) returns (uint256) {
         
         string [] memory arrOptions = Polls[pollName].arrOptions;
         
@@ -317,15 +320,12 @@ contract VoteDappRegular {
         return Polls[pollName].options[option].votes;
     }
     //request all the options for a poll
-    function requestOptions(string memory pollName) view external returns (string [] memory) {
-        require(Polls[pollName].exists, "Poll does not exist."); //checks if poll exists
+    function requestOptions(string memory pollName) view external pollExists(pollName) returns (string [] memory) {
         
         return Polls[pollName].arrOptions;
     }
     //track the amount of votes for a specific user
-    function trackTotalVotes(string memory pollName, address voter) view external returns (uint256) {
-        require(Polls[pollName].exists, "Poll does not exist."); //checks if poll exists
-        
+    function trackTotalVotes(string memory pollName, address voter) view external pollExists(pollName) returns (uint256) {
         string [] memory arrOptions = Polls[pollName].arrOptions;
         
         //total votes for the specific voter
@@ -339,9 +339,7 @@ contract VoteDappRegular {
         
     }
     //request the amount of votes a person voted for a specific option
-    function trackSpecificVotes(string memory pollName, string memory option, address voter) view external returns (uint256) {
-        require(Polls[pollName].exists, "Poll does not exist."); //checks if poll exists
-        
+    function trackSpecificVotes(string memory pollName, string memory option, address voter) view external pollExists(pollName) returns (uint256) {
         string [] memory arrOptions = Polls[pollName].arrOptions;
         
         for(uint256 x = 0; x<arrOptions.length; x++) {
@@ -357,7 +355,7 @@ contract VoteDappRegular {
         
     }
     
-    function isAllowedToVote(string memory pollName, address voter) view external returns (bool) {
+    function isAllowedToVote(string memory pollName, address voter) view external pollExists(pollName) returns (bool) {
         
         if(!Polls[pollName].privatePoll) {
             return true;
@@ -373,9 +371,7 @@ contract VoteDappRegular {
     
     //find out how much gas this costs
     //get the winner of an ongoing poll or ended poll
-    function requestWinner(string memory pollName) view public returns (string [] memory) {
-        
-        require(Polls[pollName].exists, "Poll does not exist."); //checks if poll exists
+    function requestWinner(string memory pollName) view public pollExists(pollName) returns (string [] memory) {
         
         //amount of votes per option, votes for each option are stored 
         //in the same placement of the array as it placement in the array of options

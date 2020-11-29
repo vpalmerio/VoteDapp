@@ -1,5 +1,5 @@
 pragma solidity ^0.7.0;
-pragma experimental ABIEncoderV2;
+pragma abicoder v2;
 
 
 contract VoteDappStorage {
@@ -16,20 +16,25 @@ contract VoteDappStorage {
         admin = msg.sender; //sets deployer to admin
     }
     
-    function addPollType(address pollAddr) external {
+    function addPollType(address[] memory pollAddr) external {
         require(msg.sender == admin, "You are not allowed to do this.");
         
-        pollTypeExists[pollAddr] = true;
+        for(uint256 i=0; i<pollAddr.length; i++) {
+            pollTypeExists[pollAddr[i]] = true;
+        }
+        
     }
     
-    function removePollType(address pollAddr) external {
+    function removePollType(address[] memory pollAddr) external {
         require(msg.sender == admin, "You are not allowed to do this.");
         
-        pollTypeExists[pollAddr] = false;
+        for(uint256 i=0; i<pollAddr.length; i++) {
+            pollTypeExists[pollAddr[i]] = false;
+        }
     }
     
     function addName(string memory pollName) external returns (bool) {
-        require(pollTypeExists[msg.sender], "You can't do this.");
+        require(pollTypeExists[msg.sender], "Not valid poll type.");
         
         require(!pollNameExists[pollName], "Name already taken.");
         

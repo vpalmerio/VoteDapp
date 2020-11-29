@@ -1,6 +1,6 @@
 pragma solidity ^0.7.0;
 
-//WARNING: APPROVE FUNCTION DOES NOT CHECK IF OWNER HAS THE CORRECT AMOUNT OF VOTT TOKENS
+//WARNING: APPROVE FUNCTION DOES NOT CHECK IF OWNER HAS THE CORRECT AMOUNT OF VDA TOKENS
 
 import "./SafeMath.sol";
 
@@ -64,8 +64,8 @@ contract VoteDappToken {
 
     //for people who are not the owners of the coins.
     function transferFrom(address _from, address _to, uint256 _value) external returns (bool) {
-        require(_value <= balanceOf[_from]); //checks if source has enough money
-        require(_value <= allowance[_from][msg.sender]); //checks if spender is allowed to spend this amount
+        require(_value <= balanceOf[_from], "Not enough tokens."); //checks if source has enough money
+        require(_value <= allowance[_from][msg.sender], "Did not approve amount."); //checks if spender is allowed to spend this amount
 
         balanceOf[_from] = balanceOf[_from].sub(_value); //takes money away from source
         balanceOf[_to] = balanceOf[_to].add(_value); //gives money to address

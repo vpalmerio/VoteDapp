@@ -1,5 +1,5 @@
 pragma solidity ^0.7.0;
-pragma experimental ABIEncoderV2;
+pragma abicoder v2;
 
 import "./VoteDappStorageV2.sol";
 
@@ -16,7 +16,6 @@ contract VoteDappRanked {
     struct pollData {
         address owner;
         string description;
-        bool exists; //used for getter functions
         bool open; //used to close and open poll
         bool privatePoll; //used as option to restrict which people can vote
         string[] arrOptions; //an array of options
@@ -24,15 +23,17 @@ contract VoteDappRanked {
         
         mapping(address => _voterData) voterData; //stores the choices of the user in order using array ([0] is first, [1] is second, etc)
         
-        
         address[] voters; //people who voted, needed for requestWinner
         
     }
     
-    event pollModified(
+    event pollCreated(
         string indexed _pollName,
-        string modified,
         address _owner
+    );
+    
+    event pollEnded(
+        string indexed _pollName
     );
     
     event pollVoted(
@@ -48,17 +49,20 @@ contract VoteDappRanked {
     
     VoteDappStorage nameStorage;
     
+    modifier pollExists(string memory pollName) {
+        require(Polls[pollName].owner != address(0), "Poll does not exist.");
+        _;
+    }
     
     constructor (address _storage) {
         nameStorage = VoteDappStorage(_storage); //used to check if name exists across any of the "suite" of "poll contracts"
     }
-    
 
     function createPoll(
         string memory pollName, string memory description, string[] memory toptions, bool privatePoll, 
         address[] memory allowedVoters
         ) external {
-        require(!Polls[pollName].exists, "Another poll already has that name."); //makes sure name doesn't already exist
+        require(Polls[pollName].owner == address(0), "Another poll already has that name."); //makes sure name doesn't already exist
         
         require(toptions.length <= 99, "You can only have 99 options.");
         
@@ -83,8 +87,6 @@ contract VoteDappRanked {
         if(keccak256(abi.encodePacked(description)) != keccak256(abi.encodePacked(""))) {
             Polls[pollName].description = description;
         }
-        
-        Polls[pollName].exists = true;
     
         // toptions = temporary options
         Polls[pollName].arrOptions = toptions;
@@ -101,10 +103,8 @@ contract VoteDappRanked {
         
         Polls[pollName].open = true;
         
-        emit pollModified(pollName, "Created", msg.sender);
+        emit pollCreated(pollName, msg.sender);
     }
-    
-    
     
     function vote(string memory pollName, string[] memory orderofoptions) external {
         
@@ -145,28 +145,31 @@ contract VoteDappRanked {
         emit pollVoted(pollName, orderofoptions, msg.sender);
     }
     
-    function endPoll(string memory pollName) external {
+    function endPoll(string memory pollName) external pollExists(pollName) {
         
-        require(Polls[pollName].exists, "Poll does not exist.");
         require(Polls[pollName].open, "Poll already closed.");
         require(Polls[pollName].owner==msg.sender, "You are not the owner of this poll.");
         Polls[pollName].open = false;
         
-        emit pollModified(pollName, "Ended", msg.sender);
+        emit pollEnded(pollName);
         
     }
     
     //view functions for web3
     
-    function requestOptions(string memory pollName) view external returns (string [] memory) {
-        require(Polls[pollName].exists, "Poll does not exist."); //checks if poll exists
-        
+    function getPollOwner(string memory pollName) external view returns (address) {
+        return Polls[pollName].owner;
+    }
+    
+    function getPollDescription(string memory pollName) external view pollExists(pollName) returns (string memory) {
+        return Polls[pollName].description;
+    }
+    
+    function requestOptions(string memory pollName) view external pollExists(pollName) returns (string [] memory) {
         return Polls[pollName].arrOptions; //returns all elements in the array of people who voted for specific option
     }
     
-    function requestOptionVotes(string memory pollName, string memory option) view external returns (uint256 [] memory) {
-        require(Polls[pollName].exists, "Poll does not exist."); //checks if poll exists
-        
+    function requestOptionVotes(string memory pollName, string memory option) view external pollExists(pollName) returns (uint256 [] memory) {
         string [] memory arrOptions = Polls[pollName].arrOptions;
         
         for (uint256 x = 0; x<arrOptions.length; x++) {
@@ -212,13 +215,11 @@ contract VoteDappRanked {
         return listofPolls;
     }
     
-    function trackSpecificVotes(string memory pollName, address voter) view external returns (string [] memory) {
-        require(Polls[pollName].exists, "Poll does not exist."); //checks if poll exists
-        
+    function trackSpecificVotes(string memory pollName, address voter) view external pollExists(pollName) returns (string [] memory) {
         return Polls[pollName].voterData[voter].choices;
     }
     
-    function isAllowedToVote(string memory pollName, address voter) view external returns (bool) {
+    function isAllowedToVote(string memory pollName, address voter) view external pollExists(pollName) returns (bool) {
         
         if(!Polls[pollName].privatePoll) {
             return true;
@@ -227,7 +228,7 @@ contract VoteDappRanked {
         return Polls[pollName].voterData[voter].allowedToVote;
     }
     
-    function requestWinner(string memory pollName) view public returns (string [] memory) {
+    function requestWinner(string memory pollName) view public pollExists(pollName) returns (string [] memory) {
         
         //cheap workaround
         //there is an error with not specifying space so, set a limit of 99 options (like would anyone use that much?)

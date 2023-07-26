@@ -1,0 +1,54 @@
+/* Styles go here */
+ /* body { background-color: #0f0f0a; } */
+
+.sidebar {
+  height: auto; /* Full-height: remove this if you want "auto" height */
+  width: 160px; /* Set the width of the sidebar */
+  position: fixed; /* Fixed Sidebar (stay in place on scroll) */
+  z-index: 0; /* Stay on top */
+  top: 0; /* Stay at the top */
+  left: 0;
+  overflow-x: hidden; /* Disable horizontal scroll */
+  padding-top: 20px;
+}
+
+.small-sidebar {
+  height: auto; /* Full-height: remove this if you want "auto" height */
+  width: 160px; /* Set the width of the sidebar */
+  position: fixed; /* Fixed Sidebar (stay in place on scroll) */
+  z-index: 0; /* Stay on top */
+  top: 0; /* Stay at the top */
+  left: 0;
+}
+
+.transparent-border {
+	border-color: transparent;
+}
+
+.move-right-little {
+	margin-left: 20px;
+}
+
+
+.table-wrapper {
+  max-width: 700px;
+}
+.card {
+	border-radius: 10px;
+}
+
+table {
+  position: relative;
+  border: 1px solid #ddd;
+  border-collapse: collapse;
+}
+
+td, th {
+  white-space: nowrap;
+  border: 1px solid #ddd;
+  padding: 20px;
+}
+
+tbody tr td:first-of-type {
+  
+}

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+Disallow: /app/polls/
+Sitemap: https://dapp.vote/sitemap.xml

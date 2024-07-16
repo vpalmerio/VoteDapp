@@ -1,7 +1,7 @@
 import React from 'react';
 
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import { useHistory, useParams } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import Dropdown from 'react-bootstrap/Dropdown';
@@ -17,158 +17,92 @@ import loader from './loader.png'
 export default function Main(props) { 
 
       return (
-        <Router>  
+        
           <div>
             <main>
             <Navbar account={props.account} accountBalance={props.accountBalance} />
-            <Switch>
-              <Route path="/app" exact render = {() => 
-                <div>
-                  
-                  <Apphome
-
-                    contractInteraction={props.contractInteraction}
-
-                    getRecentPolls={props.getRecentPolls}
-
-                    homePagePolls={props.homePagePolls}
-
-                  /> 
-                </div>
+            <Routes>
+              <Route path="/app" element = {
+                <Apphome
+                  contractInteraction={props.contractInteraction}
+                  getRecentPolls={props.getRecentPolls}
+                  homePagePolls={props.homePagePolls}
+                /> 
               } />
 
-              <Route path="/app/owned" exact render = {() => 
-                <div>
-                  
-                  <Ownedpolls
-
-                    pollNames={props.pollNames}
-
-                    polls={props.polls}
-
-                    contractInteraction={props.contractInteraction}
-
-                    loadPollData={props.loadPollData}
-
-                  />
-                </div>
-              } />
-
-              <Route path="/app/participated" exact render = {() => 
-                <div>
-                  
-                  <Participatedpolls
-
-                    pollNames={props.pollNames}
-
-                    polls={props.polls}
-
-                    contractInteraction={props.contractInteraction}
-
-                    loadPollData={props.loadPollData}
-
-                  />
-                </div>
-              } />
-
-              <Route path="/app/explore" exact render = {() =>
-                <div>
-                   
-                  <Explore
-
-                    pollNames={props.pollNames}
-
-                    searchPolls={props.searchPolls}
-
-                    setPollNames={props.setPollNames}
-
-                  />
-                </div>
-              } />
-
-              <Route path="/app/manage-vda" exact render = {() => 
-                <div>
-                  
-                  <Managingvda
-
-                    accountBalance={props.accountBalance}
-
-                    tokenPrice={props.tokenPrice}
-
-                    contractInteraction={props.contractInteraction}
-
-                    buyToken={props.buyToken}
-
-                    isAddress={props.isAddress}
-
-                  />
-                </div>
-              } />
-
-              <Route path="/app/choose-poll-type" exact render = {() => 
-                <div>
-                  
-                  <Choosingpolltype
-
-                  />
-                </div>
-              } />
-
-              <Route path="/app/create-poll/:type" exact render = {() => 
-                <div>
-                  
-                  <Creatingpoll
-                    
-                    contractInteraction={props.contractInteraction}
-
-                    isAddress={props.isAddress}
-
-                    account={props.account}
-
-                    clearPollData={props.clearPollData}
-
-                  />
-                </div>
-              } />
-
-              <Route path="/app/polls/:tempname" render = {() =>
-                <div>
-                   
-                  <Getpollinfo
-
-                    account={props.account}
-
-                    contractInteraction={props.contractInteraction}
-
-                    loadSpecificPoll={props.loadSpecificPoll}
-
-                    vote={props.vote}
-
-                    findCost={props.findCost}
-
-                    accountBalance={props.accountBalance}
-
-                  />
-                </div>
-              } />
-
-              <Route render={() =>
-
-                <Wrongpage
-
+              <Route path="/app/owned" element = {
+                <Ownedpolls
+                  pollNames={props.pollNames}
+                  polls={props.polls}
+                  contractInteraction={props.contractInteraction}
+                  loadPollData={props.loadPollData}
                 />
-
               } />
-              </Switch>
+
+              <Route path="/app/participated" element = {
+                <Participatedpolls
+                  pollNames={props.pollNames}
+                  polls={props.polls}
+                  contractInteraction={props.contractInteraction}
+                  loadPollData={props.loadPollData}
+                />
+              } />
+
+              <Route path="/app/explore" element = {
+                <Explore
+                  pollNames={props.pollNames}
+                  searchPolls={props.searchPolls}
+                  setPollNames={props.setPollNames}
+                />
+              } />
+
+              <Route path="/app/manage-vda" element = {
+                <Managingvda
+                  accountBalance={props.accountBalance}
+                  tokenPrice={props.tokenPrice}
+                  contractInteraction={props.contractInteraction}
+                  buyToken={props.buyToken}
+                  isAddress={props.isAddress}
+                />
+              } />
+
+              <Route path="/app/choose-poll-type" element = {
+                <Choosingpolltype/>
+              } />
+
+              <Route path="/app/create-poll/:type" element = {
+                <Creatingpoll
+                  contractInteraction={props.contractInteraction}
+                  isAddress={props.isAddress}
+                  account={props.account}
+                  clearPollData={props.clearPollData}
+              />
+              } />
+
+              <Route path="/app/polls/:tempname" element = {
+                <Getpollinfo
+                  account={props.account}
+                  contractInteraction={props.contractInteraction}
+                  loadSpecificPoll={props.loadSpecificPoll}
+                  vote={props.vote}
+                  findCost={props.findCost}
+                  accountBalance={props.accountBalance}
+                />
+              } />
+
+              <Route element = {
+                <Wrongpage/>
+              } />
+              </Routes>
             </main>
           </div>
-        </Router>
+       
       );
 }
 
 const Wrongpage = () => {
 
-  const history = useHistory()
+  const navigate = useNavigate()
 
     return (
       <div className="container-fluid mt-5">
@@ -180,7 +114,7 @@ const Wrongpage = () => {
             <h1 className="text-center">This page doesn't exist!</h1>
             
             <p>&nbsp;</p>
-            <button className="btn btn-primary btn-block" onClick = {() => history.push('/app')}>Back to Safety</button>
+            <button className="btn btn-primary btn-block" onClick = {() => navigate('/app')}>Back to Safety</button>
 
             </div>
           </main>
@@ -191,7 +125,7 @@ const Wrongpage = () => {
 
 const Apphome = ({ contractInteraction, getRecentPolls, homePagePolls }) => {
   
-  const history = useHistory()
+  const navigate = useNavigate()
 
   if(homePagePolls===null) {
     getRecentPolls()
@@ -233,7 +167,7 @@ const Apphome = ({ contractInteraction, getRecentPolls, homePagePolls }) => {
               />
             </div>
             <p>&nbsp;</p>
-            <button className="btn btn-primary btn-block mr-auto ml-auto" style={{ maxWidth: '550px' }} onClick = {() => history.push("/app/choose-poll-type")}>Create Poll</button>
+            <button className="btn btn-primary btn-block mr-auto ml-auto" style={{ maxWidth: '550px' }} onClick = {() => navigate("/app/choose-poll-type")}>Create Poll</button>
           <p>&nbsp;</p>
 
           {homePagePolls.length > 0
@@ -274,7 +208,7 @@ const Apphome = ({ contractInteraction, getRecentPolls, homePagePolls }) => {
                       }</div>
                     : <p> Poll has ended. The winner was {poll.winner.replace(', ', '')}. </p>
                   }
-                  <button className="btn btn-primary btn-block ml-auto mr-auto" style={{ maxWidth: '200px' }} onClick = {() => history.push("/app/polls/" + speciallink)}>More Info</button>
+                  <button className="btn btn-primary btn-block ml-auto mr-auto" style={{ maxWidth: '200px' }} onClick = {() => navigate("/app/polls/" + speciallink)}>More Info</button>
                   {poll.open
                     || <div>
                         {poll.moneyOwed > 0
@@ -310,7 +244,7 @@ const Apphome = ({ contractInteraction, getRecentPolls, homePagePolls }) => {
 
 const Ownedpolls = ({ pollNames, polls, contractInteraction, loadPollData }) => {
   
-  const history = useHistory()
+  const navigate = useNavigate()
 
   const [oldUser, oldUserBool] = React.useState(false)
 
@@ -403,7 +337,7 @@ const Ownedpolls = ({ pollNames, polls, contractInteraction, loadPollData }) => 
                         }
                       </div>
                     }
-                    <button className="btn btn-primary btn-block ml-auto mr-auto" style={{ maxWidth: '200px' }} onClick = {() => history.push("/app/polls/" + speciallink)}>More Info</button>
+                    <button className="btn btn-primary btn-block ml-auto mr-auto" style={{ maxWidth: '200px' }} onClick = {() => navigate("/app/polls/" + speciallink)}>More Info</button>
 
 
                     {poll.open
@@ -436,7 +370,7 @@ const Ownedpolls = ({ pollNames, polls, contractInteraction, loadPollData }) => 
 
 const Participatedpolls = ({ pollNames, polls, contractInteraction, loadPollData }) => {
   
-  const history = useHistory()
+  const navigate = useNavigate()
 
   const [oldUser, oldUserBool] = React.useState(false)
 
@@ -529,7 +463,7 @@ const Participatedpolls = ({ pollNames, polls, contractInteraction, loadPollData
                         }
                       </div>
                     }
-                    <button className="btn btn-primary btn-block ml-auto mr-auto" style={{ maxWidth: '200px' }} onClick = {() => history.push("/app/polls/" + speciallink)}>More Info</button>
+                    <button className="btn btn-primary btn-block ml-auto mr-auto" style={{ maxWidth: '200px' }} onClick = {() => navigate("/app/polls/" + speciallink)}>More Info</button>
 
 
                     {poll.open
@@ -570,7 +504,7 @@ const Participatedpolls = ({ pollNames, polls, contractInteraction, loadPollData
 
 const Explore = ({ searchPolls, setPollNames }) => {
 
-  const history = useHistory()
+  const navigate = useNavigate()
 
   const [pollNames, changePollNames] = React.useState([])
 
@@ -668,7 +602,7 @@ const Explore = ({ searchPolls, setPollNames }) => {
 
               <p>&nbsp;</p>
 
-              <button className="btn btn-primary btn-block" onClick = {() => history.goBack()}>Back</button>
+              <button className="btn btn-primary btn-block" onClick = {() => navigate(-1)}>Back</button>
 
               <p>&nbsp;</p>
 
@@ -708,7 +642,7 @@ const Explore = ({ searchPolls, setPollNames }) => {
                       }
 
                       <p>Options: {poll.displayOptions}</p>
-                      <button className="btn btn-primary btn-block ml-auto mr-auto" style={{ maxWidth: '200px' }} onClick = {() => history.push("/app/polls/" + speciallink)}>More Info</button>
+                      <button className="btn btn-primary btn-block ml-auto mr-auto" style={{ maxWidth: '200px' }} onClick = {() => navigate("/app/polls/" + speciallink)}>More Info</button>
                     </li>
                     <li className="list-group-item py-2 bg-dark">
                       <small className="text-muted">
@@ -731,7 +665,7 @@ const Explore = ({ searchPolls, setPollNames }) => {
 
 const Managingvda = ({ accountBalance, tokenPrice, contractInteraction, buyToken, isAddress }) => {
   
-  const history = useHistory()
+  const navigate = useNavigate()
 
   const [amountoftokensInput, changeAOTI] = React.useState(0)
 
@@ -770,7 +704,7 @@ const Managingvda = ({ accountBalance, tokenPrice, contractInteraction, buyToken
               </form>
               <p>&nbsp;</p>
             <p>&nbsp;</p>
-            <button className="btn btn-primary btn-block" onClick = {() => history.goBack()}>Back</button>
+            <button className="btn btn-primary btn-block" onClick = {() => navigate(-1)}>Back</button>
           </div>
         </main>
       </div>
@@ -780,7 +714,7 @@ const Managingvda = ({ accountBalance, tokenPrice, contractInteraction, buyToken
 
 const Choosingpolltype = () => {
   
-  const history = useHistory()
+  const navigate = useNavigate()
 
   return (
 
@@ -795,21 +729,21 @@ const Choosingpolltype = () => {
           <div className="content mr-auto ml-auto">
 
             <p>&nbsp;</p>
-            <button className="btn btn-primary btn-block" onClick = {() => history.push("/app/create-poll/Regular")}>Regular Voting</button>
+            <button className="btn btn-primary btn-block" onClick = {() => navigate("/app/create-poll/Regular")}>Regular Voting</button>
             
             <p>&nbsp;</p>
-            <button className="btn btn-primary btn-block" onClick = {() => history.push("/app/create-poll/Quadratic")}>Quadratic Voting</button>
+            <button className="btn btn-primary btn-block" onClick = {() => navigate("/app/create-poll/Quadratic")}>Quadratic Voting</button>
 
             <p>&nbsp;</p>
-            <button className="btn btn-primary btn-block" onClick = {() => history.push("/app/create-poll/Ranked")}>Ranked Choice Voting</button>
+            <button className="btn btn-primary btn-block" onClick = {() => navigate("/app/create-poll/Ranked")}>Ranked Choice Voting</button>
             
             <p>&nbsp;</p>
             <div className="text-center">
-              <button className="btn btn-link btn-sm pt-0" onClick = {() => history.push("/polldesc")}>What are these?</button>
+              <button className="btn btn-link btn-sm pt-0" onClick = {() => navigate("/polldesc")}>What are these?</button>
             </div>
 
             <p>&nbsp;</p>
-            <button className="btn btn-primary btn-block" onClick = {() => history.goBack()}>Back</button>
+            <button className="btn btn-primary btn-block" onClick = {() => navigate(-1)}>Back</button>
             <p>&nbsp;</p>
           </div>
         </main>
@@ -820,7 +754,7 @@ const Choosingpolltype = () => {
 
 const Creatingpoll = ({ contractInteraction, isAddress, account, clearPollData }) => {
 
-  const history = useHistory()
+  const navigate = useNavigate()
 
   const { type } = useParams()
 
@@ -936,7 +870,7 @@ const Creatingpoll = ({ contractInteraction, isAddress, account, clearPollData }
 
                   <p>&nbsp;</p>
 
-                  <button className="btn btn-primary btn-block" onClick = {() => history.goBack()}>Back</button>
+                  <button className="btn btn-primary btn-block" onClick = {() => navigate(-1)}>Back</button>
 
                   <p>&nbsp;</p>
                   </div>
@@ -1298,7 +1232,7 @@ const Creatingpoll = ({ contractInteraction, isAddress, account, clearPollData }
                       event.preventDefault()
                       var temparr = tempAddressStorage
                       var newtemparr
-                      if(temparr === []) {
+                      if(temparr.length === 0) {
                         newtemparr = []
                       } else {
                         temparr = temparr.split(", ")
@@ -1527,7 +1461,7 @@ const Creatingpoll = ({ contractInteraction, isAddress, account, clearPollData }
                 {showManagedOwnedPolls
                   &&<div>
                       <p>&nbsp;</p>
-                      <button className="btn btn-primary btn-block" onClick = {() => history.push("/app/owned")}>Managed Owned Polls</button>
+                      <button className="btn btn-primary btn-block" onClick = {() => navigate("/app/owned")}>Managed Owned Polls</button>
                     </div>
                 }
 
@@ -1548,7 +1482,7 @@ const Creatingpoll = ({ contractInteraction, isAddress, account, clearPollData }
 
 const Getpollinfo = ({ account, contractInteraction, loadSpecificPoll, vote, findCost, accountBalance }) => {
 
-  const history = useHistory()
+  const navigate = useNavigate()
 
   const { tempname } = useParams()
 
@@ -1744,7 +1678,7 @@ const Getpollinfo = ({ account, contractInteraction, loadSpecificPoll, vote, fin
                                     {finalPrice > accountBalance
                                       &&<div>
                                           <p className="text-danger">Not enough VDA in your account </p>
-                                          <button className="btn btn-primary btn-block ml-auto mr-auto" style={{ maxWidth: '200px' }} onClick = {() => history.push("/app/manage-vda")}>Purchase VDA</button>
+                                          <button className="btn btn-primary btn-block ml-auto mr-auto" style={{ maxWidth: '200px' }} onClick = {() => navigate("/app/manage-vda")}>Purchase VDA</button>
                                           <p>&nbsp;</p>
                                         </div>
                                     }
@@ -1779,7 +1713,7 @@ const Getpollinfo = ({ account, contractInteraction, loadSpecificPoll, vote, fin
                   <p> {"Name: " + poll.name} </p>
                   <p> Owner: <a href={"https://etherscan.io/address/" + poll.owner}>{poll.owner}</a></p>
                   <p> {"Type: " + poll.type}
-                    <button className="btn btn-link btn-sm pt-0" onClick = {() => history.push("/polldesc")}>What's this?</button>
+                    <button className="btn btn-link btn-sm pt-0" onClick = {() => navigate("/polldesc")}>What's this?</button>
                   </p>
                   <p> {"Options: " + poll.displayOptions} </p>
                   
@@ -1979,7 +1913,7 @@ const Getpollinfo = ({ account, contractInteraction, loadSpecificPoll, vote, fin
                 </div>
 
                 <p>&nbsp;</p>
-                <button className="btn btn-primary btn-block ml-auto mr-auto" style={{ maxWidth: '400px' }} onClick = {() => history.goBack()}>Back</button>
+                <button className="btn btn-primary btn-block ml-auto mr-auto" style={{ maxWidth: '400px' }} onClick = {() => navigate(-1)}>Back</button>
                 <p>&nbsp;</p>
 
               </div>

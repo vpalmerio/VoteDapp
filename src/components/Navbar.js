@@ -1,7 +1,7 @@
 import React from 'react';
 import {Nav, NavDropdown} from "react-bootstrap";
 
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import Jdenticon from './Jdenticon.js'
 
@@ -10,7 +10,7 @@ export default function Navbar(props) {
     return (
       <div>
       <nav className="navbar navbar-dark fixed-top bg-primary flex-md-nowrap p-0 shadow">
-        <div className="text-white col-sm-1 col-md-1 mr-0">
+        <div className="text-white col-sm-1 col-md-1 mr-0 py-2 px- 2">
           
           <Smallsidebar />
           <small >
@@ -46,7 +46,7 @@ export default function Navbar(props) {
 
 const Smallsidebar = () => {
   
-  const history = useHistory()
+  const navigate = useNavigate()
 
   return (
     <Nav className="card bg-transparent transparent-border d-block d-xl-none small-sidebar text-white" style={{ maxWidth: '160px'}}>
@@ -54,11 +54,11 @@ const Smallsidebar = () => {
           <p></p>
       </div>
       <NavDropdown className="card bg-dark text-white text-center" title="Menu">
-        <NavDropdown.Item onClick = {() => history.push("/app")}>App</NavDropdown.Item>
-        <NavDropdown.Item onClick = {() => history.push("/app/explore")}>Explore</NavDropdown.Item>
-        <NavDropdown.Item onClick = {() => history.push("/app/manage-vda")}>Manage VDA</NavDropdown.Item>
-        <NavDropdown.Item onClick = {() => history.push("/app/owned")}>Owned Polls</NavDropdown.Item>
-        <NavDropdown.Item onClick = {() => history.push("/app/participated")}>Polls You Participated In</NavDropdown.Item>
+        <NavDropdown.Item onClick = {() => navigate("/app")}>App</NavDropdown.Item>
+        <NavDropdown.Item onClick = {() => navigate("/app/explore")}>Explore</NavDropdown.Item>
+        <NavDropdown.Item onClick = {() => navigate("/app/manage-vda")}>Manage VDA</NavDropdown.Item>
+        <NavDropdown.Item onClick = {() => navigate("/app/owned")}>Owned Polls</NavDropdown.Item>
+        <NavDropdown.Item onClick = {() => navigate("/app/participated")}>Polls You Participated In</NavDropdown.Item>
       </NavDropdown>
     </Nav>
   )
@@ -66,7 +66,7 @@ const Smallsidebar = () => {
 
 const Sidebar = () => {
 
-  const history = useHistory()
+  const history = useNavigate()
 
   return(
     <div className="">

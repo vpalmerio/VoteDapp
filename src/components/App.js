@@ -14,12 +14,12 @@ import Fakemain from './Fakemain'
 import Loadbar from './loadbar'
 import Home from './Home'
 import Polldesc from './Polldesc'
-import { withRouter } from "react-router-dom";
+import withRouter from './withRouter'
 
 class App extends Component {
 
-  async componentWillMount() {
-    let path = this.props.location.pathname.substring(0, 4);
+  async componentDidMount() {
+    let path = this.props.router.location.pathname.substring(0, 4);
     if(path === "/app") {
       await this.loadWeb3()
       await this.loadBlockchainData()
@@ -66,7 +66,9 @@ class App extends Component {
     var tokenSaleAddr
     var storageAddr
 
-    if(await web3.eth.net.getId() === 5) {
+    console.log(await web3.eth.net.getId())
+
+    if(await web3.eth.net.getId() == 5) {
 
       rankedAddr = "0xd5C89E54f2f46B62382Ef56D27557fb036b946e8"
       quadraticAddr = "0xA5217021B9044FfD758b21329F79365D02092F53"
@@ -75,7 +77,7 @@ class App extends Component {
       tokenSaleAddr = "0x58085bF7262AF30e326747897B6ffBFdE59756aB"
       storageAddr = "0x09296686004F7A83DA07e0491720bbA1d85f013C"
 
-    } else if(await web3.eth.net.getId() === 5777) {
+    } else if(await web3.eth.net.getId() == 31337) {
 
       rankedAddr = "0x3C0F3976bca07dA2E9A98923177204553403e1B7"
       quadraticAddr = "0x6Be2e8fE9cFED36949eE5781953b783Fb49dB8e7"
@@ -792,7 +794,7 @@ class App extends Component {
       
       let _votesAvailable = votesAvailable - votesUsed
 
-      let voterBalance = await this.state.accountBalance
+      let voterBalance = this.state.accountBalance
 
       if (voterBalance == 0) {
         return ["You cannot pay for any of your votes (" + _votesAvailable + " vote available). Purchase VDA at 'Manage VDA' in the Sidebar.", false]
@@ -955,7 +957,7 @@ class App extends Component {
 
       loading: false,
       loadingDescription: "Connecting to browser extension...",
-      loadingBlockchain: false,
+      loadingBlockchain: true,
     }
 
     this.isAddress = this.isAddress.bind(this)
@@ -984,13 +986,14 @@ class App extends Component {
   }
 
   render() {
-    let path = this.props.location.pathname.substring(0, 4);
+
+    let path = this.props.router.location.pathname.substring(0, 4);
     
-    if(this.props.location.pathname === "/") {
+    if(this.props.router.location.pathname === "/") {
       return (
         <Home />
       )
-    } else if(this.props.location.pathname === "/polldesc") {
+    } else if(this.props.router.location.pathname === "/polldesc") {
       return (
         <Polldesc />
       )
@@ -1003,8 +1006,8 @@ class App extends Component {
           <Loadbar
             loadingDescription={this.state.loadingDescription}
           />
-          <nav className="navbar navbar-dark fixed-top bg-primary flex-md-nowrap p-0 shadow">
-            <div className="text-white col-sm-1 col-md-1 mr-0">
+          <nav className="navbar navbar-dark fixed-top bg-primary flex-md-nowrap p-0 shadow mx-auto">
+            <div className="text-white col-sm-1 col-md-1 mr-0 py-2 px-2">
               <small >
               <a
                 className="navbar-brand"

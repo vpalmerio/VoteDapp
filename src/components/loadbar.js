@@ -5,9 +5,9 @@ import loader from './loader.png'
 export default function Loadbar(props) {
 
     return (
-      <div>
-        <nav className="card fixed-bottom mr-auto ml-auto bg-dark p-0 shadow" style={{ maxWidth: '800px', overflow: 'auto'}}>
-          <div className="text-white col-sm-1 col-md-1 mr-0">
+      <div className='row fixed-bottom justify-content-center'>
+        <div className="card mr-auto ml-auto bg-dark p-0 py-2 shadow" style={{ maxWidth: '800px', overflow: 'auto'}}>
+          <div className="text-white col-sm-1 col-md-1 mr-0 px-3">
             
             <small className="navbar-brand">
             <img 
@@ -15,12 +15,13 @@ export default function Loadbar(props) {
               alt="Ballot Box" 
               width="64"
               height="64"
+              style={{ marginRight: '15px' }}
             />
-
-              {" " + props.loadingDescription}
+            {' '}
+            {props.loadingDescription}
             </small>
           </div>
-        </nav>
+        </div>
       </div>  
 
     )

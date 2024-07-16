@@ -1,6 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import jdenticon from 'jdenticon';
+
+const jdenticon = require('jdenticon');
 
 const Jdenticon = ({ value = 'test', size = '100%' }) => {
   const icon = useRef(null);

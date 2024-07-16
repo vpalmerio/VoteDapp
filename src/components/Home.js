@@ -12,14 +12,13 @@ export default function Home() {
     
       <p></p>
     
-      <section className="jumbotron bg-primary">
-        <div className="container text-center">
+      <section className="jumbotron card bg-primary">
+        <div className="container text-center py-2">
           <h1 className="display-4">VoteDapp (Goerli Testnet)</h1>
           <p className="lead text-white">Decentralized, free, open. VoteDapp is an easy to use poll interface on the ethereum network for anyone, anywhere.</p>
-          
         </div>
       </section>
-      	<div className="text-center">
+      	<div className="text-center py-4">
     		<a className="btn btn-primary" href="/app">Head to the App</a>
     	</div>
 

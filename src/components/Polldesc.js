@@ -12,7 +12,7 @@ export default function Polldesc() {
         <meta name="description" content="What are the different poll types and how do they work?" />
       </Helmet>
       <p>&nbsp;</p>
-      <div className="row">
+      <div className="row justify-content-center">
         <section className="jumbotron bg-primary mr-auto ml-auto" style={{ width: '1000px'}}>
           <div className="container text-center">
             <h1 className="display-4">Poll Types</h1>
@@ -21,10 +21,10 @@ export default function Polldesc() {
           </div>
         </section>
       </div>
-      <div className="text-center">
+      <div className="text-center py-5">
         <a className="mr-auto ml-auto btn btn-primary" href="/">Home</a>
       </div>
-      <div className="container-fluid mt-5" style={{ width: '800px'}}>
+      <div className="container-fluid mt-1" style={{ width: '800px'}}>
         
         <div className="">
           

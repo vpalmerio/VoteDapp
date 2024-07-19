@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 
 import AppPage from '../components/AppPage'
 import Button from '../components/Button'
+import BackButton from "../components/BackButton";
 import * as c from '../components/Constants';
 
 export default function ChoosePollType() {
@@ -16,13 +17,13 @@ export default function ChoosePollType() {
           <h1 className="text-center mt-5">Choose a Poll Type</h1>
                 
           <p>&nbsp;</p>
-          <Button path={c.CREATE_POLL_TYPE_LINK_REGULAR} name = "Regular Voting"/>
+          <Button path={c.CREATE_POLL_TYPE_LINK_REGULAR} text = "Regular Voting"/>
     
           <p>&nbsp;</p>
-          <Button path={c.CREATE_POLL_TYPE_LINK_QUADRATIC} name = "Quadratic Voting"/>
+          <Button path={c.CREATE_POLL_TYPE_LINK_QUADRATIC} text = "Quadratic Voting"/>
     
           <p>&nbsp;</p>
-          <Button path={c.CREATE_POLL_TYPE_LINK_RANKED} name = "Ranked Choice Voting"/>
+          <Button path={c.CREATE_POLL_TYPE_LINK_RANKED} text = "Ranked Choice Voting"/>
     
           <p>&nbsp;</p>
           <div className="text-center">
@@ -30,7 +31,7 @@ export default function ChoosePollType() {
           </div>
     
           <p>&nbsp;</p>
-          <Button path={-1} name = "Back"/>
+          <BackButton/>
           <p>&nbsp;</p>
         </AppPage>
       )

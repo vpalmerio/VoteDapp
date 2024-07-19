@@ -15,6 +15,7 @@ import Loadbar from './loadbar'
 import Home from './Home'
 import Polldesc from './Polldesc'
 import withRouter from './withRouter'
+import Navbar from './Navbar';
 
 class App extends Component {
 
@@ -79,12 +80,12 @@ class App extends Component {
 
     } else if(await web3.eth.net.getId() == 31337) {
 
-      rankedAddr = "0x3C0F3976bca07dA2E9A98923177204553403e1B7"
-      quadraticAddr = "0x6Be2e8fE9cFED36949eE5781953b783Fb49dB8e7"
-      regularAddr = "0xE605730e38ed7d2Aa2BAdC8b9BE97a830e00986D"
-      tokenAddr = "0x082F359da04B35Db583181e8634C334FFB1c0c88"
-      tokenSaleAddr = "0x95A60f5F5fAee9eEcB85aDB3Be05d32f6917F6a9"
-      storageAddr = "0x0c58e1aD2aC9FF7924c4d3Ed6937A25bf512f4D0"
+      rankedAddr = "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9"
+      quadraticAddr = "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0"
+      regularAddr = "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9"
+      tokenAddr = "0xa16E02E87b7454126E5E10d957A927A7F5B5d2be"
+      tokenSaleAddr = "0x5FbDB2315678afecb367f032d93F642f64180aa3"
+      storageAddr = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512"
 
     } else {
       this.setState({ loading: true, loadingDescription:
@@ -1006,17 +1007,9 @@ class App extends Component {
           <Loadbar
             loadingDescription={this.state.loadingDescription}
           />
-          <nav className="navbar navbar-dark fixed-top bg-primary flex-md-nowrap p-0 shadow mx-auto">
-            <div className="text-white col-sm-1 col-md-1 mr-0 py-2 px-2">
-              <small >
-              <a
-                className="navbar-brand"
-                href="/"
-                target="_blank"
-                rel="noopener noreferrer"
-              >VoteDapp</a></small>
-            </div>
-          </nav>
+          <Navbar
+            loadingBlockchain={this.state.loadingBlockchain}
+          />
         </div>
       )
     } else if(path === "/app") {
@@ -1038,6 +1031,7 @@ class App extends Component {
                   homePagePolls={this.state.homePagePolls}
 
                   loading={this.state.loading}
+                  loadingBlockchain={this.state.loadingBlockchain}
 
                   tokenPrice = {this.state.tokenPrice}
 
@@ -1056,7 +1050,7 @@ class App extends Component {
                   setPollNames={this.setPollNames}
                   searchPolls={this.searchPolls}
                   getRecentPolls={this.getRecentPolls}
-                  
+
                 />
               </div>
         </div>

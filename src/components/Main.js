@@ -20,7 +20,7 @@ export default function Main(props) {
         
           <div>
             <main>
-            <Navbar account={props.account} accountBalance={props.accountBalance} />
+            <Navbar account={props.account} accountBalance={props.accountBalance} loadingBlockchain={props.loadingBlockchain} />
             <Routes>
               <Route path="/app" element = {
                 <Apphome
@@ -155,7 +155,7 @@ const Apphome = ({ contractInteraction, getRecentPolls, homePagePolls }) => {
       <title>Home </title>
       <meta name="description" content="Create your first poll or check out some new ones!" />
     </Helmet>
-    <div className="row">
+    <div className="center-content">
       <main role="main" className="ml-auto mr-auto" style={{ maxWidth: '800px' }}>
         <div className="content mr-auto ml-auto">
             <div className="text-center">
@@ -167,7 +167,9 @@ const Apphome = ({ contractInteraction, getRecentPolls, homePagePolls }) => {
               />
             </div>
             <p>&nbsp;</p>
+            <div className='center-content'>
             <button className="btn btn-primary btn-block mr-auto ml-auto" style={{ maxWidth: '550px' }} onClick = {() => navigate("/app/choose-poll-type")}>Create Poll</button>
+            </div>
           <p>&nbsp;</p>
 
           {homePagePolls.length > 0
@@ -278,7 +280,7 @@ const Ownedpolls = ({ pollNames, polls, contractInteraction, loadPollData }) => 
       <meta name="description" content="Review the polls you created here!" />
       
     </Helmet>
-    <div className="row">
+    <div className="center-content">
       <main role="main" className="mr-auto ml-auto content" style = {{ maxWidth: '800px'}}>
         <div>
 
@@ -402,9 +404,8 @@ const Participatedpolls = ({ pollNames, polls, contractInteraction, loadPollData
     <Helmet>
       <title>Polls You Participated In</title>
       <meta name="description" content="Review the polls that you participated in!" />
-      
     </Helmet>
-    <div className="row">
+    <div className="center-content">
       <main role="main" className="col-lg-12 mr-auto ml-auto content" style = {{ maxWidth: '800px'}}>
         <div>
 
@@ -571,7 +572,7 @@ const Explore = ({ searchPolls, setPollNames }) => {
           <title>Explore</title>
           <meta name="description" content="Explore polls that others have created!" />
         </Helmet>
-        <div className="row">
+        <div className="center-content">
           <main role="main" className="col-lg-12 ml-auto mr-auto" style={{ maxWidth: '500px' }}>
             <div className="content mr-auto ml-auto">
               <p>&nbsp;</p>
@@ -592,18 +593,20 @@ const Explore = ({ searchPolls, setPollNames }) => {
               </div>
 
               <p>&nbsp;</p>
-
-              <button className="btn btn-primary btn-block" onClick = {() => {
-                //fails to update state if used twice
-                shuffle(pollNames)
-                //workaround
-                changeWorkAround(!workaround)
-              }}>Randomize</button>
+              <div className='center-content'>
+                <button className="btn btn-primary btn-block w-100" style={{ maxWidth: '500px' }} onClick = {() => {
+                  //fails to update state if used twice
+                  shuffle(pollNames)
+                  //workaround
+                  changeWorkAround(!workaround)
+                }}>Randomize</button>
+              </div>
 
               <p>&nbsp;</p>
 
-              <button className="btn btn-primary btn-block" onClick = {() => navigate(-1)}>Back</button>
-
+              <div className='center-content'>
+                <button className="btn btn-primary btn-block"  style={{ maxWidth: '480px' }} onClick = {() => navigate(-1)}>Back</button>
+              </div>
               <p>&nbsp;</p>
 
               {loading
@@ -678,7 +681,7 @@ const Managingvda = ({ accountBalance, tokenPrice, contractInteraction, buyToken
         <title>Manage your VDA</title>
         <meta name="description" content="Purchase VDA tokens here!" />
       </Helmet>
-      <div className="row">
+      <div className="center-content">
         <main role="main" className="col-lg-12 ml-auto mr-auto" style={{ maxWidth: '500px' }}>
           <div className="content mr-auto ml-auto">
             <p>&nbsp;</p>
@@ -700,11 +703,14 @@ const Managingvda = ({ accountBalance, tokenPrice, contractInteraction, buyToken
                   placeholder= {"Cost per token (wei): " + tokenPrice}
                   required />
                 </div>
-                <button type="submit" className="btn btn-primary btn-block">Buy Tokens</button>
+                <div className='center-content mt-4'>
+                  <button type="submit" className="btn btn-primary btn-block">Buy Tokens</button>
+                </div>
               </form>
-              <p>&nbsp;</p>
             <p>&nbsp;</p>
-            <button className="btn btn-primary btn-block" onClick = {() => navigate(-1)}>Back</button>
+            <div className='center-content'>
+              <button className="btn btn-primary btn-block" onClick = {() => navigate(-1)}>Back</button>
+            </div>
           </div>
         </main>
       </div>

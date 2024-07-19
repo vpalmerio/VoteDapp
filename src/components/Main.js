@@ -6,6 +6,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import Dropdown from 'react-bootstrap/Dropdown';
 
+import AppPage from './AppPage'
+import ChoosePollType from '../pages/ChoosePollType';
+import PollName from './PollName';
 import Navbar from './Navbar'
 import Button from './Button'
 import ballotbox from './ballotbox2.png'
@@ -70,7 +73,7 @@ export default function Main(props) {
               } />
 
               <Route path={c.CHOOSE_POLL_TYPE_LINK} element = {
-                <Choosingpolltype/>
+                <ChoosePollType/>
               } />
 
               <Route path={c.CREATE_POLL_TYPE_LINK + "/:type"} element = {
@@ -723,46 +726,6 @@ const Managingvda = ({ accountBalance, tokenPrice, contractInteraction, buyToken
   )
 };
 
-const Choosingpolltype = () => {
-  
-  const navigate = useNavigate()
-
-  return (
-
-    <div className="container-fluid mt-5">
-      <Helmet>
-        <title>Choose Your Poll Type</title>
-        <meta name="description" content="Choose the type of poll you want to create!" />
-        
-      </Helmet>
-      <div className="row">
-        <main role="main" className="col-lg-12 ml-auto mr-auto" style={{ maxWidth: '500px' }}>
-          <div className="content mr-auto ml-auto">
-
-            <p>&nbsp;</p>
-            <button className="btn btn-primary btn-block" onClick = {() => navigate("/app/create-poll/Regular")}>Regular Voting</button>
-            
-            <p>&nbsp;</p>
-            <button className="btn btn-primary btn-block" onClick = {() => navigate("/app/create-poll/Quadratic")}>Quadratic Voting</button>
-
-            <p>&nbsp;</p>
-            <button className="btn btn-primary btn-block" onClick = {() => navigate("/app/create-poll/Ranked")}>Ranked Choice Voting</button>
-            
-            <p>&nbsp;</p>
-            <div className="text-center">
-              <button className="btn btn-link btn-sm pt-0" onClick = {() => navigate("/polldesc")}>What are these?</button>
-            </div>
-
-            <p>&nbsp;</p>
-            <button className="btn btn-primary btn-block" onClick = {() => navigate(-1)}>Back</button>
-            <p>&nbsp;</p>
-          </div>
-        </main>
-      </div>
-    </div>
-  )
-};
-
 const Creatingpoll = ({ contractInteraction, isAddress, account, clearPollData }) => {
 
   const navigate = useNavigate()
@@ -771,15 +734,13 @@ const Creatingpoll = ({ contractInteraction, isAddress, account, clearPollData }
 
   const [page, changePage] = React.useState("Name")
 
-  const [pollNameInput, changePollName] = React.useState("")
-  const [nameTaken, changeCIReturnData] = React.useState(false)
+  const [pollName, changePollName] = React.useState("")
 
   const talkToContractInteraction = async (typeState, sendBool, functionName, argumentArray, loadingDescription) => {
     let returndata = await contractInteraction(typeState, sendBool, functionName, argumentArray, loadingDescription)
-    changeCIReturnData(returndata)
+    return returndata
   }
 
-  
   const [pollDescriptionInput, changePollDescriptionInput] = React.useState("")
 
   const [pollOptionsInput, changePollOptionsInput] = React.useState([])
@@ -815,80 +776,11 @@ const Creatingpoll = ({ contractInteraction, isAddress, account, clearPollData }
   
     if(page === "Name") {
       return (
-
-        <div className="container-fluid mt-5">
-          <Helmet>
-            <title>Create a Poll!</title>
-            <meta name="description" content="Create your own customizable poll here!" />
-            
-          </Helmet>
-          <div className="row">
-            <main role="main" className="col-lg-12 ml-auto mr-auto" style={{ maxWidth: '500px' }}>
-              <div className="content mr-auto ml-auto">
-                <p>&nbsp;</p>
-                <div className="text-center style={{ maxWidth: '400px' }}">
-                  <p>&nbsp;</p>
-                  <h1> Your Poll's Name </h1>
-                  <p> What's the main idea? Short words are better. </p>
-
-                  {nameTaken
-                    && <p className="text-left text-danger"> This poll name has already been taken. </p>
-                  }
-                  <div className="mr-sm-2">
-                    
-                    {nameTaken
-
-                      ?<input
-                        type="text"
-                        onChange={(input) => {
-                          talkToContractInteraction("Storage", false, "pollNameExists", [input.target.value], "Loading...")
-
-                          changePollName(input.target.value)
-
-                          }
-                        }
-                        className="form-control"
-                        value={pollNameInput}
-                        style={{ borderColor: 'red'}}
-                        required />
-
-                    
-                      :<input
-                        type="text"
-                        onChange={(input) => {
-                          talkToContractInteraction("Storage", false, "pollNameExists", [input.target.value], "Loading...")
-
-                          changePollName(input.target.value)
-
-                          }
-                        }
-                        className="form-control"
-                        value={pollNameInput}
-                        required />
-                    }
-                  </div>
-
-                  <p>&nbsp;</p>
-
-                  {pollNameInput === ""
-                    ||<div>
-                      {nameTaken
-                        || <button className="btn btn-primary btn-block" onClick = {() => changePage("Description")}>Next</button>
-                      }
-                      </div>
-                  }
-                  
-
-                  <p>&nbsp;</p>
-
-                  <button className="btn btn-primary btn-block" onClick = {() => navigate(-1)}>Back</button>
-
-                  <p>&nbsp;</p>
-                  </div>
-                </div>
-            </main>
-          </div>
-        </div>
+          <PollName 
+            changePollName={changePollName}
+            changePage={changePage}
+            talkToContractInteraction={talkToContractInteraction}
+          ></PollName>
       )
     } else if(page === "Description") {
       return (
@@ -1349,7 +1241,7 @@ const Creatingpoll = ({ contractInteraction, isAddress, account, clearPollData }
                   event.preventDefault()
                   let arrOfArguments = []
 
-                  arrOfArguments.push(pollNameInput)
+                  arrOfArguments.push(pollName)
                   arrOfArguments.push(pollDescriptionInput)
                   arrOfArguments.push(pollOptionsInput)
                   
@@ -1397,7 +1289,7 @@ const Creatingpoll = ({ contractInteraction, isAddress, account, clearPollData }
 
                   <div className="card mb-4 text-center">
                     
-                    <p> {"Poll Name: " + pollNameInput} </p>
+                    <p> {"Poll Name: " + pollName} </p>
                     <p> {"Description: " + pollDescriptionInput} </p>
                     <p> {"Selectable Options: " + pollOptionsInput} </p>
                     {type === "Ranked"

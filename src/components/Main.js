@@ -7,12 +7,15 @@ import DropdownButton from 'react-bootstrap/DropdownButton';
 import Dropdown from 'react-bootstrap/Dropdown';
 
 import Navbar from './Navbar'
+import Button from './Button'
 import ballotbox from './ballotbox2.png'
 import Jdenticon from './Jdenticon.js'
 
 import {Helmet} from "react-helmet";
 
 import loader from './loader.png'
+
+import * as c from './Constants';
 
 export default function Main(props) { 
 
@@ -22,7 +25,7 @@ export default function Main(props) {
             <main>
             <Navbar account={props.account} accountBalance={props.accountBalance} loadingBlockchain={props.loadingBlockchain} />
             <Routes>
-              <Route path="/app" element = {
+              <Route path={c.APP_LINK} element = {
                 <Apphome
                   contractInteraction={props.contractInteraction}
                   getRecentPolls={props.getRecentPolls}
@@ -30,7 +33,7 @@ export default function Main(props) {
                 /> 
               } />
 
-              <Route path="/app/owned" element = {
+              <Route path={c.OWNED_POLLS_LINK} element = {
                 <Ownedpolls
                   pollNames={props.pollNames}
                   polls={props.polls}
@@ -39,7 +42,7 @@ export default function Main(props) {
                 />
               } />
 
-              <Route path="/app/participated" element = {
+              <Route path={c.PARTICIPATED_POLLS_LINK} element = {
                 <Participatedpolls
                   pollNames={props.pollNames}
                   polls={props.polls}
@@ -48,7 +51,7 @@ export default function Main(props) {
                 />
               } />
 
-              <Route path="/app/explore" element = {
+              <Route path={c.EXPLORE_LINK} element = {
                 <Explore
                   pollNames={props.pollNames}
                   searchPolls={props.searchPolls}
@@ -56,7 +59,7 @@ export default function Main(props) {
                 />
               } />
 
-              <Route path="/app/manage-vda" element = {
+              <Route path={c.MANAGE_VDA_LINK} element = {
                 <Managingvda
                   accountBalance={props.accountBalance}
                   tokenPrice={props.tokenPrice}
@@ -66,11 +69,11 @@ export default function Main(props) {
                 />
               } />
 
-              <Route path="/app/choose-poll-type" element = {
+              <Route path={c.CHOOSE_POLL_TYPE_LINK} element = {
                 <Choosingpolltype/>
               } />
 
-              <Route path="/app/create-poll/:type" element = {
+              <Route path={c.CREATE_POLL_TYPE_LINK + "/:type"} element = {
                 <Creatingpoll
                   contractInteraction={props.contractInteraction}
                   isAddress={props.isAddress}
@@ -79,7 +82,7 @@ export default function Main(props) {
               />
               } />
 
-              <Route path="/app/polls/:tempname" element = {
+              <Route path={c.POLL_LINK + "/:tempname"} element = {
                 <Getpollinfo
                   account={props.account}
                   contractInteraction={props.contractInteraction}
@@ -90,7 +93,7 @@ export default function Main(props) {
                 />
               } />
 
-              <Route element = {
+              <Route path="*" element = {
                 <Wrongpage/>
               } />
               </Routes>
@@ -104,23 +107,25 @@ const Wrongpage = () => {
 
   const navigate = useNavigate()
 
-    return (
-      <div className="container-fluid mt-5">
-        <div className="row">
-          <main role="main" className="col-lg-12 ml-auto mr-auto" style={{ maxWidth: '500px' }}>
-            <div className="content mr-auto ml-auto">
+  return (
+    <div className="container-fluid mt-5">
+      <div className="center-content">
+        <main role="main" className="col-lg-12 ml-auto mr-auto" style={{ maxWidth: '500px' }}>
+          <div className="content mr-auto ml-auto">
 
-            <h1 className="text-center">Uh oh!</h1>
-            <h1 className="text-center">This page doesn't exist!</h1>
-            
-            <p>&nbsp;</p>
+          <h1 className="text-center">Uh oh!</h1>
+          <h1 className="text-center">This page doesn't exist!</h1>
+          
+          <p>&nbsp;</p>
+          <div className='center-content'>
             <button className="btn btn-primary btn-block" onClick = {() => navigate('/app')}>Back to Safety</button>
+          </div>
 
-            </div>
-          </main>
-        </div>
+          </div>
+        </main>
       </div>
-    )
+    </div>
+  )
 }
 
 const Apphome = ({ contractInteraction, getRecentPolls, homePagePolls }) => {

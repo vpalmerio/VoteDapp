@@ -9,9 +9,8 @@ export default function Navbar(props) {
     
     return (
       <div>
-      <nav className="navbar navbar-dark fixed-top bg-primary flex-md-nowrap p-0 shadow">
-        <div className="text-white col-sm-1 col-md-1 mr-0 py-2 px- 2">
-          
+      <nav className="navbar navbar-dark fixed-top bg-primary flex-md-nowrap p-0 shadow mx-auto">
+        <div className="text-white col-sm-1 col-md-1 mr-0 py-2 px-2">
           <Smallsidebar />
           <small >
           <a
@@ -22,8 +21,8 @@ export default function Navbar(props) {
           >VoteDapp</a></small>
         </div>
         
-        
-        <div className="text-white">
+        {props.loadingBlockchain ? <div></div>
+        :  <div className="text-white">
             <ul className="navbar-nav px-3">
               <li className="nav-item text-nowrap d-none d-sm-block">
                   <small id="account"> VDA Balance: {props.accountBalance}, {props.account} <span></span>
@@ -32,14 +31,12 @@ export default function Navbar(props) {
                 
               </li>
             </ul>
-          </div>
+          </div> 
         
-
+        }
       </nav>
-
       <Sidebar />
     </div>  
-
     )
   
 }
@@ -66,7 +63,7 @@ const Smallsidebar = () => {
 
 const Sidebar = () => {
 
-  const history = useNavigate()
+  const navigate = useNavigate()
 
   return(
     <div className="">
@@ -77,19 +74,19 @@ const Sidebar = () => {
          <p>&nbsp;</p>
       </Nav.Item>
       <Nav.Item>
-          <button className="btn btn-primary btn-block" style={{width: '160px'}} onClick = {() => history.push("/app")}>App</button>
+          <button className="btn btn-primary btn-block" style={{width: '160px'}} onClick = {() => navigate("/app")}>App</button>
       </Nav.Item>
       <Nav.Item>
-          <button className="btn btn-primary btn-block" style={{width: '160px'}} onClick = {() => history.push("/app/explore")}>Explore</button>
+          <button className="btn btn-primary btn-block" style={{width: '160px'}} onClick = {() => navigate("/app/explore")}>Explore</button>
       </Nav.Item>
       <Nav.Item>
-          <button className="btn btn-primary btn-block" style={{width: '160px'}} onClick = {() => history.push("/app/manage-vda")}>Manage VDA</button>
+          <button className="btn btn-primary btn-block" style={{width: '160px'}} onClick = {() => navigate("/app/manage-vda")}>Manage VDA</button>
       </Nav.Item>
       <Nav.Item>
-          <button className="btn btn-primary btn-block" style={{width: '160px'}} onClick = {() => history.push("/app/owned")}>Owned Polls</button>
+          <button className="btn btn-primary btn-block" style={{width: '160px'}} onClick = {() => navigate("/app/owned")}>Owned Polls</button>
       </Nav.Item>
       <Nav.Item>
-          <button className="btn btn-primary btn-block" style={{width: '160px'}} onClick = {() => history.push("/app/participated")}>Polls You Participated In</button>
+          <button className="btn btn-primary btn-block" style={{width: '160px'}} onClick = {() => navigate("/app/participated")}>Polls You Participated In</button>
       </Nav.Item>
       </Nav>
     </div>

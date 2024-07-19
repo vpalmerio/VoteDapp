@@ -67,8 +67,6 @@ class App extends Component {
     var tokenSaleAddr
     var storageAddr
 
-    console.log(await web3.eth.net.getId())
-
     if(await web3.eth.net.getId() == 5) {
 
       rankedAddr = "0xd5C89E54f2f46B62382Ef56D27557fb036b946e8"

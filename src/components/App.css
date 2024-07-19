@@ -37,6 +37,12 @@
 	border-radius: 10px;
 }
 
+.center-content {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
 table {
   position: relative;
   border: 1px solid #ddd;

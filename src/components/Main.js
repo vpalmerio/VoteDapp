@@ -9,6 +9,7 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import AppPage from './AppPage'
 import ChoosePollType from '../pages/ChoosePollType';
 import PollName from './PollName';
+import PollDesc from './PollDesc';
 import Navbar from './Navbar'
 import Button from './Button'
 import ballotbox from './ballotbox2.png'
@@ -741,7 +742,7 @@ const Creatingpoll = ({ contractInteraction, isAddress, account, clearPollData }
     return returndata
   }
 
-  const [pollDescriptionInput, changePollDescriptionInput] = React.useState("")
+  const [pollDescription, changePollDescription] = React.useState("")
 
   const [pollOptionsInput, changePollOptionsInput] = React.useState([])
 
@@ -776,65 +777,18 @@ const Creatingpoll = ({ contractInteraction, isAddress, account, clearPollData }
   
     if(page === "Name") {
       return (
-          <PollName 
-            changePollName={changePollName}
-            changePage={changePage}
-            talkToContractInteraction={talkToContractInteraction}
-          ></PollName>
+        <PollName 
+          changePollName={changePollName}
+          changePage={changePage}
+          talkToContractInteraction={talkToContractInteraction}
+        ></PollName>
       )
     } else if(page === "Description") {
       return (
-
-        <div className="container-fluid mt-5">
-          <Helmet>
-            <title>Create a Poll!</title>
-            <meta name="description" content="Create your own customizable poll here!" />
-            
-          </Helmet>
-          <div className="row">
-            <main role="main" className="col-lg-12 ml-auto mr-auto" style={{ maxWidth: '500px' }}>
-              <div className="content text-center">
-                <p>&nbsp;</p>
-                
-                <h1> What is your poll for? </h1>
-                <p> Extra details, recipient/target of poll, etc. </p>
-                <p> You can skip this to save gas </p>
-                <div className="mr-sm-2">
-                  <form>
-                    <input
-
-                      type="text"
-                      onChange={(input) => {
-                          changePollDescriptionInput(input.target.value)
-
-                        }
-                      }
-                      className="form-control"
-                      value={pollDescriptionInput}
-                    />
-                  </form>
-                </div> 
-
-                <p>&nbsp;</p>
-
-                {pollDescriptionInput === ""
-                  ?<button className="btn btn-primary btn-block" onClick = {() => {
-                    changePollDescriptionInput("")
-                    changePage("Options")
-                  }}>Skip</button>
-                  :<button className="btn btn-primary btn-block" onClick = {() => changePage("Options")}>Next</button>
-                }
-                
-                <p>&nbsp;</p>
-
-                <button className="btn btn-primary btn-block" onClick = {() => changePage("Name")}>Back</button>
-
-                <p>&nbsp;</p>
-
-                </div>
-            </main>
-          </div>
-        </div>
+        <PollDesc
+          changePage={changePage}
+          changePollDescription={changePollDescription}
+        ></PollDesc>
       )
     } else if(page === "Options") {
 
@@ -1242,7 +1196,7 @@ const Creatingpoll = ({ contractInteraction, isAddress, account, clearPollData }
                   let arrOfArguments = []
 
                   arrOfArguments.push(pollName)
-                  arrOfArguments.push(pollDescriptionInput)
+                  arrOfArguments.push(pollDescription)
                   arrOfArguments.push(pollOptionsInput)
                   
                   if(type !== "Ranked") {
@@ -1290,7 +1244,7 @@ const Creatingpoll = ({ contractInteraction, isAddress, account, clearPollData }
                   <div className="card mb-4 text-center">
                     
                     <p> {"Poll Name: " + pollName} </p>
-                    <p> {"Description: " + pollDescriptionInput} </p>
+                    <p> {"Description: " + pollDescription} </p>
                     <p> {"Selectable Options: " + pollOptionsInput} </p>
                     {type === "Ranked"
                       || <div>

@@ -13,7 +13,7 @@ import Main from './Main'
 import Fakemain from './Fakemain'
 import Loadbar from './loadbar'
 import Home from './Home'
-import Polldesc from './Polldesc'
+import Polldesc from './PollTypeDesc'
 import withRouter from './withRouter'
 import Navbar from './Navbar';
 

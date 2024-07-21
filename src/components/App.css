@@ -43,6 +43,11 @@
   justify-content: center;
 }
 
+.flex-container {
+  display: flex;
+  align-items: center;
+}
+
 table {
   position: relative;
   border: 1px solid #ddd;

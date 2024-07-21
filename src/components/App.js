@@ -67,7 +67,9 @@ class App extends Component {
     var tokenSaleAddr
     var storageAddr
 
-    if(await web3.eth.net.getId() == 5) {
+    const networkID = Number(await web3.eth.net.getId())
+
+    if(networkID === 5) {
 
       rankedAddr = "0xd5C89E54f2f46B62382Ef56D27557fb036b946e8"
       quadraticAddr = "0xA5217021B9044FfD758b21329F79365D02092F53"
@@ -76,7 +78,7 @@ class App extends Component {
       tokenSaleAddr = "0x58085bF7262AF30e326747897B6ffBFdE59756aB"
       storageAddr = "0x09296686004F7A83DA07e0491720bbA1d85f013C"
 
-    } else if(await web3.eth.net.getId() == 31337) {
+    } else if(networkID === 31337) {
 
       rankedAddr = "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9"
       quadraticAddr = "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0"
@@ -744,9 +746,9 @@ class App extends Component {
 
       let votesUsed = await this.state.DappRegular.methods.trackTotalVotes(poll.name, this.state.account).call()
 
-      votesUsed = votesUsed * 1
+      votesUsed = Number(votesUsed)
 
-      let votesAvailable = poll.maxVotes * 1
+      let votesAvailable = Number(poll.maxVotes)
 
       if (votesAvailable <= votesUsed) {
         

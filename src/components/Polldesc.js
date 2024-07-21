@@ -4,9 +4,9 @@ import AppPage from './AppPage'
 import Button from './Button'
 import BackButton from './BackButton'
 
-export default function Polldesc({ changePollDescription, changePage }) {
+export default function Polldesc({ pollDescription, changePollDescription, changePage }) {
 
-    const [pollDescriptionInput, changePollDescriptionInput] = React.useState("")
+    const [pollDescriptionInput, changePollDescriptionInput] = React.useState(pollDescription)
 
     const nextPage = () => {
         changePollDescription(pollDescriptionInput)

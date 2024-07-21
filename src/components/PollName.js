@@ -4,9 +4,9 @@ import AppPage from './AppPage'
 import Button from './Button'
 import BackButton from './BackButton'
 
-export default function PollName({ changePollName , changePage, talkToContractInteraction}) {
+export default function PollName({ pollName, changePollName, changePage, talkToContractInteraction}) {
 
-    const [pollNameInput, changePollNameInput] = React.useState("")
+    const [pollNameInput, changePollNameInput] = React.useState(pollName)
     const [nameTaken, changeNameTaken] = React.useState(false)
 
     const nextPage = () => {

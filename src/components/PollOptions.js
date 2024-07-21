@@ -16,8 +16,8 @@ export default function PollOptions({ pollOptions, changePollOptions, changePage
     let tempOptionStorage
     return (
         <AppPage
-          title="More options"
-          description="Select more options for your poll"
+          title="Poll Options"
+          description="Create the options people can vote on"
         >
           <p>&nbsp;</p>
 
@@ -112,8 +112,8 @@ export default function PollOptions({ pollOptions, changePollOptions, changePage
           {pollOptionsInput.length > 0
             &&<div> 
                 <Button text='Next' onClick = {() => {
-                    changePage("More options")
                     changePollOptions(pollOptionsInput)
+                    changePage("More features")
                 }}></Button>
               </div>
 

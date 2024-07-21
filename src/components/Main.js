@@ -1,25 +1,28 @@
 import React from 'react';
 
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import { useNavigate, useParams } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 
-import DropdownButton from 'react-bootstrap/DropdownButton';
-import Dropdown from 'react-bootstrap/Dropdown';
+import DropdownButton from 'react-bootstrap/DropdownButton'
+import Dropdown from 'react-bootstrap/Dropdown'
 
 import AppPage from './AppPage'
-import ChoosePollType from '../pages/ChoosePollType';
-import PollName from './PollName';
-import PollDesc from './PollDesc';
+import ChoosePollType from '../pages/ChoosePollType'
+import PollName from './PollName'
+import PollDesc from './PollDesc'
+import PollOptions from './PollOptions'
+import PollFeatures from './PollFeatures'
+import PollCompletion from './PollCompletion'
 import Navbar from './Navbar'
 import Button from './Button'
 import ballotbox from './ballotbox2.png'
 import Jdenticon from './Jdenticon.js'
 
-import {Helmet} from "react-helmet";
+import {Helmet} from "react-helmet"
 
 import loader from './loader.png'
 
-import * as c from './Constants';
+import * as c from './Constants'
 
 export default function Main(props) { 
 
@@ -733,18 +736,18 @@ const Creatingpoll = ({ contractInteraction, isAddress, account, clearPollData }
 
   const { type } = useParams()
 
-  const [page, changePage] = React.useState("Name")
-
-  const [pollName, changePollName] = React.useState("")
-
   const talkToContractInteraction = async (typeState, sendBool, functionName, argumentArray, loadingDescription) => {
     let returndata = await contractInteraction(typeState, sendBool, functionName, argumentArray, loadingDescription)
     return returndata
   }
 
+  const [page, changePage] = React.useState("Name")
+
+  const [pollName, changePollName] = React.useState("")
+
   const [pollDescription, changePollDescription] = React.useState("")
 
-  const [pollOptionsInput, changePollOptionsInput] = React.useState([])
+  const [pollOptions, changePollOptions] = React.useState([])
 
   const [pollPrivatePollInput, privatePollBool] = React.useState(false)
   const [pollRestrictedVotersArrayInput, changeRestrictedVotersArray] = React.useState([])
@@ -755,9 +758,7 @@ const Creatingpoll = ({ contractInteraction, isAddress, account, clearPollData }
   const [pollRecipientInput, changePollRecipientInput] = React.useState(account)
   const [pollVoteCostInput, changeVoteCostInput] = React.useState(0)
   const [returnMoneyOnCompletionInput, changeRMOCI] = React.useState(true)
-  const [sendFundsToMe, sendFundsToMeBool] = React.useState(true)
-
-  const [workaround, changeWorkAround] = React.useState(false)
+  const [sendFundsToMe, changeSendFundsToMe] = React.useState(true)
 
   const [showManagedOwnedPolls, changeShowManagedOwnedPolls] = React.useState(false)
 
@@ -778,6 +779,7 @@ const Creatingpoll = ({ contractInteraction, isAddress, account, clearPollData }
     if(page === "Name") {
       return (
         <PollName 
+          pollName={pollName}
           changePollName={changePollName}
           changePage={changePage}
           talkToContractInteraction={talkToContractInteraction}
@@ -788,550 +790,75 @@ const Creatingpoll = ({ contractInteraction, isAddress, account, clearPollData }
         <PollDesc
           changePage={changePage}
           changePollDescription={changePollDescription}
+          pollDescription={pollDescription}
         ></PollDesc>
       )
     } else if(page === "Options") {
 
-      let tempOptionStorage
-
       return (
-        <div className="container-fluid mt-5">
-          <Helmet>
-            <title>Create a Poll!</title>
-            <meta name="description" content="Create your own customizable poll here!" />
-            
-          </Helmet>
-          <div className="row">
-            <main role="main" className="col-lg-12 ml-auto mr-auto" style={{ maxWidth: '500px' }}>
-              <div className="content text-center">
-                <p>&nbsp;</p>
-
-                <h1> What are the options people can vote on? </h1>
-                <p> Type in an option, then press "Add option" to add it to the list. </p>
-
-
-                <form onSubmit={(event) => {
-                  event.preventDefault()
-
-                  if(tempOptionStorage === "" || tempOptionStorage == undefined) {
-                    window.alert("Please put an option in the textbox.")
-                  } else {
-
-                    let taken = false;
-                    for(let i = 0; i<pollOptionsInput.length; i++) {
-                      if(tempOptionStorage==pollOptionsInput[i]) {
-                        taken=true;
-                        window.alert("You already have the option: " + tempOptionStorage)
-                        break;
-                      }
-                    }
-                    if(!taken) {
-                      let temparr = pollOptionsInput
-                      temparr.push(tempOptionStorage)
-
-                      changePollOptionsInput(temparr)
-                      
-                      changeWorkAround(!workaround)
-
-                      document.getElementById('Option').value = '';
-                    }
-                  }
-
-                }}>
-                  <div className="form-group mr-sm-2">
-                    <input
-                      id="Option"
-                      type="text"
-                      onChange={(input) => {
-                          tempOptionStorage = input.target.value
-                        }
-                      }
-                      className="form-control"
-                      placeholder="Ex. yes"
-                    />
-                  </div>
-
-                  <p>&nbsp;</p>
-
-                  <button type="submit" className="btn btn-primary btn-block">Add option</button>
-
-                </form>
-
-                <p>&nbsp;</p>
-
-                <p> Selectable Options: </p>
-                
-                  {pollOptionsInput.map((option, key) => {
-                      return (
-                      <div key={key} className="text-left">
-                        <li>{option}</li>
-                        <button className="btn btn-link btn-sm pt-0" onClick = {() => {
-
-                          let temparr = pollOptionsInput
-
-                          temparr.splice(key, 1)
-
-                          document.getElementById('Option').value = '';
-
-                          changePollOptionsInput(temparr)
-
-                          changeWorkAround(!workaround)
-
-                        }}>Remove</button>
-                      </div>
-                      )
-                  })}
-
-
-                <p>&nbsp;</p>
-
-                {pollOptionsInput.length > 0
-                  &&<div> 
-                      <button className="btn btn-primary btn-block" onClick = {() => changePage("More options")}>Next</button>
-                    </div>
-
-                }
-
-                <p>&nbsp;</p>
-
-                <button className="btn btn-primary btn-block" onClick = {() => changePage("Description")}>Back</button>
-
-                <p>&nbsp;</p>
-
-                </div>
-            </main>
-          </div>
-        </div>
+        <PollOptions
+          changePage={changePage}
+          changePollOptions={changePollOptions}
+          pollOptions={pollOptions}
+        ></PollOptions>
+        
       )
-    } else if(page === "More options") {
+    } else if(page === "More features") {
 
       let tempAddressStorage
 
       return (
-
-        <div className="container-fluid mt-5">
-          <Helmet>
-            <title>Create a Poll!</title>
-            <meta name="description" content="Create your own customizable poll here!" />
-            
-          </Helmet>
-          <div className="row">
-            <main role="main" className="col-lg-12 ml-auto mr-auto" style={{ maxWidth: '500px' }}>
-              <div className="content mr-auto ml-auto">
-                <p>&nbsp;</p>
-                <div className="text-center">
-                  <h1> More options </h1>
-                  <p> Charge money for votes (regular and quadratic only) and/or only allow certain people to vote </p>
-                </div>
-
-                {type === "Regular"
-                  &&
-                    <div>
-                      <div className="form-group mr-sm-2 text-center">
-                        <label> Maximum amount of votes for each voter </label>
-                        <input
-                          type="number"
-                          onChange={(input) => {
-                            changePollMaxVotesInput(input.target.value)
-                              
-                            }
-                          }
-                          className="form-control"
-                          value={pollMaxVotesInput}
-                          required 
-                        />
-                      </div>
-                      <div className="form-check ml-auto mr-auto">
-                        <input
-                          type="checkbox"
-                          checked={costsMoney}
-                          onChange= {() => costsMoneyBool(!costsMoney)}
-                          className="form-check-input"
-                           />
-                          <label className=""> Charge money for votes </label>
-                      </div>
-                      {costsMoney
-                        && <div className="mr-sm-2 ml-auto mr-auto ">
-                            <div className="form-group text-center">
-                              <label> Cost in VDA tokens </label>
-                              <input
-                                type="number"
-                                onChange={(input) => changeVoteCostInput(input.target.value)}
-                                className="form-control"
-                                value={pollVoteCostInput}
-                                required />
-                            </div>
-                            <div className="form-check">
-                              <input
-                                type="checkbox"
-                                checked={returnMoneyOnCompletionInput}
-                                onChange= {() => changeRMOCI(!returnMoneyOnCompletionInput)}
-                                className="form-check-input"
-                                 />
-                                <label> Return money to voters upon completion of poll </label>
-                            </div>
-                            {returnMoneyOnCompletionInput
-                              || <div>
-                                   <div className="form-group mr-sm-2 text-center">
-                                      <label> Recipient of funds spent on winning option </label>
-                                      {sendFundsToMe
-                                        ? <input
-                                            onChange={(input) => changePollRecipientInput(input.target.value)}
-                                            className="form-control"
-                                            value={account}
-                                            disabled={true}
-                                          />
-                                        : <input
-                                            onChange={(input) => changePollRecipientInput(input.target.value)}
-                                            className="form-control"
-                                            value={pollRecipientInput}
-                                            required 
-                                          />
-                                      }
-                                    <div className="form-check">
-                                      <input
-                                        type="checkbox"
-                                        checked={sendFundsToMe}
-                                        onChange={() => {
-                                          sendFundsToMeBool(!sendFundsToMe)
-                                        }}
-                                        className="form-check-input"
-                                         />
-                                        <label className=""> Send funds to me </label>
-                                    </div>
-                                </div>
-                              </div>
-                            }
-                          </div>
-                        }
-                    </div>
-                }
-
-                {type === "Quadratic"
-                && <div>
-                    <div className="form-group mr-sm-2 text-center">
-                      <label> Maximum amount of votes for each voter </label>
-                      <input
-                        type="number"
-                        onChange={(input) => {
-                          changePollMaxVotesInput(input.target.value)
-                            
-                          }
-                        }
-                        className="form-control"
-                        value={pollMaxVotesInput}
-                        required 
-                      />
-                    </div>
-                    <div className="form-check mr-auto ml-auto ">
-                        <input
-                          type="checkbox"
-                          checked={returnMoneyOnCompletionInput}
-                          onChange= {() => changeRMOCI(!returnMoneyOnCompletionInput)}
-                          className="form-check-input"
-                           />
-                        <label> Return money upon completion of poll </label>
-                        </div>
-                        {returnMoneyOnCompletionInput
-                          || <div>
-                               <div className="form-group mr-sm-2 text-center">
-                                  <label> Recipient of funds spent on winning option </label>
-                                  {sendFundsToMe
-                                    ? <input
-                                        type="text"
-                                        onChange={(input) => changePollRecipientInput(input.target.value)}
-                                        className="form-control"
-                                        value={account}
-                                        disabled={true}
-                                      />
-                                    : <input
-                                        onChange={(input) => changePollRecipientInput(input.target.value)}
-                                        className="form-control"
-                                        value={pollRecipientInput}
-                                        required 
-                                      />
-                                  }
-                                <div className="form-check">
-                                  <input
-                                    type="checkbox"
-                                    checked={sendFundsToMe}
-                                    onChange={() => {
-                                      sendFundsToMeBool(!sendFundsToMe)
-                                    }}
-                                    className="form-check-input"
-                                     />
-                                    <label className=""> Send funds to me </label>
-                                </div>
-                            </div>
-                          </div>
-                        }
-                    </div>
-                }
-                
-
-                <p>&nbsp;</p>
-
-                <div className="form-check">
-                  <input
-                    type="checkbox"
-                    checked={pollPrivatePollInput}
-                    onChange= {() => privatePollBool(!pollPrivatePollInput)}
-                    className="form-check-input"
-                     />
-                    <label className=""> Private poll </label>
-                </div>
-
-              
-
-              {pollPrivatePollInput
-                  && <div className="">
-                    <form onSubmit={(event) => {
-                      event.preventDefault()
-                      var temparr = tempAddressStorage
-                      var newtemparr
-                      if(temparr.length === 0) {
-                        newtemparr = []
-                      } else {
-                        temparr = temparr.split(", ")
-
-                        let checkAddrs = isAddress(temparr)
-
-                        if(!checkAddrs[1]) {
-                          window.alert("Invalid address detected: " + checkAddrs[0])
-                        } else if(checkAddrs[1]) {
-                          newtemparr = pollRestrictedVotersArrayInput.concat(temparr)
-                          changeRestrictedVotersArray(newtemparr)
-                        }
-                        
-                        
-                      }
-                      
-                    }}>
-                      <div className="form-group mr-sm-2">
-                        <input
-                          type="text"
-                          onChange={(input) => {
-                            tempAddressStorage = input.target.value
-
-                            }
-                          }
-                          className="form-control"
-                          placeholder="Allowed voters separated by comma and space (ex. 0x01, 0x02, 0x03)"
-                          required />
-                      </div>
-                      <button type="submit" className="btn btn-primary btn-block">Add addresses</button>
-                    </form>
-                    <p>&nbsp;</p>
-                    <p> Allowed Addresses </p>
-                      {pollRestrictedVotersArrayInput.map((address, key) => {
-                        return (
-                        
-                          <li key={key}>{address}</li>
-
-                        )
-                      })}
-                   
-                  </div>
-                }
-
-              <p>&nbsp;</p>
-
-                <p>&nbsp;</p>
-
-                <button className="btn btn-primary btn-block" onClick = {() => {
-
-                  if(pollMaxVotesInput <= 0) {
-                    window.alert("You cannot have 0 maximum votes.")
-                  } else {
-
-                    if(costsMoney && pollVoteCostInput <= 0) {
-                      window.alert("The cost per vote must be greater than 0, or you can uncheck 'Charge money for votes' for free voting.")
-                    } else {
-
-                      if (!returnMoneyOnCompletionInput && costsMoney) {
-                        let tempRecipientArr = [pollRecipientInput]
-                        
-                        let checkAddrs = isAddress(tempRecipientArr)
-
-                        if(!checkAddrs[1]) {
-                          window.alert("Invalid address detected: " + checkAddrs[0])
-                        } else if(checkAddrs[1]) {
-                          changePage("Finish")
-                        }
-                      } else {
-                        changePage("Finish")
-                      }
-                    }
-                  }
-                  
-
-                }}>Next</button>
-
-                <p>&nbsp;</p>
-
-                <button className="btn btn-primary btn-block" onClick = {() => changePage("Options")}>Back</button>
-
-                <p>&nbsp;</p>
-
-                </div>
-            </main>
-          </div>
-        </div>
+        <PollFeatures
+          type={type}
+          changePage={changePage}
+          pollMaxVotesInput={pollMaxVotesInput}
+          changePollMaxVotesInput={changePollMaxVotesInput}
+          costsMoney={costsMoney}
+          costsMoneyBool={costsMoneyBool}
+          pollVoteCostInput={pollVoteCostInput}
+          changeVoteCostInput={changeVoteCostInput}
+          returnMoneyOnCompletionInput={returnMoneyOnCompletionInput}
+          changeRMOCI={changeRMOCI}
+          pollRecipientInput={pollRecipientInput}
+          changePollRecipientInput={changePollRecipientInput}
+          sendFundsToMe={sendFundsToMe}
+          changeSendFundsToMe={changeSendFundsToMe}
+          pollPrivatePollInput={pollPrivatePollInput}
+          privatePollBool={privatePollBool}
+          tempAddressStorage={tempAddressStorage}
+          changeRestrictedVotersArray={changeRestrictedVotersArray}
+          pollRestrictedVotersArrayInput={pollRestrictedVotersArrayInput}
+          isAddress={isAddress}
+          account={account}
+        ></PollFeatures>
       )
     } else if(page === "Finish") {
       return (
-
-        <div className="container-fluid mt-5">
-          <Helmet>
-            <title>Create a Poll!</title>
-            <meta name="description" content="Create your own customizable poll here!" />
-            
-          </Helmet>
-          <div className="row">
-            <main role="main" className="col-lg-12 ml-auto mr-auto" style={{ maxWidth: '500px' }}>
-              <div className="content mr-auto ml-auto">
-                <p>&nbsp;</p>
-                <form onSubmit={(event) => {
-                  event.preventDefault()
-                  let arrOfArguments = []
-
-                  arrOfArguments.push(pollName)
-                  arrOfArguments.push(pollDescription)
-                  arrOfArguments.push(pollOptionsInput)
-                  
-                  if(type !== "Ranked") {
-
-                    arrOfArguments.push(pollMaxVotesInput)
-
-                    if(type === "Regular") {
-
-                      if(costsMoney) {
-                        arrOfArguments.push(pollVoteCostInput)
-                      } else if (!costsMoney) {
-                        arrOfArguments.push(0)
-                      }
-                    }
-                    arrOfArguments.push(returnMoneyOnCompletionInput)
-                  }
-
-                  arrOfArguments.push(pollPrivatePollInput)
-                  if(pollPrivatePollInput) {
-                    arrOfArguments.push(pollRestrictedVotersArrayInput)
-                  } else if(!pollPrivatePollInput) {
-                    arrOfArguments.push([])
-                  }
-
-                  if(type !== "Ranked") {
-                    if(returnMoneyOnCompletionInput) {
-                      arrOfArguments.push("0x0000000000000000000000000000000000000000")
-                    } else if (!returnMoneyOnCompletionInput) {
-                      if(sendFundsToMe) {
-                        arrOfArguments.push(account)
-                      } else if (!sendFundsToMe) {
-                        arrOfArguments.push(pollRecipientInput)
-                      }
-                      
-                    }
-                    
-                  }
-                  talkToContractInteraction(type, true, "createPoll", arrOfArguments, "Creating transaction and sending to network...")
-                  clearPollData()
-                  changeShowManagedOwnedPolls(true)
-                  
-                }}>
-                  <h1 className="text-center"> Let's Double Check! </h1>
-
-                  <div className="card mb-4 text-center">
-                    
-                    <p> {"Poll Name: " + pollName} </p>
-                    <p> {"Description: " + pollDescription} </p>
-                    <p> {"Selectable Options: " + pollOptionsInput} </p>
-                    {type === "Ranked"
-                      || <div>
-                          <p> {"Maximum amount of votes per voter: " + pollMaxVotesInput} </p>
-                          {type === "Regular"
-                            ? <div>
-                                  {costsMoney
-                                    ? <div>
-                                        <p>{"Cost per vote in VDA: " + pollVoteCostInput}</p>
-                                        {returnMoneyOnCompletionInput
-                                          ? <p> {"Return money to voters when poll ends: " + returnMoneyOnCompletionInput} </p>
-                                          : <div>
-                                              <p> {"Return money to voters when poll ends: " + returnMoneyOnCompletionInput} </p>
-                                              {sendFundsToMe
-                                                ? <p> {"Recipient of VDA spent on winning option: " + account} </p>
-                                                : <p> {"Recipient of VDA spent on winning option: " + pollRecipientInput} </p>
-                                              }
-                                            </div>
-
-                                        }
-                                      </div>
-                                    : <p> Cost per vote in VDA: 0 </p>
-                                  }
-                               </div>
-                            : <div>
-                                {returnMoneyOnCompletionInput
-                                  ? <p> {"Return money to voters when poll ends: " + returnMoneyOnCompletionInput} </p>
-                                  : <div>
-                                      <p> {"Return money to voters when poll ends: " + returnMoneyOnCompletionInput} </p>
-                                      {sendFundsToMe
-                                        ? <p> {"Recipient of VDA spent on winning option: " + account} </p>
-                                        : <p> {"Recipient of VDA spent on winning option: " + pollRecipientInput} </p>
-                                      }
-                                    </div>
-
-                                }
-                              </div>
-                          }
-                          
-                          
-
-                         </div>
-
-                    }
-
-                    {pollPrivatePollInput
-                      ? <div>
-                          <p> People allowed to vote in this poll: </p>
-                          {pollRestrictedVotersArrayInput.map((address, key) => {
-                            return (
-                            
-                              <li key={key}>{address}</li>
-
-                            )
-                          })}
-                        </div>
-                      : <p> Anyone can vote in this poll. </p>
-                    }
-                  
-
-                  </div>
-                  
-                  <button type="submit" className="btn btn-primary btn-block">Create Poll</button>
-                  
-                  
-
-                </form>
-
-                
-
-                {showManagedOwnedPolls
-                  &&<div>
-                      <p>&nbsp;</p>
-                      <button className="btn btn-primary btn-block" onClick = {() => navigate("/app/owned")}>Managed Owned Polls</button>
-                    </div>
-                }
-
-                <p>&nbsp;</p>
-
-                <button className="btn btn-primary btn-block" onClick = {() => changePage("More options")}>Back</button>
-
-                <p>&nbsp;</p>
-              </div>
-            </main>
-          </div>
-        </div>
-       
+       <PollCompletion
+        pollName={pollName}
+        pollDescription={pollDescription}
+        pollOptions={pollOptions}
+        pollPrivatePollInput={pollPrivatePollInput}
+        pollRestrictedVotersArrayInput={pollRestrictedVotersArrayInput}
+        pollMaxVotesInput={pollMaxVotesInput}
+        costsMoney={costsMoney}
+        pollVoteCostInput={pollVoteCostInput}
+        returnMoneyOnCompletionInput={returnMoneyOnCompletionInput}
+        pollRecipientInput={pollRecipientInput}
+        sendFundsToMe={sendFundsToMe}
+        contractInteraction={contractInteraction}
+        changeShowManagedOwnedPolls={changeShowManagedOwnedPolls}
+        showManagedOwnedPolls={showManagedOwnedPolls}
+        clearPollData={clearPollData}
+        changePage={changePage}
+        talkToContractInteraction={talkToContractInteraction}
+        account={account}
+        type={type}
+       ></PollCompletion>
+      )
+    } else {
+      return (
+        <Wrongpage />
       )
     }
   }

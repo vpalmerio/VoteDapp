@@ -19,6 +19,7 @@ import Navbar from './Navbar';
 
 import * as c from './Constants'
 
+// The below is used to enable BigInt in the browser
 /* global BigInt */
 
 class App extends Component {
@@ -770,9 +771,9 @@ class App extends Component {
 
         let voterBalance = this.state.accountBalance
 
-        let eligibleVotesCanPay = Math.floor(voterBalance / votePrice)
+        let eligibleVotesCanPay = BigInt(voterBalance) / votePrice
 
-        if (isNaN(eligibleVotesCanPay) || eligibleVotesCanPay === 0) {
+        if (eligibleVotesCanPay === 0) {
           return ["You cannot pay for any of your votes (" + _votesAvailable + " vote available). Purchase VDA at 'Manage VDA' in the Sidebar.", false]
         }
 

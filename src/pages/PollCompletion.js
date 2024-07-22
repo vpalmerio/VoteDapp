@@ -129,10 +129,8 @@ export default function PollCompletion({
                     : <p> Anyone can vote in this poll. </p>
                 }
                 
-                </div>
-                <div className="center-content">     
-                    <button type="submit" className="btn btn-primary btn-block">Create Poll</button>
                 </div> 
+                <Button buttonType='submit' className="btn btn-primary btn-block">Create Poll</Button>
             </form>
 
             {showManagedOwnedPolls

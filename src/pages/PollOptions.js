@@ -68,13 +68,8 @@ export default function PollOptions({ pollOptions, changePollOptions, changePage
                 placeholder="Ex. yes"
               />
             </div>
-
-            <p>&nbsp;</p>
-
-            <div className='center-content'>
-              <button type="submit" className="btn btn-primary btn-block">Add option</button>
-            </div>
-
+            <p></p>
+            <Button buttonType="submit" text='Add Option'></Button>
           </form>
 
           <p>&nbsp;</p>

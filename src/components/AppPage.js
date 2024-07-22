@@ -1,6 +1,12 @@
 import {Helmet} from "react-helmet";
 
 export default function AppPage(props) {
+
+    let maxWidth = '500px'
+    if (props.maxWidth !== undefined) {
+        maxWidth = props.maxWidth
+    }
+
     return (
         <div className="container-fluid mt-5">
             <Helmet>
@@ -8,8 +14,8 @@ export default function AppPage(props) {
                 <meta name="description" content={props.description} />
             </Helmet>
             <div className="center-content">
-                <main role="main" className="col-lg-12 ml-auto mr-auto" style={{ maxWidth: '500px' }}>
-                    <div className="content mr-auto ml-auto">
+                <main role="main" className="col-lg-12" style={{ maxWidth: maxWidth}}>
+                    <div className="content">
 
                         {props.children}
 

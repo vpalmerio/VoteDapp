@@ -11,8 +11,7 @@ import Button from '../components/Button'
 import ReturnMoneyInfo from '../components/ReturnMoneyInfo'
 import DisplayVotes from '../components/DisplayVotes'
 import BackButton from '../components/BackButton'
-
-import loader from '../media/loader.png'
+import LoadScreen from '../components/LoadScreen'
 
 import * as c from '../components/Constants'
 
@@ -66,29 +65,16 @@ export default function Getpollinfo ({ account, contractInteraction, loadSpecifi
   
     const [selectedOption, changeSelectedOption] = React.useState("Choose an option")
     
-    console.log(poll)
-  
       if(poll === undefined) {
   
         refreshData(name)
   
         return(
-  
-          <div id="loader" className="text-center mt-5">
-            <Helmet>
-              <title>{name}</title>
-              <meta name="description" content={"Info about: '" + name + "'"} />
-              
-            </Helmet>
-            <p>Loading poll...</p>
-            <img 
-              src={loader} 
-              alt="Ballot Box" 
-              width="64"
-              height="64"
-            />
-          </div>
-  
+            <LoadScreen
+                name = {name}
+                description = {"Info about: '" + name + "'"}
+                text = {"Loading poll..."}
+            ></LoadScreen>
         )
       } else if(poll === false) {
         return(

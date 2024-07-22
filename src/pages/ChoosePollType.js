@@ -27,7 +27,7 @@ export default function ChoosePollType() {
     
           <p>&nbsp;</p>
           <div className="text-center">
-            <button className="btn btn-link btn-sm pt-0" onClick = {() => navigate("/polldesc")}>What are these?</button>
+            <button className="btn btn-link btn-sm pt-0" onClick = {() => navigate(c.POLL_DESC_LINK)}>What are these?</button>
           </div>
     
           <p>&nbsp;</p>

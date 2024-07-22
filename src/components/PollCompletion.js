@@ -1,6 +1,7 @@
 import AppPage from "./AppPage"
 import Button from "./Button"
 
+import * as c from "./Constants"
 
 export default function PollCompletion({ 
     pollName, pollDescription, pollOptions, pollMaxVotesInput, pollVoteCostInput, 
@@ -23,11 +24,11 @@ export default function PollCompletion({
                 arrOfArguments.push(pollDescription)
                 arrOfArguments.push(pollOptions)
                 
-                if(type !== "Ranked") {
+                if(type !== c.RANKED_POLL_TYPE) {
 
                 arrOfArguments.push(pollMaxVotesInput)
 
-                if(type === "Regular") {
+                if(type === c.REGULAR_POLL_TYPE) {
 
                     if(costsMoney) {
                     arrOfArguments.push(pollVoteCostInput)
@@ -45,7 +46,7 @@ export default function PollCompletion({
                 arrOfArguments.push([])
                 }
 
-                if(type !== "Ranked") {
+                if(type !== c.RANKED_POLL_TYPE) {
                 if(returnMoneyOnCompletionInput) {
                     arrOfArguments.push("0x0000000000000000000000000000000000000000")
                 } else if (!returnMoneyOnCompletionInput) {
@@ -70,10 +71,10 @@ export default function PollCompletion({
                 <p> {"Poll Name: " + pollName} </p>
                 <p> {"Description: " + pollDescription} </p>
                 <p> {"Selectable Options: " + pollOptions} </p>
-                {type === "Ranked"
+                {type === c.RANKED_POLL_TYPE
                     || <div>
                         <p> {"Maximum amount of votes per voter: " + pollMaxVotesInput} </p>
-                        {type === "Regular"
+                        {type === c.REGULAR_POLL_TYPE
                         ? <div>
                                 {costsMoney
                                 ? <div>

@@ -2,7 +2,6 @@ import React from 'react';
 
 import AppPage from './AppPage'
 import Button from './Button'
-import BackButton from './BackButton'
 
 export default function Polldesc({ pollDescription, changePollDescription, changePage }) {
 
@@ -15,8 +14,8 @@ export default function Polldesc({ pollDescription, changePollDescription, chang
 
     return (
         <AppPage
-          title="Create a poll!"
-          description="Create your own customizable poll here!"
+          title="Write a short description"
+          description="Write a short description for your poll"
         >
           <p>&nbsp;</p>
           <div className='text-center'>

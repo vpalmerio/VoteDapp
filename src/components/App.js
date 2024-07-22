@@ -17,6 +17,10 @@ import Polldesc from './PollTypeDesc'
 import withRouter from './withRouter'
 import Navbar from './Navbar';
 
+import * as c from './Constants'
+
+/* global BigInt */
+
 class App extends Component {
 
   async componentDidMount() {
@@ -102,11 +106,11 @@ class App extends Component {
     const DappStorage = new web3.eth.Contract(VoteDappStorage, storageAddr)
 
 
-    DappRegular.type = "Regular"
+    DappRegular.type = c.REGULAR_POLL_TYPE
 
-    DappQuadratic.type = "Quadratic"
+    DappQuadratic.type = c.QUADRATIC_POLL_TYPE
 
-    DappRanked.type = "Ranked"
+    DappRanked.type = c.RANKED_POLL_TYPE
 
 
     DappRanked.abi = VoteDappRanked.abi
@@ -181,7 +185,7 @@ class App extends Component {
 
               poll.name = listofPollsReg[i]
 
-              poll.type = "Regular"
+              poll.type = c.REGULAR_POLL_TYPE
 
               poll.typeState = this.state.DappRegular
 
@@ -271,7 +275,7 @@ class App extends Component {
 
               poll.name = listofPollsQuadratic[i]
 
-              poll.type = "Quadratic"
+              poll.type = c.QUADRATIC_POLL_TYPE
 
               poll.typeState = this.state.DappQuadratic
 
@@ -359,7 +363,7 @@ class App extends Component {
 
             poll.name = listofPollsRanked[i]
 
-            poll.type = "Ranked"
+            poll.type = c.RANKED_POLL_TYPE
 
             poll.typeState = this.state.DappRanked
 
@@ -444,19 +448,19 @@ class App extends Component {
       
       if(poll.name !== undefined) {
 
-        if(poll.type === "Regular") {
+        if(poll.type === c.REGULAR_POLL_TYPE) {
           const votesUsed = await poll.typeState.methods.trackTotalVotes(poll.name, this.state.account).call()
 
           if (votesUsed > 0) {
             poll.participated = true
           }
-        } else if(poll.type === "Quadratic") {
+        } else if(poll.type === c.QUADRATIC_POLL_TYPE) {
           const votesUsed = await poll.typeState.methods.trackTotalPayments(poll.name, this.state.account).call()
 
           if (votesUsed > 0) {
             poll.participated = true
           }
-        } else if(poll.type === "Ranked") {
+        } else if(poll.type === c.RANKED_POLL_TYPE) {
 
           const arrayofChoices = await poll.typeState.methods.trackSpecificVotes(poll.name, this.state.account).call()
 
@@ -473,7 +477,7 @@ class App extends Component {
         }
 
         if (poll.open === false) {
-          if(poll.type !== "Ranked") {
+          if(poll.type !== c.RANKED_POLL_TYPE) {
             poll.moneyOwed = await poll.typeState.methods.checkGetYourMoney(poll.name).call()
           }
         } else {
@@ -536,11 +540,11 @@ class App extends Component {
 
     let self = this
 
-    if(typeState === "Regular") {
+    if(typeState === c.REGULAR_POLL_TYPE) {
       typeState = this.state.DappRegular
-    } else if (typeState === "Quadratic") {
+    } else if (typeState === c.QUADRATIC_POLL_TYPE) {
       typeState = this.state.DappQuadratic
-    } else if (typeState === "Ranked") {
+    } else if (typeState === c.RANKED_POLL_TYPE) {
       typeState = this.state.DappRanked
     } else if (typeState === "Storage") {
       typeState = this.state.DappStorage
@@ -640,11 +644,11 @@ class App extends Component {
     
     this.setState({ loading: true })
 
-    //prevents error "this.setState is not a function"
+    //prevents error "this.setState is not a function" in the .once and .on functions
     let self = this
 
-    if (poll.type === "Regular") {
-      let payment = poll.cost * votes
+    if (poll.type === c.REGULAR_POLL_TYPE) {
+      let payment = poll.cost * BigInt(votes)
       if (payment > 0) {
         this.setState({ loadingDescription: "Sending approve transaction..." })
                                             //make sure this address thing works
@@ -681,7 +685,7 @@ class App extends Component {
         })
 
       }
-    } else if (poll.type === "Quadratic") {
+    } else if (poll.type === c.QUADRATIC_POLL_TYPE) {
 
         this.setState({ loadingDescription: "Sending approve transaction..." })
 
@@ -709,7 +713,7 @@ class App extends Component {
         .on('error', function(error) {
         self.setState({ loading: false, loadingDescription: "Loading..."})
         })
-    } else if (poll.type === "Ranked") {
+    } else if (poll.type === c.RANKED_POLL_TYPE) {
 
       this.setState({ loadingDescription: "Creating transaction (to vote) and sending to network..." })
 
@@ -742,7 +746,7 @@ class App extends Component {
 
     }
     
-    if (poll.type === "Regular") {
+    if (poll.type === c.REGULAR_POLL_TYPE) {
 
       let votesUsed = await this.state.DappRegular.methods.trackTotalVotes(poll.name, this.state.account).call()
 
@@ -779,7 +783,7 @@ class App extends Component {
         }
       }
 
-    } else if (poll.type === "Quadratic") {
+    } else if (poll.type === c.QUADRATIC_POLL_TYPE) {
 
       let totalPayments = await this.state.DappQuadratic.methods.trackTotalPayments(poll.name, this.state.account).call()
 
@@ -819,7 +823,7 @@ class App extends Component {
 
       return ["Failure to check eligibility", false]
       
-    } else if (poll.type === "Ranked") {
+    } else if (poll.type === c.RANKED_POLL_TYPE) {
 
       if (poll.participated) {
         return ["You already voted and are not allowed to vote again.", false]
@@ -851,7 +855,7 @@ class App extends Component {
     //find previousVotes
     poll.previousVotes = []
 
-    if(poll.type === "Regular") {
+    if(poll.type === c.REGULAR_POLL_TYPE) {
 
       for(let u = 0; u<poll.options.length; u++) {
 
@@ -861,7 +865,7 @@ class App extends Component {
 
       }
 
-    } else if (poll.type === "Quadratic") {
+    } else if (poll.type === c.QUADRATIC_POLL_TYPE) {
 
       for(let u = 0; u<poll.options.length; u++) {
 
@@ -872,14 +876,14 @@ class App extends Component {
         poll.previousVotes.push(optionVotes.toString())
 
       }
-    } else if (poll.type === "Ranked") {
+    } else if (poll.type === c.RANKED_POLL_TYPE) {
         poll.previousVotes = await poll.typeState.methods.trackSpecificVotes(poll.name, this.state.account).call()
     }
     
 
     poll.currentResults = []
 
-    if(poll.type === "Regular" || poll.type === "Quadratic") {
+    if(poll.type === c.REGULAR_POLL_TYPE || poll.type === c.QUADRATIC_POLL_TYPE) {
 
       for(let u = 0; u<poll.options.length; u++) {
 
@@ -889,7 +893,7 @@ class App extends Component {
 
       }
 
-    } else if (poll.type === "Ranked") {
+    } else if (poll.type === c.RANKED_POLL_TYPE) {
 
       for(let u = 0; u<poll.options.length; u++) {
 

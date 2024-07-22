@@ -3,13 +3,15 @@ import React from 'react';
 import AppPage from './AppPage'
 import Button from './Button'
 
+import * as c from './Constants'
+
 export default function Polldesc({ pollDescription, changePollDescription, changePage }) {
 
     const [pollDescriptionInput, changePollDescriptionInput] = React.useState(pollDescription)
 
     const nextPage = () => {
         changePollDescription(pollDescriptionInput)
-        changePage("Options")
+        changePage(c.CREATE_POLL_OPTIONS)
     }
 
     return (
@@ -51,7 +53,7 @@ export default function Polldesc({ pollDescription, changePollDescription, chang
           
           <p>&nbsp;</p>
 
-          <Button text="Back" onClick={() => changePage("Name")}></Button>
+          <Button text="Back" onClick={() => changePage(c.CREATE_POLL_NAME)}></Button>
           <p>&nbsp;</p>
 
         </AppPage>

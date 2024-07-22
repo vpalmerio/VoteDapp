@@ -774,7 +774,7 @@ const Creatingpoll = ({ contractInteraction, isAddress, account, clearPollData }
     )
   } else {
   
-    if(page === "Name") {
+    if(page === c.CREATE_POLL_NAME) {
       return (
         <PollName 
           pollName={pollName}
@@ -783,7 +783,7 @@ const Creatingpoll = ({ contractInteraction, isAddress, account, clearPollData }
           talkToContractInteraction={talkToContractInteraction}
         ></PollName>
       )
-    } else if(page === "Description") {
+    } else if(page === c.CREATE_POLL_DESC) {
       return (
         <PollDesc
           changePage={changePage}
@@ -791,7 +791,7 @@ const Creatingpoll = ({ contractInteraction, isAddress, account, clearPollData }
           pollDescription={pollDescription}
         ></PollDesc>
       )
-    } else if(page === "Options") {
+    } else if(page === c.CREATE_POLL_OPTIONS) {
 
       return (
         <PollOptions
@@ -801,7 +801,7 @@ const Creatingpoll = ({ contractInteraction, isAddress, account, clearPollData }
         ></PollOptions>
         
       )
-    } else if(page === "More features") {
+    } else if(page === c.CREATE_POLL_FEATURES) {
 
       let tempAddressStorage
 
@@ -830,7 +830,7 @@ const Creatingpoll = ({ contractInteraction, isAddress, account, clearPollData }
           account={account}
         ></PollFeatures>
       )
-    } else if(page === "Finish") {
+    } else if(page === c.CREATE_POLL_COMPLETION) {
       return (
        <PollCompletion
         pollName={pollName}

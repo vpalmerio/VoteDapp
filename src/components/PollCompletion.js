@@ -24,39 +24,39 @@ export default function PollCompletion({
                 arrOfArguments.push(pollDescription)
                 arrOfArguments.push(pollOptions)
                 
-                if(type !== c.RANKED_POLL_TYPE) {
+                if (type !== c.RANKED_POLL_TYPE) {
 
-                arrOfArguments.push(pollMaxVotesInput)
+                    arrOfArguments.push(pollMaxVotesInput)
 
-                if(type === c.REGULAR_POLL_TYPE) {
+                if (type === c.REGULAR_POLL_TYPE) {
 
                     if(costsMoney) {
-                    arrOfArguments.push(pollVoteCostInput)
+                        arrOfArguments.push(pollVoteCostInput)
                     } else if (!costsMoney) {
-                    arrOfArguments.push(0)
+                        arrOfArguments.push(0)
                     }
                 }
-                arrOfArguments.push(returnMoneyOnCompletionInput)
+                    arrOfArguments.push(returnMoneyOnCompletionInput)
                 }
 
                 arrOfArguments.push(pollPrivatePollInput)
-                if(pollPrivatePollInput) {
-                arrOfArguments.push(pollRestrictedVotersArrayInput)
-                } else if(!pollPrivatePollInput) {
-                arrOfArguments.push([])
+                
+                if (pollPrivatePollInput) {
+                    arrOfArguments.push(pollRestrictedVotersArrayInput)
+                } else if (!pollPrivatePollInput) {
+                    arrOfArguments.push([])
                 }
 
-                if(type !== c.RANKED_POLL_TYPE) {
-                if(returnMoneyOnCompletionInput) {
-                    arrOfArguments.push("0x0000000000000000000000000000000000000000")
-                } else if (!returnMoneyOnCompletionInput) {
-                    if(sendFundsToMe) {
-                    arrOfArguments.push(account)
-                    } else if (!sendFundsToMe) {
-                    arrOfArguments.push(pollRecipientInput)
+                if (type !== c.RANKED_POLL_TYPE) {
+                    if (returnMoneyOnCompletionInput) {
+                        arrOfArguments.push("0x0000000000000000000000000000000000000000")
+                    } else if (!returnMoneyOnCompletionInput) {
+                        if(sendFundsToMe) {
+                            arrOfArguments.push(account)
+                        } else if (!sendFundsToMe) {
+                            arrOfArguments.push(pollRecipientInput)
+                        }
                     }
-                    
-                }
                 
                 }
                 talkToContractInteraction(type, true, "createPoll", arrOfArguments, "Creating transaction and sending to network...")
@@ -138,13 +138,13 @@ export default function PollCompletion({
             {showManagedOwnedPolls
                 &&<div>
                     <p>&nbsp;</p>
-                    <Button path="/app/owned" text="Managed Owned Polls"></Button>
+                    <Button path={c.OWNED_POLLS_LINK} text="Managed Owned Polls"></Button>
                 </div>
             }
 
             <p>&nbsp;</p>
 
-            <Button text="Back" onClick = {() => changePage("More features")}></Button>
+            <Button text="Back" onClick = {() => changePage(c.CREATE_POLL_FEATURES)}></Button>
 
             <p>&nbsp;</p>
 

@@ -3,6 +3,8 @@ import React from 'react';
 import AppPage from './AppPage'
 import Button from './Button'
 
+import * as c from './Constants'
+
 export default function PollOptions({ pollOptions, changePollOptions, changePage }) {
 
     const [pollOptionsInput, changePollOptionsInput] = React.useState(pollOptions)
@@ -113,7 +115,7 @@ export default function PollOptions({ pollOptions, changePollOptions, changePage
             &&<div> 
                 <Button text='Next' onClick = {() => {
                     changePollOptions(pollOptionsInput)
-                    changePage("More features")
+                    changePage(c.CREATE_POLL_FEATURES)
                 }}></Button>
               </div>
 
@@ -121,7 +123,7 @@ export default function PollOptions({ pollOptions, changePollOptions, changePage
 
           <p>&nbsp;</p>
 
-          <Button text='Back' onClick = {() => changePage("Description")}></Button>
+          <Button text='Back' onClick = {() => changePage(c.CREATE_POLL_DESC)}></Button>
 
           <p>&nbsp;</p>
 

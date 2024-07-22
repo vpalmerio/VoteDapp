@@ -145,7 +145,8 @@ export default function PollFeatures({
                         placeholder="Allowed voters separated by comma and space (ex. 0x01, 0x02, 0x03)"
                         required />
                     </div>
-                    <button type="submit" className="btn btn-primary btn-block">Add addresses</button>
+                    <p></p>
+                    <Button buttonType="submit" text="Add Addresses"></Button>
                 </form>
                 <p>&nbsp;</p>
                 <p> Allowed Addresses </p>

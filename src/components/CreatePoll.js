@@ -137,7 +137,7 @@ export default function CreatePoll ({ contractInteraction, isAddress, account, c
         )
       } else {
         return (
-          <Wrongpage />
+          <WrongPage />
         )
       }
     }

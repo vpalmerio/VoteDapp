@@ -1,10 +1,10 @@
 import React from 'react';
 
-import PollName from './PollName'
-import PollDesc from './PollDesc'
-import PollOptions from './PollOptions'
-import PollFeatures from './PollFeatures'
-import PollCompletion from './PollCompletion'
+import PollName from '../pages/PollName'
+import PollDesc from '../pages/PollDesc'
+import PollOptions from '../pages/PollOptions'
+import PollFeatures from '../pages/PollFeatures'
+import PollCompletion from '../pages/PollCompletion'
 
 import WrongPage from '../pages/WrongPage'
 import * as c from './Constants'

@@ -1,10 +1,10 @@
 import React from 'react';
 
-import AppPage from './AppPage'
-import Button from './Button'
-import BackButton from './BackButton'
+import AppPage from '../components/AppPage'
+import Button from '../components/Button'
+import BackButton from '../components/BackButton'
 
-import * as c from './Constants'
+import * as c from '../components/Constants'
 
 export default function PollName({ pollName, changePollName, changePage, talkToContractInteraction}) {
 

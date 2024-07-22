@@ -1,10 +1,10 @@
 import React from 'react';
 
-import AppPage from './AppPage'
-import Button from './Button'
-import ReturnMoneyWeb from './ReturnMoneyWeb';
+import AppPage from '../components/AppPage'
+import Button from '../components/Button'
+import ReturnMoneyWeb from '../components/ReturnMoneyWeb';
 
-import * as c from './Constants'
+import * as c from '../components/Constants'
 
 export default function PollFeatures({ 
     type, costsMoney, costsMoneyBool, pollVoteCostInput, changeVoteCostInput, 

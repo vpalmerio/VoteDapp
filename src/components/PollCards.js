@@ -4,17 +4,18 @@ import Jdenticon from './Jdenticon.js'
 
 import * as c from './Constants'
 
-export default function PollCards({ pollArray, contractInteraction}) {
+export default function PollCards({ pollArray, contractInteraction, maxWidth = '800px'}) {
+    
     return (
-        <>
+        <div>
             {pollArray.map((poll, key) => {
 
                 var speciallink1 = poll.name.replace(/\?/g, "_question_mark_");
                 var speciallink = speciallink1.replace(/\#/g, "_hashtag_");
 
                 return(
-                <div key={key}>
-                    <div className="card mb-4 bg-dark" style={{ maxWidth: '800px', maxHeight: '300px' }}>
+                <div key={key} className='center-content'>
+                    <div className="card mb-4 bg-dark overflow-auto" style={{ maxWidth: maxWidth, maxHeight: '500px' }}>
                         <div className="card-header">
                         <small className="float-left mt-1 text-white">
                             <p>Name: {poll.name} &nbsp;</p>
@@ -74,6 +75,6 @@ export default function PollCards({ pollArray, contractInteraction}) {
                 </div>
                 )}
             )}
-        </>
+        </div>
     )
 }

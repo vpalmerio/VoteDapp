@@ -13,10 +13,15 @@ export default function Button(props) {
         }
     }
 
+    let buttonType = ''
+    if (props.buttonType !== undefined) {
+        buttonType = props.type
+    }
+
     const navigate = useNavigate()
     return (
         <div className='center-content'>
-            <button className="btn btn-primary btn-block" onClick = {() => handleClick()}>{props.text}</button>
+            <button className="btn btn-primary btn-block" type={buttonType} onClick = {() => handleClick()}>{props.text}</button>
         </div>
     )
 }

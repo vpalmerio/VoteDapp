@@ -2,7 +2,7 @@ import React from 'react';
 
 import loader from '../media/loader.png'
 
-export default function Loadbar(props) {
+export default function LoadBar(props) {
 
     return (
       <div className='row fixed-bottom justify-content-center'>
@@ -12,7 +12,7 @@ export default function Loadbar(props) {
             <small className="navbar-brand">
             <img 
               src={loader} 
-              alt="Ballot Box" 
+              alt="Loading Gif" 
               width="64"
               height="64"
               style={{ marginRight: '15px' }}

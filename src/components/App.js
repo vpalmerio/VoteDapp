@@ -11,7 +11,7 @@ import VoteDappTokenSale from '../abis/VoteDappTokenSale.json'
 
 import Main from './Main'
 import Fakemain from './Fakemain'
-import Loadbar from './loadbar'
+import Loadbar from './LoadBar'
 import Home from './Home'
 import Polldesc from '../pages/PollTypeDesc'
 import withRouter from './withRouter'

@@ -4,6 +4,8 @@ import AppPage from './AppPage'
 import Button from './Button'
 import ReturnMoneyWeb from './ReturnMoneyWeb';
 
+import * as c from './Constants'
+
 export default function PollFeatures({ 
     type, costsMoney, costsMoneyBool, pollVoteCostInput, changeVoteCostInput, 
     returnMoneyOnCompletionInput, changeRMOCI, pollRecipientInput, changePollRecipientInput, 
@@ -25,7 +27,7 @@ export default function PollFeatures({
             <p> Charge money for votes (regular and quadratic only) and/or only allow certain people to vote </p>
           </div>
 
-          {type === "Regular"
+          {type === c.REGULAR_POLL_TYPE
             &&
               <div>
                 <div className="form-group mr-sm-2 text-center">
@@ -76,7 +78,7 @@ export default function PollFeatures({
             </div>
           }
 
-          {type === "Quadratic"
+          {type === c.QUADRATIC_POLL_TYPE
           && <div>
               <div className="form-group mr-sm-2 text-center">
                 <label> Maximum amount of votes for each voter </label>

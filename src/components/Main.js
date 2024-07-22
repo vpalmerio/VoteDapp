@@ -732,8 +732,6 @@ const Managingvda = ({ accountBalance, tokenPrice, contractInteraction, buyToken
 
 const Creatingpoll = ({ contractInteraction, isAddress, account, clearPollData }) => {
 
-  const navigate = useNavigate()
-
   const { type } = useParams()
 
   const talkToContractInteraction = async (typeState, sendBool, functionName, argumentArray, loadingDescription) => {
@@ -768,7 +766,7 @@ const Creatingpoll = ({ contractInteraction, isAddress, account, clearPollData }
     }
   }
 
-  if(type !== "Regular" && type !== "Quadratic" && type !== "Ranked") {
+  if(type !== c.REGULAR_POLL_TYPE && type !== c.QUADRATIC_POLL_TYPE && type !== c.RANKED_POLL_TYPE) {
     return (
 
       <Wrongpage />
@@ -895,14 +893,14 @@ const Getpollinfo = ({ account, contractInteraction, loadSpecificPoll, vote, fin
 
     let finalPrice
 
-    if (poll.type === "Regular") {
-      finalPrice = thisamountofvotesInput * poll.cost
+    if (poll.type === c.REGULAR_POLL_TYPE) {
+      finalPrice = thisamountofvotesInput * Number(poll.cost)
 
-    } else if(poll.type === "Quadratic") {
+    } else if(poll.type === c.QUADRATIC_POLL_TYPE) {
 
       finalPrice = await findCost(pollName, thisamountofvotesInput)
 
-    } else if (poll.type === "Ranked") {
+    } else if (poll.type === c.RANKED_POLL_TYPE) {
       finalPrice = 0
     }
 
@@ -976,7 +974,7 @@ const Getpollinfo = ({ account, contractInteraction, loadSpecificPoll, vote, fin
 
                     {poll.canVote
 
-                      && <div>{poll.type === "Ranked"
+                      && <div>{poll.type === c.RANKED_POLL_TYPE
 
                         ? <div>
 
@@ -1101,12 +1099,12 @@ const Getpollinfo = ({ account, contractInteraction, loadSpecificPoll, vote, fin
                   </p>
                   <p> {"Options: " + poll.displayOptions} </p>
                   
-                  {poll.type === "Ranked"
+                  {poll.type === c.RANKED_POLL_TYPE
                     || <div>
 
                       <p> {"Maximum Votes: " + poll.maxVotes} </p>
 
-                      {poll.type === "Regular"
+                      {poll.type === c.REGULAR_POLL_TYPE
                         && <div>
                             <p> {"Vote Cost: " + poll.cost} </p>
                             </div>
@@ -1118,7 +1116,7 @@ const Getpollinfo = ({ account, contractInteraction, loadSpecificPoll, vote, fin
                   
                   {poll.previousVotes.length > 0
                     && <div>
-                      {poll.type === "Ranked"
+                      {poll.type === c.RANKED_POLL_TYPE
                         ? <p> {"Order of options you voted for: " + poll.previousVotes} </p>
 
                         : <div>
@@ -1148,7 +1146,7 @@ const Getpollinfo = ({ account, contractInteraction, loadSpecificPoll, vote, fin
                     </div>
                   }
 
-                  {poll.type === "Ranked"
+                  {poll.type === c.RANKED_POLL_TYPE
                     ?<div className="table-wrapper text-center ml-auto mr-auto">
                       <table>
                         <thead>
@@ -1224,9 +1222,9 @@ const Getpollinfo = ({ account, contractInteraction, loadSpecificPoll, vote, fin
                   </p>
 
 
-                  {poll.type === "Ranked"
+                  {poll.type === c.RANKED_POLL_TYPE
                     || <div>
-                        {poll.type==="Regular"
+                        {poll.type===c.REGULAR_POLL_TYPE
                           ? <div>
                               {poll.cost > 0
                                 && <div> 

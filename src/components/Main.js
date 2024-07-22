@@ -6,6 +6,7 @@ import { useNavigate, useParams } from "react-router-dom"
 import DropdownButton from 'react-bootstrap/DropdownButton'
 import Dropdown from 'react-bootstrap/Dropdown'
 
+import AppHome from '../pages/AppHome'
 import ChoosePollType from '../pages/ChoosePollType'
 import CreatePoll from './CreatePoll'
 import WrongPage from '../pages/WrongPage'
@@ -14,10 +15,12 @@ import GetPollInfo from '../pages/GetPollInfo'
 import AppPage from './AppPage'
 import Navbar from './Navbar'
 import Button from './Button'
-import ballotbox from '../media/ballotbox2.png'
+import ballotbox from '../media/ballotbox.png'
 import Jdenticon from './Jdenticon.js'
 import ReturnMoneyInfo from './ReturnMoneyInfo'
 import DisplayVotes from './DisplayVotes'
+import PollCards from './PollCards'
+import LoadScreen from './LoadScreen'
 
 import {Helmet} from "react-helmet"
 
@@ -35,7 +38,7 @@ export default function Main(props) {
             <Navbar account={props.account} accountBalance={props.accountBalance} loadingBlockchain={props.loadingBlockchain} />
             <Routes>
               <Route path={c.APP_LINK} element = {
-                <Apphome
+                <AppHome
                   contractInteraction={props.contractInteraction}
                   getRecentPolls={props.getRecentPolls}
                   homePagePolls={props.homePagePolls}
@@ -111,127 +114,6 @@ export default function Main(props) {
        
       );
 }
-
-const Apphome = ({ contractInteraction, getRecentPolls, homePagePolls }) => {
-  
-  const navigate = useNavigate()
-
-  if(homePagePolls===null) {
-    getRecentPolls()
-    return (
-
-      <div id="loader" className="text-center mt-5">
-        <Helmet>
-          <title>Home</title>
-          <meta name="description" content="Create your first poll or check out some new ones!" />
-        </Helmet>
-        <p>Loading polls...</p>
-        <img 
-          src={loader} 
-          alt="Ballot Box" 
-          width="64"
-          height="64"
-        />
-      </div>
-
-    )
-  } else {
-
-  return (
-
-  <div className="container-fluid mt-5">
-    <Helmet>
-      <title>Home </title>
-      <meta name="description" content="Create your first poll or check out some new ones!" />
-    </Helmet>
-    <div className="center-content">
-      <main role="main" className="ml-auto mr-auto" style={{ maxWidth: '800px' }}>
-        <div className="content mr-auto ml-auto">
-            <div className="text-center">
-              <img 
-                src={ballotbox} 
-                alt="Ballot Box" 
-                width="474"
-                height="474"
-              />
-            </div>
-            <p>&nbsp;</p>
-            <div className='center-content'>
-            <button className="btn btn-primary btn-block mr-auto ml-auto" style={{ maxWidth: '550px' }} onClick = {() => navigate("/app/choose-poll-type")}>Create Poll</button>
-            </div>
-          <p>&nbsp;</p>
-
-          {homePagePolls.length > 0
-            && <p className="text-center"> Recently Created Polls </p>
-          }
-          
-
-          {homePagePolls.map((poll, key) => {
-
-          var speciallink1 = poll.name.replace(/\?/g, "_question_mark_");
-          var speciallink = speciallink1.replace(/\#/g, "_hashtag_");
-
-          return(
-            <div key={key} className="">
-            <div className="card mb-4 bg-dark" style={{ maxWidth: '600px', maxHeight: '300px' }}>
-              <div className="card-header">
-                <small className="float-left mt-1 text-white">
-                  <p>Name: {poll.name} &nbsp;</p>
-                </small>
-                
-                <small className="float-right mt-1 text-white">
-                  <p>Type: {poll.type}</p>
-                </small>
-                
-              </div>
-              <ul className="list-group list-group-flush">
-                <li className="list-group-item bg-dark text-white">
-                  {poll.description === ""
-                    ||<p>Description: {poll.description}</p>
-                  }
-                  
-                  
-                  <p>Options: {poll.displayOptions}</p>
-
-                  {poll.open
-                    ? <div>{poll.canVote
-                          || <p>You can't vote in this poll</p>
-                      }</div>
-                    : <p> Poll has ended. The winner was {poll.winner.replace(', ', '')}. </p>
-                  }
-                  <button className="btn btn-primary btn-block ml-auto mr-auto" style={{ maxWidth: '200px' }} onClick = {() => navigate("/app/polls/" + speciallink)}>More Info</button>
-                  {poll.open
-                    || <div>
-                        {poll.moneyOwed > 0
-
-                          && <button className="btn btn-primary btn-block" style={{ maxWidth: '550px' }} onClick = {() => contractInteraction
-                              (poll.typeState, true, "getYourMoney", [poll.name], "Creating transaction and sending to network...")
-                              }>Retrieve Spent Tokens</button>
-
-                        }
-                      </div>
-                    }
-                  </li>
-                  <li className="list-group-item py-2 bg-dark">
-                    
-                    <small className="text-muted">
-                      <Jdenticon size="30" value={poll.owner} />
-                      <span></span>
-                    {poll.owner}</small>
-                  </li>
-                </ul>
-              </div>
-              </div>
-            )
-          })}
-          
-          </div>
-        </main>
-      </div>
-    </div>
-  )
-  }
-};
 
 const Ownedpolls = ({ pollNames, polls, contractInteraction, loadPollData }) => {
   
@@ -454,7 +336,6 @@ const Participatedpolls = ({ pollNames, polls, contractInteraction, loadPollData
                       </div>
                     }
                     <button className="btn btn-primary btn-block ml-auto mr-auto" style={{ maxWidth: '200px' }} onClick = {() => navigate("/app/polls/" + speciallink)}>More Info</button>
-
 
                     {poll.open
                       || <div>

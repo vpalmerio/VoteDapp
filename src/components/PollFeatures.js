@@ -171,19 +171,19 @@ export default function PollFeatures({
                         window.alert("The cost per vote must be greater than 0, or you can uncheck 'Charge money for votes' for free voting.")
                     } else {
 
-                    if (!returnMoneyOnCompletionInput && costsMoney) {
-                        let tempRecipientArr = [pollRecipientInput]
-                        
-                        let checkAddrs = isAddress(tempRecipientArr)
+                      if (!returnMoneyOnCompletionInput && costsMoney) {
+                          let tempRecipientArr = [pollRecipientInput]
+                          
+                          let checkAddrs = isAddress(tempRecipientArr)
 
-                        if(!checkAddrs[1]) {
-                        window.alert("Invalid address detected: " + checkAddrs[0])
-                        } else if(checkAddrs[1]) {
-                        changePage("Finish")
-                        }
-                    } else {
-                        changePage("Finish")
-                    }
+                          if(!checkAddrs[1]) {
+                            window.alert("Invalid address detected: " + checkAddrs[0])
+                          } else if(checkAddrs[1]) {
+                            changePage(c.CREATE_POLL_COMPLETION)
+                          }
+                      } else {
+                          changePage(c.CREATE_POLL_COMPLETION)
+                      }
                     }
                 }
             
@@ -191,7 +191,7 @@ export default function PollFeatures({
 
             <p>&nbsp;</p>
 
-            <Button text="Back" onClick = {() => changePage("Options")}>Back</Button>
+            <Button text="Back" onClick = {() => changePage(c.CREATE_POLL_OPTIONS)}>Back</Button>
 
             <p>&nbsp;</p>
 

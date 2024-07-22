@@ -1,4 +1,5 @@
 
+// Poll types (used across the app)
 export const REGULAR_POLL_TYPE = "regular"
 export const QUADRATIC_POLL_TYPE = "quadratic"
 export const RANKED_POLL_TYPE = "ranked"
@@ -24,3 +25,10 @@ export const CREATE_POLL_TYPE_LINK = APP_LINK + "/create-poll"
 export const CREATE_POLL_TYPE_LINK_REGULAR = CREATE_POLL_TYPE_LINK + "/" + REGULAR_POLL_TYPE
 export const CREATE_POLL_TYPE_LINK_QUADRATIC = CREATE_POLL_TYPE_LINK + "/" + QUADRATIC_POLL_TYPE
 export const CREATE_POLL_TYPE_LINK_RANKED = CREATE_POLL_TYPE_LINK + "/" + RANKED_POLL_TYPE
+
+// Create poll pages
+export const CREATE_POLL_NAME = "Name"
+export const CREATE_POLL_DESC = "Description"
+export const CREATE_POLL_OPTIONS = "Options"
+export const CREATE_POLL_FEATURES = "Features"
+export const CREATE_POLL_COMPLETION = "Completion"

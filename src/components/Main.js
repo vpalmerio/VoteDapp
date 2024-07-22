@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom"
 import { useNavigate, useParams } from "react-router-dom"
@@ -6,11 +6,11 @@ import { useNavigate, useParams } from "react-router-dom"
 import DropdownButton from 'react-bootstrap/DropdownButton'
 import Dropdown from 'react-bootstrap/Dropdown'
 
-import AppPage from './AppPage'
 import ChoosePollType from '../pages/ChoosePollType'
 import CreatePoll from './CreatePoll'
 import WrongPage from '../pages/WrongPage'
 
+import AppPage from './AppPage'
 import Navbar from './Navbar'
 import Button from './Button'
 import ballotbox from './ballotbox2.png'
@@ -99,38 +99,13 @@ export default function Main(props) {
               } />
 
               <Route path="*" element = {
-                <Wrongpage/>
+                <WrongPage/>
               } />
               </Routes>
             </main>
           </div>
        
       );
-}
-
-const Wrongpage = () => {
-
-  const navigate = useNavigate()
-
-  return (
-    <div className="container-fluid mt-5">
-      <div className="center-content">
-        <main role="main" className="col-lg-12 ml-auto mr-auto" style={{ maxWidth: '500px' }}>
-          <div className="content mr-auto ml-auto">
-
-          <h1 className="text-center">Uh oh!</h1>
-          <h1 className="text-center">This page doesn't exist!</h1>
-          
-          <p>&nbsp;</p>
-          <div className='center-content'>
-            <button className="btn btn-primary btn-block" onClick = {() => navigate('/app')}>Back to Safety</button>
-          </div>
-
-          </div>
-        </main>
-      </div>
-    </div>
-  )
 }
 
 const Apphome = ({ contractInteraction, getRecentPolls, homePagePolls }) => {

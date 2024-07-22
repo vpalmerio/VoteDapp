@@ -13,12 +13,12 @@ import WrongPage from '../pages/WrongPage'
 import AppPage from './AppPage'
 import Navbar from './Navbar'
 import Button from './Button'
-import ballotbox from './ballotbox2.png'
+import ballotbox from '../media/ballotbox2.png'
 import Jdenticon from './Jdenticon.js'
 
 import {Helmet} from "react-helmet"
 
-import loader from './loader.png'
+import loader from '../media/loader.png'
 
 import * as c from './Constants'
 

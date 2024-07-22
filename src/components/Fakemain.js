@@ -12,7 +12,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 import {Helmet} from "react-helmet";
 
-import loader from './loader.png'
+import loader from '../media/loader.png'
 
 export default function Fakemain(props) { 
 

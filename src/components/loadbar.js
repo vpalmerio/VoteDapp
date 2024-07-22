@@ -1,6 +1,6 @@
 import React from 'react';
 
-import loader from './loader.png'
+import loader from '../media/loader.png'
 
 export default function Loadbar(props) {
 

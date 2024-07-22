@@ -1,9 +1,9 @@
 import React from 'react';
 
-import AppPage from './AppPage'
-import Button from './Button'
+import AppPage from '../components/AppPage'
+import Button from '../components/Button'
 
-import * as c from './Constants'
+import * as c from '../components/Constants'
 
 export default function PollOptions({ pollOptions, changePollOptions, changePage }) {
 

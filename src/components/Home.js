@@ -1,8 +1,8 @@
 import React from 'react';
 
-import createpoll1 from './createpoll1.gif'
-import createpoll2 from './createpoll2.gif'
-import createpoll3 from './createpoll3.gif'
+import createpoll1 from '../media/createpoll1.gif'
+import createpoll2 from '../media/createpoll2.gif'
+import createpoll3 from '../media/createpoll3.gif'
 
 export default function Home() {
 

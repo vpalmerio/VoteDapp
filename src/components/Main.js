@@ -11,7 +11,7 @@ import ChoosePollType from '../pages/ChoosePollType'
 import CreatePoll from './CreatePoll'
 import WrongPage from '../pages/WrongPage'
 import GetPollInfo from '../pages/GetPollInfo'
-import ParticipatedPolls from '../pages/ParticipatedPolls'
+import DisplayPolls from '../pages/DisplayPolls'
 
 import AppPage from './AppPage'
 import Navbar from './Navbar'
@@ -56,12 +56,17 @@ export default function Main(props) {
               } />
 
               <Route path={c.PARTICIPATED_POLLS_LINK} element = {
-                <ParticipatedPolls
+                <DisplayPolls
                   pollNames={props.pollNames}
                   polls={props.polls}
                   contractInteraction={props.contractInteraction}
                   loadPollData={props.loadPollData}
-                />
+                  pollProperty={"participated"}
+                  pageTitle="Polls You Participated In"
+                  pageDescription="Review the polls that you participated in!"
+                  noPollDescription="You have not participated in any polls"
+                  pollsExistDescription="Polls You Participated In"
+                ></DisplayPolls>
               } />
 
               <Route path={c.EXPLORE_LINK} element = {

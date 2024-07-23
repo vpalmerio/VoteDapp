@@ -4,9 +4,13 @@ import AppPage from '../components/AppPage'
 import LoadScreen from '../components/LoadScreen'
 import PollCards from '../components/PollCards'
 
-export default function Participatedpolls ({ pollNames, polls, contractInteraction, loadPollData }) {
+export default function DisplayPolls ({ 
+    pollNames, polls, contractInteraction, loadPollData, 
+    pollProperty, pageTitle, pageDescription,
+    noPollDescription, pollsExistDescription 
+}) {
   
-    const [hasParticipated, changeHasParticipated] = React.useState(false)
+    /* Workaround is used to update state because react doesn't detect changes in arrays */
     const [workaround, changeWorkAround] = React.useState(false)
     const [pollArray, changePollArray] = React.useState([])
   
@@ -14,11 +18,8 @@ export default function Participatedpolls ({ pollNames, polls, contractInteracti
       var array = []
       for(let i = 0; i < pollNames.length; i++) {
         let poll = polls.get(pollNames[i])
-        if(poll.participated === true) {
+        if(poll[pollProperty] === true) {
           array.push(poll)
-          if (!hasParticipated) {
-            changeHasParticipated(true)
-          }
         }
       }
       changePollArray(array)
@@ -29,8 +30,8 @@ export default function Participatedpolls ({ pollNames, polls, contractInteracti
       loadPollData()
       return (
         <LoadScreen
-          name = "Polls You Participated In"
-          description = "Review the polls that you participated in!"
+          name = {pageTitle}
+          description = {pageDescription}
           text = "Loading polls..."
         ></LoadScreen>
       )
@@ -38,15 +39,15 @@ export default function Participatedpolls ({ pollNames, polls, contractInteracti
   
       return (
         <AppPage
-          title='Polls You Participated In'
-          description='Review the polls that you participated in!'
+          title= {pageTitle}
+          description={pageDescription}
           maxWidth='800px'
         >
-          {hasParticipated
+          {pollArray.length > 0
             ? <div>
                 <div className="text-center">
                   <p>&nbsp;</p>
-                  <p className="">Polls You Participated In</p>
+                  <p>{pollsExistDescription}</p>
                 </div>
                 <PollCards
                   pollArray={pollArray}
@@ -54,7 +55,7 @@ export default function Participatedpolls ({ pollNames, polls, contractInteracti
                   maxWidth='500px'
                 ></PollCards>
               </div>
-            : <p className="text-center">You have not participated in any polls</p>
+            : <p className="text-center">{noPollDescription}</p>
           }
           <p>&nbsp;</p>
         </AppPage>

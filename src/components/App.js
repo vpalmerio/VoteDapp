@@ -15,7 +15,8 @@ import Loadbar from './LoadBar'
 import Home from '../pages/Home'
 import Polldesc from '../pages/PollTypeDesc'
 import withRouter from './withRouter'
-import Navbar from './Navbar';
+import Navbar from './Navbar'
+import WrongPage from '../pages/WrongPage'
 
 import * as c from './Constants'
 
@@ -1029,18 +1030,7 @@ class App extends Component {
       );
     } else {
       return (
-        <div className="container-fluid">
-          <p></p>
-          <section className="jumbotron bg-primary">
-            <div className="container text-center">
-              <h1 className="display-4">Uh Oh!</h1>
-              <p className="lead text-white">Looks like this page doesn't exist...</p>
-            </div>
-          </section>
-          <div className="text-center">
-            <a className="btn btn-primary" href="/">Home</a>
-          </div>
-        </div>
+        <WrongPage/>
       )
     }
   }

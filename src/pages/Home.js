@@ -7,6 +7,8 @@ import createpoll3 from '../media/createpoll3.gif'
 import Jumbotron from '../components/Jumbotron'
 import Footer from '../components/Footer'
 
+import * as c from '../components/Constants'
+
 export default function Home() {
 
 	return(
@@ -18,7 +20,7 @@ export default function Home() {
         smallText='Decentralized, free, open. VoteDapp is an easy to use poll interface on the ethereum network for anyone, anywhere.'
       ></Jumbotron>
       <div className="text-center py-4">
-    		<a className="btn btn-primary" href="/app">Head to the App</a>
+    		<a className="btn btn-primary" href={c.APP_LINK}>Head to the App</a>
     	</div>
 
       <section className="py-5">
@@ -62,7 +64,7 @@ export default function Home() {
               <p>Rank your votes from first to last, allowing you to express your opinion more cleary and effectively.</p>
             </div>
           </div>
-          <a className="btn btn-primary" href="/polldesc">Learn more</a>
+          <a className="btn btn-primary" href={c.POLL_DESC_LINK}>Learn more</a>
         </div>
       </section>
     

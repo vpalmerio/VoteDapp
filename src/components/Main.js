@@ -13,6 +13,7 @@ import CreatePoll from './CreatePoll'
 import WrongPage from '../pages/WrongPage'
 import GetPollInfo from '../pages/GetPollInfo'
 import DisplayPolls from '../pages/DisplayPolls'
+import ManageVDA from '../pages/ManageVDA'
 
 import AppPage from './AppPage'
 import Navbar from './Navbar'
@@ -85,7 +86,7 @@ export default function Main(props) {
               } />
 
               <Route path={c.MANAGE_VDA_LINK} element = {
-                <Managingvda
+                <ManageVDA
                   accountBalance={props.accountBalance}
                   tokenPrice={props.tokenPrice}
                   contractInteraction={props.contractInteraction}
@@ -127,55 +128,3 @@ export default function Main(props) {
        
       );
 }
-
-const Managingvda = ({ accountBalance, tokenPrice, contractInteraction, buyToken, isAddress }) => {
-  
-  const navigate = useNavigate()
-
-  const [amountoftokensInput, changeAOTI] = React.useState(0)
-
-  let tempFinalPrice = tokenPrice * amountoftokensInput
-
-  return (
-    
-    <div className="container-fluid mt-5">
-      <Helmet>
-        <title>Manage your VDA</title>
-        <meta name="description" content="Purchase VDA tokens here!" />
-      </Helmet>
-      <div className="center-content">
-        <main role="main" className="col-lg-12 ml-auto mr-auto" style={{ maxWidth: '500px' }}>
-          <div className="content mr-auto ml-auto">
-            <p>&nbsp;</p>
-              <div className="text-center">
-                <p>Your VDA Balance: {accountBalance}</p>
-                <p>Total Price in Wei: {tempFinalPrice}</p>
-              </div>
-              <form onSubmit={(event) => {
-                event.preventDefault()
-                
-                buyToken(amountoftokensInput)
-              }}>
-                <div className="form-group mr-sm-2">
-                  <input
-                  id="amountoftokens"
-                  type="number"
-                  onChange={(input) => { changeAOTI(input.target.value) }}
-                  className="form-control"
-                  placeholder= {"Cost per token (wei): " + tokenPrice}
-                  required />
-                </div>
-                <div className='center-content mt-4'>
-                  <button type="submit" className="btn btn-primary btn-block">Buy Tokens</button>
-                </div>
-              </form>
-            <p>&nbsp;</p>
-            <div className='center-content'>
-              <button className="btn btn-primary btn-block" onClick = {() => navigate(-1)}>Back</button>
-            </div>
-          </div>
-        </main>
-      </div>
-    </div>
-  )
-};

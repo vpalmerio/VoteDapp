@@ -10,9 +10,9 @@ import VoteDappToken from '../abis/VoteDappToken.json'
 import VoteDappTokenSale from '../abis/VoteDappTokenSale.json'
 
 import Main from './Main'
-import Fakemain from './Fakemain'
+import PlaceholderMain from '../pages/PlaceholderMain'
 import Loadbar from './LoadBar'
-import Home from './Home'
+import Home from '../pages/Home'
 import Polldesc from '../pages/PollTypeDesc'
 import withRouter from './withRouter'
 import Navbar from './Navbar';
@@ -969,7 +969,7 @@ class App extends Component {
     } else if(this.state.loadingBlockchain) {
       return(
         <div>
-          <Fakemain 
+          <PlaceholderMain 
             failedToLoad={this.state.failedToLoad}
             loadingDescription={this.state.loadingDescription}
             changeLoadingBlockchain={this.changeLoadingBlockchain}

@@ -426,7 +426,7 @@ class App extends Component {
   async loadSpecificPoll(pollName) {
 
     if(await this.state.DappStorage.methods.pollNameExists(pollName).call() === false) {
-      return[undefined, false]
+      return [undefined, false]
     } else {
 
       let poll 
@@ -592,32 +592,9 @@ class App extends Component {
     for(let u = 0; u<arrPollNames.length; u++) {
       
       let pollName = arrPollNames[u]
-
-      if(await this.state.DappStorage.methods.pollNameExists(pollName).call() === false) {
-        return[undefined, false]
-      } else {
-
-        var typeStateArray = [this.state.DappRegular, this.state.DappQuadratic, this.state.DappRanked]
-
-        for(var i=0; i<typeStateArray.length; i++) {
-          let owner = await typeStateArray[i].methods.getPollOwner(pollName).call()
-          if(owner !== this.state.nullAddress) {
-            let poll = {}
-            poll.name = pollName
-            poll.owner = owner
-            poll.type = typeStateArray[i].type
-            poll.typeState = typeStateArray[i]
-
-            poll.description = await poll.typeState.methods.getPollDescription(pollName).call()
-
-            const Options = await poll.typeState.methods.requestOptions(pollName).call().catch((err => {console.log("error: ", err)}))
-            poll.displayOptions = Options.join(", ")
-
-            arrPollData.push(poll)
-
-            break
-          }
-        }
+      let poll = (await this.loadSpecificPoll(pollName))[0]
+      if (poll[u] !== undefined) {
+        arrPollData.push(poll)
       }
     }
 

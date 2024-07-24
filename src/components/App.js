@@ -27,10 +27,17 @@ class App extends Component {
   async componentDidMount() {
     let path = this.props.router.location.pathname.substring(0, 4);
     if(path === "/app") {
-      await this.loadWeb3()
-      await this.loadBlockchainData()
+      try {
+        await this.loadWeb3()
+        await this.loadBlockchainData()
+      } catch {
+        this.setState({ loading: true, loadingDescription:
+          "Failed to connect to contracts. Please make sure you have MetaMask or another web3 wallet extension installed and are on the Goerli testnet. Get Goerli testnet eth at https://goerli-faucet.slock.it/. Once properly set up, please refresh the page",
+          failedToLoad: true
+        })
+        return false
+      }
     }
-
   }
 
   async loadWeb3() {
@@ -58,11 +65,10 @@ class App extends Component {
       polls: null
     })
 
-
-
     const web3 = window.web3
     //get account
     const accounts = await web3.eth.getAccounts()
+    console.log("test")
     this.setState({ account: accounts[0] })
 
     var rankedAddr
@@ -93,8 +99,10 @@ class App extends Component {
       storageAddr = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512"
 
     } else {
+      console.log("testing")
       this.setState({ loading: true, loadingDescription:
-       "Failed to connect to contracts. Please make sure you are on the Goerli testnet. Get Goerli testnet eth at https://goerli-faucet.slock.it/."
+       "Failed to connect to contracts. Please make sure you are on the Goerli testnet. Get Goerli testnet eth at https://goerli-faucet.slock.it/.",
+        failedToLoad: true
       })
       return false
     }
@@ -139,6 +147,7 @@ class App extends Component {
     this.setState({ accountBalance: accountBalance.toString(), tokenPrice: tokenPrice.toString() })
 
     this.setState({ loading: false, loadingBlockchain: false, loadingDescription: "Loading..."})
+  
   }
 
   async loadPollData() {
@@ -153,7 +162,6 @@ class App extends Component {
       let polls = new Map()
 
       //if listofPolls.length === undefined, for loop will not run
-
 
       //load regular polls
       const listofPollsReg = await this.state.DappRegular.methods.getPollList().call()
@@ -191,9 +199,7 @@ class App extends Component {
               poll.typeState = this.state.DappRegular
 
               if (owner) {
-
                 poll.owned = true
-
               }
 
               if(participated) {
@@ -211,7 +217,6 @@ class App extends Component {
               if(Options !== undefined) {
 
                 poll.options = Options
-
                 poll.displayOptions = Options.join(", ")
 
               } else {
@@ -234,15 +239,12 @@ class App extends Component {
                 if(concatinatedWinners === ", " || concatinatedWinners === "") {
                   concatinatedWinners = "No one has voted yet."
                 }
-
                 poll.winner = concatinatedWinners
               }
 
               polls.set(listofPollsReg[i], poll)
             }
-            
           }
-        
       }
 
       //load quadratic polls
@@ -299,7 +301,6 @@ class App extends Component {
               if(Options !== undefined) {
                 
                 poll.options = Options
-
                 poll.displayOptions = Options.join(", ")
 
               } else {
@@ -324,14 +325,9 @@ class App extends Component {
 
                 poll.winner = concatinatedWinners
               }
-
-              
-
               polls.set(listofPollsQuadratic[i], poll)
-
             }
           }
-        
       }
 
       const listofPollsRanked = await this.state.DappRanked.methods.getPollList().call()
@@ -408,12 +404,9 @@ class App extends Component {
 
               poll.winner = concatinatedWinners
             }
-
             polls.set(listofPollsRanked[i], poll)
-
           }
         }
-        
       }
 
       this.setState({ polls })
@@ -472,9 +465,7 @@ class App extends Component {
         }
 
         if (poll.owner === this.state.account) {
-
           poll.owned = true
-
         }
 
         if (poll.open === false) {
@@ -490,7 +481,6 @@ class App extends Component {
         if(Options !== undefined) {
 
           poll.options = Options
-
           poll.displayOptions = Options.join(", ")
 
         } else {
@@ -520,17 +510,13 @@ class App extends Component {
     
     var arrPolls = []
 
-
-    
     for(let i = 0; i<arr.length; i++) {
       if(arr[i] !== undefined) {
         let gotInfo = await this.loadSpecificPoll(arr[i])
         arrPolls[i] = gotInfo[0]
       }
     }
-    
     this.setState({ homePagePolls: arrPolls })
-
   }
 
   async contractInteraction(typeState, sendBool, functionName, argumentArray, loadingDescription) {
@@ -606,11 +592,10 @@ class App extends Component {
 
     this.setState({ loading: true, loadingDescription: "Creating transaction and sending to network..." })
 
-
     const price = await this.state.DappTokenSale.methods.tokenPrice().call()
 
+    //prevents error "this.setState is not a function" in the .once and .on functions
     let self = this
-
     this.state.DappTokenSale.methods.buyTokens(amount).send({ from: this.state.account, value: amount * price })
       .on('transactionHash', function(hash) { 
       self.loadBlockchainData();
@@ -717,11 +702,8 @@ class App extends Component {
       .catch((err => {return ["Failure to check eligibility", false]}))
 
       if (boolAllowed === false) {
-
         return ["Not permitted to vote in this poll", false]
-
       }
-
     }
     
     if (poll.type === c.REGULAR_POLL_TYPE) {
@@ -733,9 +715,7 @@ class App extends Component {
       let votesAvailable = Number(poll.maxVotes)
 
       if (votesAvailable <= votesUsed) {
-        
         return ["Not eligible to vote/no more votes left", false]
-
       } 
 
       let _votesAvailable = votesAvailable - votesUsed
@@ -824,7 +804,6 @@ class App extends Component {
 
     let finalPrice = await this.state.DappQuadratic.methods.findCost(votes, votesUsed).call()
     
-    
     return finalPrice
   }
 
@@ -858,7 +837,6 @@ class App extends Component {
         poll.previousVotes = await poll.typeState.methods.trackSpecificVotes(poll.name, this.state.account).call()
     }
     
-
     poll.currentResults = []
 
     if(poll.type === c.REGULAR_POLL_TYPE || poll.type === c.QUADRATIC_POLL_TYPE) {
@@ -920,6 +898,10 @@ class App extends Component {
     this.setState({ polls: null })
   }
 
+  changeLoadingBlockchain(value) {
+    this.setState({ loadingBlockchain: value });
+  }
+
   constructor(props) {
     super(props)
     this.state = {
@@ -941,6 +923,7 @@ class App extends Component {
       loading: false,
       loadingDescription: "Connecting to browser extension...",
       loadingBlockchain: true,
+      failedToLoad: false,
     }
 
     this.isAddress = this.isAddress.bind(this)
@@ -966,6 +949,9 @@ class App extends Component {
     this.getRecentPolls = this.getRecentPolls.bind(this)
 
     this.vote = this.vote.bind(this)
+
+    this.changeLoadingBlockchain = this.changeLoadingBlockchain.bind(this);
+
   }
 
   render() {
@@ -984,11 +970,15 @@ class App extends Component {
       return(
         <div>
           <Fakemain 
+            failedToLoad={this.state.failedToLoad}
             loadingDescription={this.state.loadingDescription}
+            changeLoadingBlockchain={this.changeLoadingBlockchain}
           />
-          <Loadbar
-            loadingDescription={this.state.loadingDescription}
-          />
+          {this.state.failedToLoad
+          ||<Loadbar
+              loadingDescription={this.state.loadingDescription}
+            />
+          }
           <Navbar
             loadingBlockchain={this.state.loadingBlockchain}
           />
@@ -1045,9 +1035,7 @@ class App extends Component {
             <div className="container text-center">
               <h1 className="display-4">Uh Oh!</h1>
               <p className="lead text-white">Looks like this page doesn't exist...</p>
-              
             </div>
-
           </section>
           <div className="text-center">
             <a className="btn btn-primary" href="/">Home</a>

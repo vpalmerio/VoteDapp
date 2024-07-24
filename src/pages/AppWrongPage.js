@@ -1,12 +1,8 @@
 import AppPage from '../components/AppPage'
 import Button from '../components/Button'
 
-import { useNavigate } from 'react-router-dom'
+export default function AppWrongPage () {
 
-export default function Wrongpage () {
-
-    const navigate = useNavigate()
-  
     return (
       <AppPage>
   

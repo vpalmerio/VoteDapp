@@ -10,7 +10,7 @@ import AppHome from '../pages/AppHome'
 import Explore from '../pages/Explore'
 import ChoosePollType from '../pages/ChoosePollType'
 import CreatePoll from './CreatePoll'
-import WrongPage from '../pages/WrongPage'
+import AppWrongPage from '../pages/AppWrongPage'
 import GetPollInfo from '../pages/GetPollInfo'
 import DisplayPolls from '../pages/DisplayPolls'
 import ManageVDA from '../pages/ManageVDA'
@@ -120,7 +120,7 @@ export default function Main(props) {
               } />
 
               <Route path="*" element = {
-                <WrongPage/>
+                <AppWrongPage/>
               } />
               </Routes>
             </main>

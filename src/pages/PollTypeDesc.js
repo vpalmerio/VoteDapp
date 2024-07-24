@@ -2,6 +2,9 @@ import React from 'react';
 
 import {Helmet} from "react-helmet";
 
+import Footer from '../components/Footer'
+import Jumbotron from '../components/Jumbotron';
+
 export default function Polldesc() { 
 
     return (
@@ -12,14 +15,11 @@ export default function Polldesc() {
         <meta name="description" content="What are the different poll types and how do they work?" />
       </Helmet>
       <p>&nbsp;</p>
-      <div className="row justify-content-center">
-        <section className="jumbotron bg-primary mr-auto ml-auto" style={{ width: '1000px'}}>
-          <div className="container text-center">
-            <h1 className="display-4">Poll Types</h1>
-            <p className="lead text-white">How does each one work?</p>
-            
-          </div>
-        </section>
+      <div className='container-fluid px-4'>
+        <Jumbotron
+          bigText="Poll Types"
+          smallText="How does each one work?"
+        ></Jumbotron>
       </div>
       <div className="text-center py-5">
         <a className="mr-auto ml-auto btn btn-primary" href="/">Home</a>
@@ -72,22 +72,7 @@ export default function Polldesc() {
           </main>
         </div>
       </div>
-      <footer className="py-3">
-        <div className="container">
-          <div className="d-flex justify-content-between align-items-center flex-column flex-md-row border-bottom pb-2">
-            <h5 className="ml-0 ml-md-3 mb-0"><a href="/app">App</a></h5>
-            <ul className="nav justify-content-center">
-              <li className="nav-item"><a className="nav-link" href="https://github.com/rokkinrob/VoteDapp">Github</a></li>
-              <li className="nav-item"><a className="nav-link" href="https://discord.gg/uEeFU7n">Discord</a></li>
-            </ul>
-          </div>
-          <div className="d-flex justify-content-center align-items-center flex-column flex-md-row mx-3 mt-3">
-            <div className="d-flex mt-3 mt-md-0">
-              <p className="mb-0 small text-muted">VoteDapp</p>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <Footer/>
     </div>
   )
 

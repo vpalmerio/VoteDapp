@@ -1,15 +1,12 @@
-import {Nav, NavDropdown} from "react-bootstrap";
-
-import { useNavigate } from "react-router-dom";
-
 import Jdenticon from './Jdenticon.js'
 
+import Sidebar from './Sidebar'
 import SmallSidebar from './SmallSidebar'
 
 export default function Navbar(props) {
     
-    return (
-      <div>
+  return (
+    <div>
       <nav className="navbar navbar-dark fixed-top bg-primary flex-md-nowrap p-0 shadow mx-auto">
         <div className="text-white col-sm-1 col-md-1 mr-0 py-2 px-2">
           <SmallSidebar />
@@ -33,43 +30,9 @@ export default function Navbar(props) {
               </li>
             </ul>
           </div> 
-        
         }
       </nav>
       <Sidebar />
     </div>  
-    )
-  
-}
-
-const Sidebar = () => {
-
-  const navigate = useNavigate()
-
-  return(
-    <div className="">
-      
-     <Nav className="col-md-12 card d-none d-md-none d-lg-none d-xl-block bg-primary sidebar">
-        <div className="sidebar-sticky"></div>
-      <Nav.Item>
-         <p>&nbsp;</p>
-      </Nav.Item>
-      <Nav.Item>
-          <button className="btn btn-primary btn-block" style={{width: '160px'}} onClick = {() => navigate("/app")}>App</button>
-      </Nav.Item>
-      <Nav.Item>
-          <button className="btn btn-primary btn-block" style={{width: '160px'}} onClick = {() => navigate("/app/explore")}>Explore</button>
-      </Nav.Item>
-      <Nav.Item>
-          <button className="btn btn-primary btn-block" style={{width: '160px'}} onClick = {() => navigate("/app/manage-vda")}>Manage VDA</button>
-      </Nav.Item>
-      <Nav.Item>
-          <button className="btn btn-primary btn-block" style={{width: '160px'}} onClick = {() => navigate("/app/owned")}>Owned Polls</button>
-      </Nav.Item>
-      <Nav.Item>
-          <button className="btn btn-primary btn-block" style={{width: '160px'}} onClick = {() => navigate("/app/participated")}>Polls You Participated In</button>
-      </Nav.Item>
-      </Nav>
-    </div>
   )
 }

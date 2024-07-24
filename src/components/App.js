@@ -69,7 +69,6 @@ class App extends Component {
     const web3 = window.web3
     //get account
     const accounts = await web3.eth.getAccounts()
-    console.log("test")
     this.setState({ account: accounts[0] })
 
     var rankedAddr

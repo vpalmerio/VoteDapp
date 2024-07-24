@@ -6,7 +6,7 @@ import PollOptions from '../pages/PollOptions'
 import PollFeatures from '../pages/PollFeatures'
 import PollCompletion from '../pages/PollCompletion'
 
-import WrongPage from '../pages/WrongPage'
+import WrongPage from '../pages/AppWrongPage'
 import * as c from './Constants'
 
 import { useParams } from "react-router-dom"

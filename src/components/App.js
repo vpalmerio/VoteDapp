@@ -99,7 +99,6 @@ class App extends Component {
       storageAddr = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512"
 
     } else {
-      console.log("testing")
       this.setState({ loading: true, loadingDescription:
        "Failed to connect to contracts. Please make sure you are on the Goerli testnet. Get Goerli testnet eth at https://goerli-faucet.slock.it/.",
         failedToLoad: true

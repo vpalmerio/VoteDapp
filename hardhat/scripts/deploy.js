@@ -14,7 +14,7 @@ async function main() {
     parameters: { VDTSale: { tokenPrice } },
   });
 
-    const tokenAddress = await VDTSale.getContractAddr();
+  const tokenAddress = await VDTSale.getContractAddr();
 
   const { VDStorage } = await hre.ignition.deploy(VDStorageModule);
 
@@ -24,20 +24,28 @@ async function main() {
     parameters: { VDQuadratic: { tokenAddress, storageAddress} },
   });
 
+  const VDQAddress = await VDQuadratic.getAddress();
+
   const { VDRegular } = await hre.ignition.deploy(VDRegularModule, {
     parameters: { VDRegular: { tokenAddress, storageAddress} },
   });
+
+  const VDRAddress = await VDRegular.getAddress();
 
   const { VDRanked } = await hre.ignition.deploy(VDRankedModule, {
     parameters: { VDRanked: {  storageAddress} },
   });
 
+  const VDRankedAddress = await VDRanked.getAddress();
+
+  VDStorage.addPollType([VDQAddress, VDRAddress, VDRankedAddress]);
+
   console.log(`Token deployed to: ${tokenAddress}`);
   console.log(`VDStorage deployed to: ${storageAddress}`);
   console.log(`VDTSale deployed to: ${await VDTSale.getAddress()}`);
-  console.log(`VDQuadratic deployed to: ${await VDQuadratic.getAddress()}`);
-  console.log(`VDRegular deployed to: ${await VDRegular.getAddress()}`);
-  console.log(`VDRanked deployed to: ${await VDRanked.getAddress()}`);
+  console.log(`VDQuadratic deployed to: ${VDQAddress}`);
+  console.log(`VDRegular deployed to: ${VDRAddress}`);
+  console.log(`VDRanked deployed to: ${VDRankedAddress}`);
 }
 
 main().catch(console.error);

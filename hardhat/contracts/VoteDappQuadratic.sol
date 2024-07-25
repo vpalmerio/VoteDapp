@@ -1,7 +1,7 @@
 pragma solidity ^0.7.0;
 pragma abicoder v2;
 
-import "./VoteDappTokenV3.sol";
+import "./VoteDappTokenSaleV2.sol";
 import "./VoteDappStorageV2.sol";
 
 import "./SafeMath.sol";

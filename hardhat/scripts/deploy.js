@@ -14,7 +14,7 @@ async function main() {
     parameters: { VDTSale: { tokenPrice } },
   });
 
-  const tokenAddress = await VDTSale.getContractAddr();
+  const tokenAddress = await VDTSale.getAddress();
 
   const { VDStorage } = await hre.ignition.deploy(VDStorageModule);
 
@@ -40,9 +40,8 @@ async function main() {
 
   VDStorage.addPollType([VDQAddress, VDRAddress, VDRankedAddress]);
 
-  console.log(`Token deployed to: ${tokenAddress}`);
+  console.log(`VDTSale deployed to: ${tokenAddress}`);
   console.log(`VDStorage deployed to: ${storageAddress}`);
-  console.log(`VDTSale deployed to: ${await VDTSale.getAddress()}`);
   console.log(`VDQuadratic deployed to: ${VDQAddress}`);
   console.log(`VDRegular deployed to: ${VDRAddress}`);
   console.log(`VDRanked deployed to: ${VDRankedAddress}`);

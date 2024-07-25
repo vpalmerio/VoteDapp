@@ -228,7 +228,7 @@ contract VoteDappRanked {
         return Polls[pollName].voterData[voter].allowedToVote;
     }
     
-    function requestWinner(string memory pollName) view public pollExists(pollName) returns (string [] memory) {
+    function requestWinner(string memory pollName) view public pollExists(pollName) returns (string [] memory winners) {
         
         //cheap workaround
         //there is an error with not specifying space so, set a limit of 99 options (like would anyone use that much?)
@@ -313,7 +313,7 @@ contract VoteDappRanked {
             }
             
             //array to store and return winners
-            string [] memory winners = new string[] (2);
+            winners = new string[] (2);
             
             
             

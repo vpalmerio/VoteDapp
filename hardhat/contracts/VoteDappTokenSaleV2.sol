@@ -1,4 +1,4 @@
-pragma solidity ^0.7.0;
+pragma solidity ^0.8.26;
 pragma abicoder v2;
 
 import "./SafeMath.sol";
@@ -65,7 +65,7 @@ contract VoteDappToken {
         balanceOf[msg.sender] = balanceOf[msg.sender].sub(amount);
 
         //tranfers in units of wei
-        msg.sender.transfer(amount.mul(tokenPrice));
+        payable(msg.sender).transfer(amount.mul(tokenPrice));
 
         tokensInCirculation = tokensInCirculation.sub(amount);
 

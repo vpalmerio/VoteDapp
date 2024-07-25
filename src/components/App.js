@@ -2,11 +2,7 @@ import React, { Component } from 'react';
 import Web3 from 'web3';
 import './App.css';
 
-import VoteDappStorage from '../abis/VoteDappStorage.json'
-import VoteDappRanked from '../abis/VoteDappRanked.json'
-import VoteDappQuadratic from '../abis/VoteDappQuadratic.json'
-import VoteDappRegular from '../abis/VoteDappRegular.json'
-import VoteDappToken from '../abis/VoteDappToken.json'
+import contractData from '../contract_data.json'
 
 import Main from './Main'
 import PlaceholderMain from '../pages/PlaceholderMain'
@@ -70,44 +66,19 @@ class App extends Component {
     const accounts = await web3.eth.getAccounts()
     this.setState({ account: accounts[0] })
 
-    var rankedAddr
-    var quadraticAddr
-    var regularAddr
-    var tokenAddr
-    var storageAddr
-
     const networkID = Number(await web3.eth.net.getId())
 
-    if(networkID === 5) {
+    let data = contractData.networkID[networkID]
 
-      rankedAddr = "0xd5C89E54f2f46B62382Ef56D27557fb036b946e8"
-      quadraticAddr = "0xA5217021B9044FfD758b21329F79365D02092F53"
-      regularAddr = "0x8C39AF50003E3F7AEc4E17c808001f8c84d77bdd"
-      tokenAddr = "0xe799c0d5869fc23576E88A62b28E568bAc0160e3"
-      storageAddr = "0x09296686004F7A83DA07e0491720bbA1d85f013C"
-
-    } else if(networkID === 31337) {
-
-      rankedAddr = "0x0165878A594ca255338adfa4d48449f69242Eb8F"
-      quadraticAddr = "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9"
-      regularAddr = "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707"
-      tokenAddr = "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0"
-      storageAddr = "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9"
-
-    } else {
-      this.setState({ loading: true, loadingDescription:
-       "Failed to connect to contracts. Please make sure you are on the Goerli testnet. Get Goerli testnet eth at https://goerli-faucet.slock.it/.",
-        failedToLoad: true
-      })
-      return false
+    if(data === undefined) {
+      throw new Error("Current network ID not found in contract data")
     }
 
-    const DappRanked = new web3.eth.Contract(VoteDappRanked, rankedAddr)
-    const DappQuadratic = new web3.eth.Contract(VoteDappQuadratic, quadraticAddr)
-    const DappRegular = new web3.eth.Contract(VoteDappRegular, regularAddr)
-    const DappToken = new web3.eth.Contract(VoteDappToken, tokenAddr)
-    const DappStorage = new web3.eth.Contract(VoteDappStorage, storageAddr)
-
+    const DappRanked = new web3.eth.Contract(data.VoteDappRanked.abi, data.VoteDappRanked.address)
+    const DappQuadratic = new web3.eth.Contract(data.VoteDappQuadratic.abi, data.VoteDappQuadratic.address)
+    const DappRegular = new web3.eth.Contract(data.VoteDappRegular.abi, data.VoteDappRegular.address)
+    const DappToken = new web3.eth.Contract(data.VoteDappToken.abi, data.VoteDappToken.address)
+    const DappStorage = new web3.eth.Contract(data.VoteDappStorage.abi, data.VoteDappStorage.address)
 
     DappRegular.type = c.REGULAR_POLL_TYPE
 
@@ -115,19 +86,14 @@ class App extends Component {
 
     DappRanked.type = c.RANKED_POLL_TYPE
 
+    DappRanked.abi = DappRanked._jsonInterface
+    DappQuadratic.abi = DappQuadratic._jsonInterface
+    DappRegular.abi = DappRegular._jsonInterface
+    DappToken.abi =  DappToken._jsonInterface
+    DappStorage.abi = DappStorage._jsonInterface
 
-    DappRanked.abi = VoteDappRanked.abi
-
-    DappQuadratic.abi = VoteDappQuadratic.abi
-
-    DappRegular.abi = VoteDappRegular.abi
-
-    DappToken.abi = VoteDappToken.abi
-
-    DappStorage.abi = VoteDappStorage
-
-    DappQuadratic.address = quadraticAddr
-    DappRegular.address = regularAddr
+    DappQuadratic.address = DappQuadratic._address
+    DappRegular.address = DappRegular._address
 
     this.setState({ DappRegular, DappRanked, DappQuadratic, DappToken, DappStorage})
     

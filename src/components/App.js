@@ -7,7 +7,6 @@ import VoteDappRanked from '../abis/VoteDappRanked.json'
 import VoteDappQuadratic from '../abis/VoteDappQuadratic.json'
 import VoteDappRegular from '../abis/VoteDappRegular.json'
 import VoteDappToken from '../abis/VoteDappToken.json'
-import VoteDappTokenSale from '../abis/VoteDappTokenSale.json'
 
 import Main from './Main'
 import PlaceholderMain from '../pages/PlaceholderMain'
@@ -31,7 +30,7 @@ class App extends Component {
       try {
         await this.loadWeb3()
         await this.loadBlockchainData()
-      } catch {
+      } catch(err){
         this.setState({ loading: true, loadingDescription:
           "Failed to connect to contracts. Please make sure you have MetaMask or another web3 wallet extension installed and are on the Goerli testnet. Get Goerli testnet eth at https://goerli-faucet.slock.it/. Once properly set up, please refresh the page",
           failedToLoad: true
@@ -75,7 +74,6 @@ class App extends Component {
     var quadraticAddr
     var regularAddr
     var tokenAddr
-    var tokenSaleAddr
     var storageAddr
 
     const networkID = Number(await web3.eth.net.getId())
@@ -86,17 +84,15 @@ class App extends Component {
       quadraticAddr = "0xA5217021B9044FfD758b21329F79365D02092F53"
       regularAddr = "0x8C39AF50003E3F7AEc4E17c808001f8c84d77bdd"
       tokenAddr = "0xe799c0d5869fc23576E88A62b28E568bAc0160e3"
-      tokenSaleAddr = "0x58085bF7262AF30e326747897B6ffBFdE59756aB"
       storageAddr = "0x09296686004F7A83DA07e0491720bbA1d85f013C"
 
     } else if(networkID === 31337) {
 
-      rankedAddr = "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9"
-      quadraticAddr = "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0"
-      regularAddr = "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9"
-      tokenAddr = "0xa16E02E87b7454126E5E10d957A927A7F5B5d2be"
-      tokenSaleAddr = "0x5FbDB2315678afecb367f032d93F642f64180aa3"
-      storageAddr = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512"
+      rankedAddr = "0x0165878A594ca255338adfa4d48449f69242Eb8F"
+      quadraticAddr = "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9"
+      regularAddr = "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707"
+      tokenAddr = "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0"
+      storageAddr = "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9"
 
     } else {
       this.setState({ loading: true, loadingDescription:
@@ -110,7 +106,6 @@ class App extends Component {
     const DappQuadratic = new web3.eth.Contract(VoteDappQuadratic, quadraticAddr)
     const DappRegular = new web3.eth.Contract(VoteDappRegular, regularAddr)
     const DappToken = new web3.eth.Contract(VoteDappToken, tokenAddr)
-    const DappTokenSale = new web3.eth.Contract(VoteDappTokenSale, tokenSaleAddr)
     const DappStorage = new web3.eth.Contract(VoteDappStorage, storageAddr)
 
 
@@ -131,18 +126,15 @@ class App extends Component {
 
     DappStorage.abi = VoteDappStorage
 
-
     DappQuadratic.address = quadraticAddr
     DappRegular.address = regularAddr
 
-
-
-    this.setState({ DappRegular, DappRanked, DappQuadratic, DappToken, DappTokenSale, DappStorage})
-
-    const tokenPrice = await DappTokenSale.methods.tokenPrice().call()
-
+    this.setState({ DappRegular, DappRanked, DappQuadratic, DappToken, DappStorage})
+    
+    const tokenPrice = await DappToken.methods.tokenPrice().call()
+    
     const accountBalance = await DappToken.methods.balanceOf(this.state.account).call()
-
+    
     this.setState({ accountBalance: accountBalance.toString(), tokenPrice: tokenPrice.toString() })
 
     this.setState({ loading: false, loadingBlockchain: false, loadingDescription: "Loading..."})
@@ -152,7 +144,6 @@ class App extends Component {
   async loadPollData() {
 
       this.setState({ loading: true, loadingDescription: "Loading polls..."})
-
 
       this.setState({ polls: [], pollNames: [] })
       
@@ -595,11 +586,11 @@ class App extends Component {
     this.setState({ loading: true, loadingDescription: "Creating transaction and sending to network..." })
 
     try {
-      const price = await this.state.DappTokenSale.methods.tokenPrice().call()
+      const price = await this.state.DappToken.methods.tokenPrice().call()
 
       //prevents error "this.setState is not a function" in the .once and .on functions
       let self = this
-      await this.state.DappTokenSale.methods.buyTokens(amount).send({ from: this.state.account, value: amount * price })
+      await this.state.DappToken.methods.buyTokens(amount).send({ from: this.state.account, value: amount * price })
         .on('transactionHash', function(hash) { 
         self.loadBlockchainData();
         

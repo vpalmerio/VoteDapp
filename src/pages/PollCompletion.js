@@ -130,7 +130,7 @@ export default function PollCompletion({
                 }
                 
                 </div> 
-                <Button buttonType='submit' className="btn btn-primary btn-block">Create Poll</Button>
+                <Button buttonType='submit' text="Create Poll"></Button>
             </form>
 
             {showManagedOwnedPolls

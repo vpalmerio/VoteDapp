@@ -539,17 +539,20 @@ class App extends Component {
     }
 
     if(sendBool) {
-      typeState.methods[functionName](...argumentArray).send({ from: self.state.account })
-      .once('sending', function(payload){ 
-        self.setState({ loading: true, loadingDescription: "Sending to network..."})
-      })
-      .once('transactionHash', function(hash){
-        self.setState({ loading: false, loadingDescription: "Loading..."})
-      })
-      .on('error', function(error) {
-        self.setState({ loading: false, loadingDescription: "Loading..."})
-      })
-
+      try {
+        await typeState.methods[functionName](...argumentArray).send({ from: self.state.account })
+        .once('sending', function(payload){ 
+          self.setState({ loading: true, loadingDescription: "Sending to network..."})
+        })
+        .once('transactionHash', function(hash){
+          self.setState({ loading: false, loadingDescription: "Loading..."})
+        })
+        .on('error', function(error) {
+          self.setState({ loading: false, loadingDescription: "Loading..."})
+        })
+      } catch {
+        this.setState({ loading: false, loadingDescription: "Loading..."})
+      }
     } else {
       let returnValue = await typeState.methods[functionName](...argumentArray).call()
       return returnValue
@@ -591,15 +594,19 @@ class App extends Component {
 
     this.setState({ loading: true, loadingDescription: "Creating transaction and sending to network..." })
 
-    const price = await this.state.DappTokenSale.methods.tokenPrice().call()
+    try {
+      const price = await this.state.DappTokenSale.methods.tokenPrice().call()
 
-    //prevents error "this.setState is not a function" in the .once and .on functions
-    let self = this
-    this.state.DappTokenSale.methods.buyTokens(amount).send({ from: this.state.account, value: amount * price })
-      .on('transactionHash', function(hash) { 
-      self.loadBlockchainData();
-      
-    })
+      //prevents error "this.setState is not a function" in the .once and .on functions
+      let self = this
+      await this.state.DappTokenSale.methods.buyTokens(amount).send({ from: this.state.account, value: amount * price })
+        .on('transactionHash', function(hash) { 
+        self.loadBlockchainData();
+        
+      })
+    } catch {
+      this.setState({ loading: false, loadingDescription: "Loading..."})
+    }
   }
 
   async vote(poll, option, votes) {
@@ -609,15 +616,34 @@ class App extends Component {
     //prevents error "this.setState is not a function" in the .once and .on functions
     let self = this
 
-    if (poll.type === c.REGULAR_POLL_TYPE) {
-      let payment = poll.cost * BigInt(votes)
-      if (payment > 0) {
-        this.setState({ loadingDescription: "Sending approve transaction..." })
-                                            //make sure this address thing works
-        this.state.DappToken.methods.approve(this.state.DappRegular.address, payment).send({ from: this.state.account })
-        .once('transactionHash', function(hash){
-          self.setState({ loadingDescription: "Creating transaction (to vote) and sending to network..." })
-          self.state.DappRegular.methods.vote(poll.name, option, votes).send({ from: self.state.account })
+    try {
+      if (poll.type === c.REGULAR_POLL_TYPE) {
+        let payment = poll.cost * BigInt(votes)
+        if (payment > 0) {
+          this.setState({ loadingDescription: "Sending approve transaction..." })
+                                              //make sure this address thing works
+          await this.state.DappToken.methods.approve(this.state.DappRegular.address, payment).send({ from: this.state.account })
+          .once('transactionHash', function(hash){
+            self.setState({ loadingDescription: "Creating transaction (to vote) and sending to network..." })
+            self.state.DappRegular.methods.vote(poll.name, option, votes).send({ from: self.state.account })
+            .once('sending', function(payload){ 
+              self.setState({ loadingDescription: "Creating transaction (to vote) and sending to network..."})
+            })
+            .once('transactionHash', function(hash){
+              self.loadBlockchainData()
+            })
+            .on('error', function(error) {
+              self.setState({ loading: false, loadingDescription: "Loading..."})
+            })
+          })
+          .on('error', function(error) {
+            self.setState({ loading: false, loadingDescription: "Loading..."})
+          })
+        } else {
+
+          this.setState({ loadingDescription: "Creating transaction (to vote) and sending to network..." })
+
+          await this.state.DappRegular.methods.vote(poll.name, option, votes).send({ from: this.state.account })
           .once('sending', function(payload){ 
             self.setState({ loadingDescription: "Creating transaction (to vote) and sending to network..."})
           })
@@ -627,15 +653,40 @@ class App extends Component {
           .on('error', function(error) {
             self.setState({ loading: false, loadingDescription: "Loading..."})
           })
-        })
-        .on('error', function(error) {
-        self.setState({ loading: false, loadingDescription: "Loading..."})
-        })
-      } else {
+        }
+      } else if (poll.type === c.QUADRATIC_POLL_TYPE) {
+
+          this.setState({ loadingDescription: "Sending approve transaction..." })
+
+          let totalPayments = await this.state.DappQuadratic.methods.trackTotalPayments(poll.name, this.state.account).call()
+
+          let totalPastVotes = await this.state.DappQuadratic.methods.findVotes(totalPayments).call()
+
+          let finalPayment = await this.state.DappQuadratic.methods.findCost(votes, totalPastVotes).call()
+
+                                              //make sure this address thing works
+          await this.state.DappToken.methods.approve(this.state.DappQuadratic.address, finalPayment).send({ from: this.state.account })
+          .once('transactionHash', function(hash){
+            self.setState({ loadingDescription: "Creating transaction (to vote) and sending to network..." })
+            self.state.DappQuadratic.methods.vote(poll.name, option, votes).send({ from: self.state.account })
+            .once('sending', function(payload){ 
+              self.setState({ loadingDescription: "Creating transaction (to vote) and sending to network..."})
+            })
+            .once('transactionHash', function(hash){
+              self.loadBlockchainData()
+            })
+            .on('error', function(error) {
+              self.setState({ loading: false, loadingDescription: "Loading..."})
+            })
+          })
+          .on('error', function(error) {
+            self.setState({ loading: false, loadingDescription: "Loading..."})
+          })
+      } else if (poll.type === c.RANKED_POLL_TYPE) {
 
         this.setState({ loadingDescription: "Creating transaction (to vote) and sending to network..." })
 
-        this.state.DappRegular.methods.vote(poll.name, option, votes).send({ from: this.state.account })
+        await this.state.DappRanked.methods.vote(poll.name, option).send({ from: this.state.account })
         .once('sending', function(payload){ 
           self.setState({ loadingDescription: "Creating transaction (to vote) and sending to network..."})
         })
@@ -645,51 +696,9 @@ class App extends Component {
         .on('error', function(error) {
           self.setState({ loading: false, loadingDescription: "Loading..."})
         })
-
       }
-    } else if (poll.type === c.QUADRATIC_POLL_TYPE) {
-
-        this.setState({ loadingDescription: "Sending approve transaction..." })
-
-        let totalPayments = await this.state.DappQuadratic.methods.trackTotalPayments(poll.name, this.state.account).call()
-
-        let totalPastVotes = await this.state.DappQuadratic.methods.findVotes(totalPayments).call()
-
-        let finalPayment = await this.state.DappQuadratic.methods.findCost(votes, totalPastVotes).call()
-
-                                            //make sure this address thing works
-        this.state.DappToken.methods.approve(this.state.DappQuadratic.address, finalPayment).send({ from: this.state.account })
-        .once('transactionHash', function(hash){
-          self.setState({ loadingDescription: "Creating transaction (to vote) and sending to network..." })
-          self.state.DappQuadratic.methods.vote(poll.name, option, votes).send({ from: self.state.account })
-          .once('sending', function(payload){ 
-            self.setState({ loadingDescription: "Creating transaction (to vote) and sending to network..."})
-          })
-          .once('transactionHash', function(hash){
-            self.loadBlockchainData()
-          })
-          .on('error', function(error) {
-            self.setState({ loading: false, loadingDescription: "Loading..."})
-          })
-        })
-        .on('error', function(error) {
-        self.setState({ loading: false, loadingDescription: "Loading..."})
-        })
-    } else if (poll.type === c.RANKED_POLL_TYPE) {
-
-      this.setState({ loadingDescription: "Creating transaction (to vote) and sending to network..." })
-
-      this.state.DappRanked.methods.vote(poll.name, option).send({ from: this.state.account })
-      .once('sending', function(payload){ 
-        self.setState({ loadingDescription: "Creating transaction (to vote) and sending to network..."})
-      })
-      .once('transactionHash', function(hash){
-        self.loadBlockchainData()
-      })
-      .on('error', function(error) {
-        self.setState({ loading: false, loadingDescription: "Loading..."})
-      })
-
+    } catch {
+      this.setState({ loading: false, loadingDescription: "Loading..."})
     }
   }
 

@@ -272,16 +272,16 @@ contract VoteDappQuadratic {
         return c;
     }
     
-    function findVotes(uint256 c) pure public returns (uint256) {
+    function findVotes(uint256 c) pure public returns (uint256 i) {
         uint256 v;
-        for(uint256 i = 0; i<=c; i++) {
+        for(i = 0; i<=c; i++) {
             v=v.add(i);
             if (v==c) {
                 return i;
             }
             
         }
-        //consider adding a revert failed if for loop doesnt return anything
+        //For loop should never reach here, but if it does, it will return 0
     }
     
     //view functions (for web3)

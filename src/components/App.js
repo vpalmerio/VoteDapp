@@ -475,7 +475,7 @@ class App extends Component {
     this.setState({ homePagePolls: arrPolls })
   }
 
-  async contractInteraction(typeState, sendBool, functionName, argumentArray, loadingDescription) {
+  async contractInteraction(typeState, sendBool, functionName, argumentArray, loadingDescription, reloadBlockchainData) {
 
     if(sendBool) {
       this.setState({ loading: true, loadingDescription })
@@ -503,6 +503,9 @@ class App extends Component {
         })
         .once('transactionHash', function(hash){
           self.setState({ loading: false, loadingDescription: "Loading..."})
+          if (reloadBlockchainData === true) {
+            self.loadBlockchainData()
+          }
         })
         .on('error', function(error) {
           self.setState({ loading: false, loadingDescription: "Loading..."})
@@ -556,7 +559,7 @@ class App extends Component {
 
       //prevents error "this.setState is not a function" in the .once and .on functions
       let self = this
-      await this.state.DappToken.methods.buyTokens(amount).send({ from: this.state.account, value: amount * price })
+      await this.state.DappToken.methods.buyTokens(amount).send({ from: this.state.account, value: BigInt(amount) * price })
         .on('transactionHash', function(hash) { 
         self.loadBlockchainData();
         

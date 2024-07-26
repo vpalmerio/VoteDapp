@@ -1,15 +1,18 @@
 import React from 'react'
 
 import AppPage from '../components/AppPage'
-import Button from '../components/Button'
 import BackButton from '../components/BackButton'
+import TokenForm from '../components/TokenForm'
 
-export default function ManageVDA ({ accountBalance, tokenPrice, contractInteraction, buyToken, isAddress }) {
+export default function ManageVDA ({ accountBalance, tokenPrice, contractInteraction, buyToken}) {
 
-    const [amountoftokensInput, changeAOTI] = React.useState(0)
-  
-    let tempFinalPrice = tokenPrice * amountoftokensInput
-  
+    const sellToken = (amountOfTokens) => {
+      contractInteraction(
+        "Token", true, "returnTokens", [amountOfTokens], 
+        "Creating transaction and sending to network...", true
+      )
+    }
+
     return (
       <AppPage
         title="Manage your VDA"
@@ -18,28 +21,25 @@ export default function ManageVDA ({ accountBalance, tokenPrice, contractInterac
         <p>&nbsp;</p>
           <div className="text-center">
             <p>Your VDA Balance: {accountBalance}</p>
-            <p>Total Price in Wei: {tempFinalPrice}</p>
+            <p>Value of a single VDA token in Wei: {tokenPrice}</p>
           </div>
-          <form onSubmit={(event) => {
-            event.preventDefault()
-            
-            buyToken(amountoftokensInput)
-          }}>
-            <div className="form-group mr-sm-2">
-              <input
-              id="amountoftokens"
-              type="number"
-              onChange={(input) => { changeAOTI(input.target.value) }}
-              className="form-control"
-              placeholder= {"Cost per token (wei): " + tokenPrice}
-              required />
-            </div>
-            <div className='mt-4'>
-              <Button buttonType="submit" text="Buy Tokens"></Button>
-            </div>
-          </form>
+          <TokenForm
+            tokenFunction={buyToken}
+            action="buy"
+            placeholder="Amount of VDA to buy"
+            tokenPrice={tokenPrice}
+            buttonText="Buy Tokens"
+          />
+
+          <TokenForm
+            tokenFunction={sellToken}
+            action="sell"
+            placeholder="Amount of VDA to sell"
+            tokenPrice={tokenPrice}
+            buttonText="Sell Tokens"
+          />
         <p>&nbsp;</p>
-        <BackButton></BackButton>
+        <BackButton/>
       </AppPage>
     )
   };

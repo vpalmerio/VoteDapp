@@ -91,7 +91,6 @@ export default function Main(props) {
                   tokenPrice={props.tokenPrice}
                   contractInteraction={props.contractInteraction}
                   buyToken={props.buyToken}
-                  isAddress={props.isAddress}
                 />
               } />
 

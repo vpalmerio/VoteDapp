@@ -146,7 +146,7 @@ class App extends Component {
 
               newlistofPolls.push(listofPollsReg[i])
 
-              var poll = await this.state.DappRegular.methods.Polls(listofPollsReg[i]).call()
+              let poll = await this.state.DappRegular.methods.Polls(listofPollsReg[i]).call()
 
               poll.name = listofPollsReg[i]
 
@@ -230,7 +230,7 @@ class App extends Component {
 
               newlistofPolls.push(listofPollsQuadratic[i])
 
-              var poll = await this.state.DappQuadratic.methods.Polls(listofPollsQuadratic[i]).call()
+              let poll = await this.state.DappQuadratic.methods.Polls(listofPollsQuadratic[i]).call()
 
               poll.name = listofPollsQuadratic[i]
 
@@ -312,7 +312,7 @@ class App extends Component {
 
             newlistofPolls.push(listofPollsRanked[i])
 
-            var poll = await this.state.DappRanked.methods.Polls(listofPollsRanked[i]).call()
+            let poll = await this.state.DappRanked.methods.Polls(listofPollsRanked[i]).call()
 
             poll.name = listofPollsRanked[i]
 
@@ -689,8 +689,7 @@ class App extends Component {
       let _votesAvailable = votesAvailable - votesUsed
 
       let votePrice = poll.cost
-
-      if (votePrice == 0) {
+      if (votePrice === BigInt(0)) {
         return ["You have " + _votesAvailable + " vote(s) left.", true]
       } else {
 
@@ -727,7 +726,7 @@ class App extends Component {
 
       let voterBalance = this.state.accountBalance
 
-      if (voterBalance == 0) {
+      if (voterBalance === BigInt(0)) {
         return ["You cannot pay for any of your votes (" + _votesAvailable + " vote available). Purchase VDA at 'Manage VDA' in the Sidebar.", false]
       }
 
@@ -736,7 +735,7 @@ class App extends Component {
       for(let i = voterBalance; i > 0; i--) {
         amountOfPossibleVotes = await this.state.DappQuadratic.methods.findVotes(i).call()
 
-        if(amountOfPossibleVotes != 0) {
+        if(amountOfPossibleVotes !== BigInt(0)) {
           break;
         }
       }

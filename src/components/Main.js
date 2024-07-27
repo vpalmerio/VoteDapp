@@ -1,10 +1,6 @@
 import React from 'react'
 
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom"
-import { useNavigate, useParams } from "react-router-dom"
-
-import DropdownButton from 'react-bootstrap/DropdownButton'
-import Dropdown from 'react-bootstrap/Dropdown'
+import { Route, Routes } from "react-router-dom"
 
 import AppHome from '../pages/AppHome'
 import Explore from '../pages/Explore'
@@ -15,22 +11,9 @@ import GetPollInfo from '../pages/GetPollInfo'
 import DisplayPolls from '../pages/DisplayPolls'
 import ManageVDA from '../pages/ManageVDA'
 
-import AppPage from './AppPage'
 import Navbar from './Navbar'
-import Button from './Button'
-import ballotbox from '../media/ballotbox.png'
-import Jdenticon from './Jdenticon.js'
-import ReturnMoneyInfo from './ReturnMoneyInfo'
-import DisplayVotes from './DisplayVotes'
-import PollCards from './PollCards'
-import LoadScreen from './LoadScreen'
-
-import {Helmet} from "react-helmet"
-
-import loader from '../media/loader.png'
 
 import * as c from './Constants'
-import BackButton from './BackButton'
 
 export default function Main(props) { 
 

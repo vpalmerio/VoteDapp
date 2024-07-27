@@ -11,7 +11,7 @@ export default function PollCards({ pollArray, contractInteraction, maxWidth = '
             {pollArray.map((poll, key) => {
 
                 var speciallink1 = poll.name.replace(/\?/g, "_question_mark_");
-                var speciallink = speciallink1.replace(/\#/g, "_hashtag_");
+                var speciallink = speciallink1.replace(/#/g, "_hashtag_");
 
                 return(
                 <div key={key} className='center-content'>

@@ -31,13 +31,13 @@ export default function PollOptions({ pollOptions, changePollOptions, changePage
           <form onSubmit={(event) => {
             event.preventDefault()
 
-            if(tempOptionStorage === "" || tempOptionStorage == undefined) {
+            if(tempOptionStorage === "" || tempOptionStorage === undefined) {
               window.alert("Please put an option in the textbox.")
             } else {
-
+ 
               let taken = false;
               for(let i = 0; i<pollOptionsInput.length; i++) {
-                if(tempOptionStorage==pollOptionsInput[i]) {
+                if(tempOptionStorage === pollOptionsInput[i]) {
                   taken=true;
                   window.alert("You already have the option: " + tempOptionStorage)
                   break;

@@ -1,11 +1,11 @@
 import React from 'react'
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom"
+import { Route, Routes } from "react-router-dom"
 
 import {Helmet} from "react-helmet"
 
 import loader from '../media/loader.png'
 import AppPage from '../components/AppPage'
-
+ 
 export default function PlaceholderMain(props) { 
 
       return (

@@ -1,5 +1,3 @@
-
-
 export default function DisplayVotes({ votes, options }) {
     return (
         <div className='center-content' >

@@ -14,7 +14,7 @@ import BackButton from '../components/BackButton'
 import LoadScreen from '../components/LoadScreen'
 
 import * as c from '../components/Constants'
-
+ 
 
 export default function Getpollinfo ({ account, contractInteraction, loadSpecificPoll, vote, findCost, accountBalance }) {
 
@@ -89,8 +89,8 @@ export default function Getpollinfo ({ account, contractInteraction, loadSpecifi
           </p></div>
   
         )
-      } else if(poll.name == name){
-  
+      } else if(poll.name === name){
+
         if(selectedOptionsArray.length < 1) {
           changeSelectedOptionsArray(poll.options)
   

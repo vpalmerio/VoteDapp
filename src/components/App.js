@@ -714,9 +714,7 @@ class App extends Component {
 
       let votesUsed = await this.state.DappQuadratic.methods.findVotes(totalPayments).call()
 
-      votesUsed = votesUsed * 1
-
-      let votesAvailable = poll.maxVotes * 1
+      let votesAvailable = poll.maxVotes
 
       if (votesAvailable <= votesUsed) {
         return ["Not eligible to vote/no more votes left", false]
@@ -729,17 +727,15 @@ class App extends Component {
       if (voterBalance === BigInt(0)) {
         return ["You cannot pay for any of your votes (" + _votesAvailable + " vote available). Purchase VDA at 'Manage VDA' in the Sidebar.", false]
       }
-
       let amountOfPossibleVotes = 0
 
       for(let i = voterBalance; i > 0; i--) {
         amountOfPossibleVotes = await this.state.DappQuadratic.methods.findVotes(i).call()
-
         if(amountOfPossibleVotes !== BigInt(0)) {
           break;
         }
       }
-
+      
       if (amountOfPossibleVotes >= _votesAvailable) {
         return ["You have " + _votesAvailable + " vote(s) left and can pay for all of them!", true]
       } else if (amountOfPossibleVotes <_votesAvailable) {

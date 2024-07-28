@@ -674,13 +674,13 @@ class App extends Component {
       }
     }
     
+    let votesUsed = await this.getVotesUsed(poll)
+
     if (poll.type === c.REGULAR_POLL_TYPE) {
 
-      let votesUsed = await this.state.DappRegular.methods.trackTotalVotes(poll.name, this.state.account).call()
+      votesUsed = BigInt(votesUsed)
 
-      votesUsed = Number(votesUsed)
-
-      let votesAvailable = Number(poll.maxVotes)
+      let votesAvailable = BigInt(poll.maxVotes)
 
       if (votesAvailable <= votesUsed) {
         return ["Not eligible to vote/no more votes left", false]
@@ -710,10 +710,6 @@ class App extends Component {
 
     } else if (poll.type === c.QUADRATIC_POLL_TYPE) {
 
-      let totalPayments = await this.state.DappQuadratic.methods.trackTotalPayments(poll.name, this.state.account).call()
-
-      let votesUsed = await this.state.DappQuadratic.methods.findVotes(totalPayments).call()
-
       let votesAvailable = poll.maxVotes
 
       if (votesAvailable <= votesUsed) {
@@ -735,7 +731,7 @@ class App extends Component {
           break;
         }
       }
-      
+
       if (amountOfPossibleVotes >= _votesAvailable) {
         return ["You have " + _votesAvailable + " vote(s) left and can pay for all of them!", true]
       } else if (amountOfPossibleVotes <_votesAvailable) {
@@ -753,6 +749,20 @@ class App extends Component {
       }
 
     }
+  }
+
+  async getVotesUsed(poll) {
+  
+    let votesUsed = 0
+    if (poll.type === c.REGULAR_POLL_TYPE) {
+      votesUsed = await this.state.DappRegular.methods.trackTotalVotes(poll.name, this.state.account).call()
+
+    } else if (poll.type === c.QUADRATIC_POLL_TYPE) {
+      let totalPayments = await this.state.DappQuadratic.methods.trackTotalPayments(poll.name, this.state.account).call()
+
+      votesUsed = await this.state.DappQuadratic.methods.findVotes(totalPayments).call()
+    }
+    return votesUsed
   }
 
   async findCost(pollName, votes) {
@@ -915,6 +925,8 @@ class App extends Component {
 
     this.changeLoadingBlockchain = this.changeLoadingBlockchain.bind(this);
 
+    this.getVotesUsed = this.getVotesUsed.bind(this)
+
   }
 
   render() {
@@ -985,6 +997,7 @@ class App extends Component {
                   setPollNames={this.setPollNames}
                   searchPolls={this.searchPolls}
                   getRecentPolls={this.getRecentPolls}
+                  getVotesUsed={this.getVotesUsed}
 
                 />
               </div>

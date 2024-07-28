@@ -163,7 +163,7 @@ class App extends Component {
               }
 
               if (poll.open === false) {
-                poll.moneyOwed = await poll.typeState.methods.checkGetYourMoney(poll.name).call()
+                poll.moneyOwed = await poll.typeState.methods.checkGetYourMoney(poll.name).call({ from: this.state.account })
               } else {
                 poll.moneyOwed = 0
               }
@@ -247,7 +247,7 @@ class App extends Component {
               }
 
               if (poll.open === false) {
-                poll.moneyOwed = await poll.typeState.methods.checkGetYourMoney(poll.name).call()
+                poll.moneyOwed = await poll.typeState.methods.checkGetYourMoney(poll.name).call({ from: this.state.account })
               } else {
                 poll.moneyOwed = 0
               }
@@ -426,10 +426,10 @@ class App extends Component {
 
         if (poll.open === false) {
           if(poll.type !== c.RANKED_POLL_TYPE) {
-            poll.moneyOwed = await poll.typeState.methods.checkGetYourMoney(poll.name).call()
+            poll.moneyOwed = await poll.typeState.methods.checkGetYourMoney(poll.name).call({ from: this.state.account })
           }
         } else {
-          poll.moneyOwed = 0
+          poll.moneyOwed = BigInt(0)
         }
 
         const Options = await poll.typeState.methods.requestOptions(pollName).call().catch((err => {console.log("error: ", err)}))
@@ -673,6 +673,10 @@ class App extends Component {
         return ["Not permitted to vote in this poll", false]
       }
     }
+
+    if (!poll.open) {
+      return ["Poll is closed", false]
+    }
     
     let votesUsed = await this.getVotesUsed(poll)
 
@@ -723,22 +727,25 @@ class App extends Component {
       if (voterBalance === BigInt(0)) {
         return ["You cannot pay for any of your votes (" + _votesAvailable + " vote available). Purchase VDA at 'Manage VDA' in the Sidebar.", false]
       }
-      let amountOfPossibleVotes = 0
 
-      for(let i = voterBalance; i > 0; i--) {
-        amountOfPossibleVotes = await this.state.DappQuadratic.methods.findVotes(i).call()
-        if(amountOfPossibleVotes !== BigInt(0)) {
-          break;
-        }
-      }
+      /* Does not work because of misuse of findVotes (doesn't account for is user already voted) */
+      
+      // let amountOfPossibleVotes = 0
+      // for(let i = voterBalance; i > 0; i--) {
+      //   amountOfPossibleVotes = await this.state.DappQuadratic.methods.findVotes(i).call()
+      //   if(amountOfPossibleVotes !== BigInt(0)) {
+      //     break;
+      //   }
+      // }
+      // console.log("Possible: " + amountOfPossibleVotes)
+      // console.log("Available: " + _votesAvailable)
+      // if (amountOfPossibleVotes >= _votesAvailable) {
+      //   return ["You have " + _votesAvailable + " vote(s) left and can pay for all of them!", true]
+      // } else if (amountOfPossibleVotes <_votesAvailable) {
+      //   return ["You have " + _votesAvailable + " vote(s) left and can pay for " + amountOfPossibleVotes + " vote(s).", true]
+      // }
 
-      if (amountOfPossibleVotes >= _votesAvailable) {
-        return ["You have " + _votesAvailable + " vote(s) left and can pay for all of them!", true]
-      } else if (amountOfPossibleVotes <_votesAvailable) {
-        return ["You have " + _votesAvailable + " vote(s) left and can pay for " + amountOfPossibleVotes + " vote(s).", true]
-      }
-
-      return ["Failure to check eligibility", false]
+      return ["You have " + _votesAvailable + " vote(s) left", true]
       
     } else if (poll.type === c.RANKED_POLL_TYPE) {
 

@@ -18,7 +18,7 @@ import * as c from '../components/Constants'
 // The below is used to enable BigInt in the browser
 /* global BigInt */
 
-export default function Getpollinfo ({ account, contractInteraction, loadSpecificPoll, vote, findCost, accountBalance }) {
+export default function GetPollInfo ({ account, contractInteraction, loadSpecificPoll, vote, findCost, accountBalance }) {
 
     const navigate = useNavigate()
   
@@ -99,6 +99,8 @@ export default function Getpollinfo ({ account, contractInteraction, loadSpecifi
           changeSelectedOption(poll.options[0])
         }
   
+        let votesLeft = poll.maxVotes - poll.votesUsed
+
         return (
           <AppPage
             title={name}
@@ -191,8 +193,8 @@ export default function Getpollinfo ({ account, contractInteraction, loadSpecifi
                           <div className='center-content'>
                             <div className="form-group" style={{ maxWidth: '200px'}}>
                               <p> Cost for votes (in VDA): {finalPrice} </p>
-                              {poll.maxVotes < amountofvotesInput   
-                                ?<p className="text-danger">Too many votes than allowed</p>
+                              {votesLeft < amountofvotesInput   
+                                ?<p className="text-danger">That is more votes than you currently have ({votesLeft.toString()} left)</p>
                                 : <div>
                                     {finalPrice > BigInt(accountBalance)
                                       && <div>
@@ -208,7 +210,7 @@ export default function Getpollinfo ({ account, contractInteraction, loadSpecifi
                                 type="number"
                                 onChange={(e) => changePrice(poll.name, e.target.value)}
                                 className="form-control"
-                                placeholder= {"Maximum Votes: " + poll.maxVotes}
+                                placeholder= {"Votes Left: " + votesLeft.toString()}
                                 required />
                             </div>
                           </div>

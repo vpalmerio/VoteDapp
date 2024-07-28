@@ -14,7 +14,9 @@ import BackButton from '../components/BackButton'
 import LoadScreen from '../components/LoadScreen'
 
 import * as c from '../components/Constants'
- 
+
+// The below is used to enable BigInt in the browser
+/* global BigInt */
 
 export default function Getpollinfo ({ account, contractInteraction, loadSpecificPoll, vote, findCost, accountBalance }) {
 
@@ -189,11 +191,11 @@ export default function Getpollinfo ({ account, contractInteraction, loadSpecifi
                           <div className='center-content'>
                             <div className="form-group" style={{ maxWidth: '200px'}}>
                               <p> Cost for votes (in VDA): {finalPrice} </p>
-                              {poll.maxVotes < amountofvotesInput
+                              {poll.maxVotes < amountofvotesInput   
                                 ?<p className="text-danger">Too many votes than allowed</p>
                                 : <div>
-                                    {finalPrice > accountBalance
-                                      &&<div>
+                                    {finalPrice > BigInt(accountBalance)
+                                      && <div>
                                           <p className="text-danger">Not enough VDA in your account </p>
                                           <Button text='Purchase VDA' path={c.MANAGE_VDA_LINK}></Button>
                                           <p>&nbsp;</p>
@@ -350,7 +352,7 @@ export default function Getpollinfo ({ account, contractInteraction, loadSpecifi
                     && <div>
                         <p className="text-center "> Owner Controls </p>
                         <Button text='End Poll' onClick = {() => contractInteraction
-                          (poll.typeState, true, "endPoll", [poll.name], "Creating transaction and sending to network...")
+                          (poll.typeState, true, "endPoll", [poll.name], "Creating transaction and sending to network...", true)
                         }>End Poll</Button>
   
                       </div>
@@ -362,9 +364,9 @@ export default function Getpollinfo ({ account, contractInteraction, loadSpecifi
   
                     : poll.moneyOwed > 0
                       ? <div>
-                          <p className="text-center">Poll has ended. You can reclaim {poll.moneyOwed} token(s).</p> 
+                          <p className="text-center">Poll has ended. You can reclaim {poll.moneyOwed.toString()} token(s).</p> 
                           <Button text='Get Money' style={{ maxWidth: '200px' }} onClick = {() => contractInteraction
-                            (poll.typeState, true, "getYourMoney", [poll.name], "Creating transaction and sending to network...")
+                            (poll.typeState, true, "getYourMoney", [poll.name], "Creating transaction and sending to network...", true)
                           }></Button>
                         </div>
                       : null

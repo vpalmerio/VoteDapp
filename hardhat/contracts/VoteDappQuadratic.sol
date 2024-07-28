@@ -162,7 +162,7 @@ contract VoteDappQuadratic {
         //get the price for the new votes
         uint256 c = findCost(votes, previousTotalVotes);
         
-        //transfer VOTT
+        //transfer VDA
         require(token.balanceOf(msg.sender) >= c, "You do not have enough VOTT coins."); //checks if sender has enough money
         require(token.allowance(msg.sender, address(this)) >= c, "You did not approve the contract's allowance."); //checks if spender is allowed to spend this amount
                                             //address(this) is the contracts address
@@ -265,23 +265,30 @@ contract VoteDappQuadratic {
     
     //Quadratic Voting where your n'th vote costs $n
     function findCost(uint256 n, uint256 b) pure public returns (uint256) {
-        uint256 c;
+        uint256 c = 0;
         for (uint256 i=n + b; i>b; i--) { //b is used if the person has already voted and wants to get more votes
             c = c.add(i);
         }
         return c;
     }
     
-    function findVotes(uint256 c) pure public returns (uint256 i) {
-        uint256 v;
-        for(i = 0; i<=c; i++) {
-            v=v.add(i);
-            if (v==c) {
+    /**
+     * @dev Calculate how many votes are available given the cost "c".
+     * @param availableTokens The amount of tokens that can be spent by the user
+     * @return i The number of votes that can be bought.
+     */
+    function findVotes(uint256 availableTokens) pure public returns (uint256 i) {
+        uint256 predictedCost = 0;
+        for(i = 0; i <= availableTokens; i++) {
+            predictedCost += i;
+            if (predictedCost == availableTokens) {
                 return i;
             }
-            
+            if (predictedCost > availableTokens) {
+                return i - 1;
+            }   
         }
-        //For loop should never reach here, but if it does, it will return 0
+        return i;
     }
     
     //view functions (for web3)

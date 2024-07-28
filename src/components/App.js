@@ -814,7 +814,9 @@ class App extends Component {
 
       }
     } else if (poll.type === c.RANKED_POLL_TYPE) {
-        poll.previousVotes = await poll.typeState.methods.trackSpecificVotes(poll.name, this.state.account).call()
+        poll.previousVotes = (await 
+          poll.typeState.methods.trackSpecificVotes(poll.name, this.state.account).call()
+        ).join(', ')
     }
     
     poll.currentResults = []

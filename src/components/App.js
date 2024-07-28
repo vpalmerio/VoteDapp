@@ -851,6 +851,8 @@ class App extends Component {
 
     poll.winner = concatinatedWinners
 
+    poll.votesUsed = await this.getVotesUsed(poll);
+
     return poll
   }
 
@@ -997,7 +999,6 @@ class App extends Component {
                   setPollNames={this.setPollNames}
                   searchPolls={this.searchPolls}
                   getRecentPolls={this.getRecentPolls}
-                  getVotesUsed={this.getVotesUsed}
 
                 />
               </div>

@@ -11,10 +11,12 @@ export default function DisplayPolls ({
 }) {
   
     /* Workaround is used to update state because react doesn't detect changes in arrays */
-    const [workaround, changeWorkAround] = React.useState(false)
+    const [loadedPolls, changeLoadedPolls] = React.useState(false)
     const [pollArray, changePollArray] = React.useState([])
   
-    if (polls !== null && polls.length !== 0 && pollArray.length === 0) {
+    if (polls !== null && polls.length !== 0 && 
+      pollArray.length === 0 && loadedPolls === false
+    ) {
       var array = []
       for(let i = 0; i < pollNames.length; i++) {
         let poll = polls.get(pollNames[i])
@@ -23,7 +25,7 @@ export default function DisplayPolls ({
         }
       }
       changePollArray(array)
-      changeWorkAround(!workaround)
+      changeLoadedPolls(true)
     }
      
     if(polls===null) {

@@ -113,7 +113,7 @@ export default function GetPollInfo ({ account, contractInteraction, loadSpecifi
               <div className="card col-6 text-center text-white bg-dark" style={{ maxWidth: '500px'}}>
   
                 <p>&nbsp;</p>
-                <p> Elgibility: {poll.eligibility} </p>
+                <p className='px-2'> Elgibility: {poll.eligibility} </p>
   
                   {poll.canVote
   
@@ -128,22 +128,26 @@ export default function GetPollInfo ({ account, contractInteraction, loadSpecifi
                             vote(poll, options, amountofvotes)
                             
                           }}>
-                          <p>Note: Option 1 is the same as your first option, option 2 is you second option, etc.
+                          <div className='px-2'>
+                            <p>
+                              Note: Option 1 is the same as your first option, option 2 is you second option, etc.
+                            </p>
+                            <p>
                               Order your options based on your favorite option being first, second favorite being second, so on.
-                              You are allowed to put the same option for first, second, and so on.
-                          </p>
+                              You are allowed to put the same option multiple times.
+                            </p>
+                          </div>
   
                           <p>&nbsp;</p>
   
-                          <p className="move-right-little float-left"> Order of options: </p>
+                          <p> Order of options: </p>
                           {poll.options.map((option, key) => {
                             
                             let optionNumber = key + 1
                             return (
-                              <div key={key} className="move-right-little float-left">
+                              <div key={key}>
                                 
                                 <DropdownButton 
-                                  
                                   title={"Option " + optionNumber + ": " + selectedOptionsArray[key]}
                                   onSelect={(input) => {
                                     var array = selectedOptionsArray.slice()
@@ -160,12 +164,13 @@ export default function GetPollInfo ({ account, contractInteraction, loadSpecifi
                                       
                                     })}
                                 </DropdownButton>
+                                <p></p>
                               </div>
                             )
                           })}
                           <p>&nbsp;</p>
-                          <p>&nbsp;</p>
-                          <Button buttonType='submit' buttonText='Cast Vote'></Button>
+                          
+                          <Button buttonType='submit' text='Cast Vote'></Button>
                           </form>
                         </div>
                       : <div>
@@ -254,7 +259,7 @@ export default function GetPollInfo ({ account, contractInteraction, loadSpecifi
               {poll.previousVotes.length > 0
                 && <div>
                   {poll.type === c.RANKED_POLL_TYPE
-                    ? <p> {"Order of options you voted for: " + poll.previousVotes} </p>
+                    ? <p className='fw-bold'> {"Order of options you voted for: " + poll.previousVotes} </p>
   
                     : <DisplayVotes
                       votes={poll.previousVotes}
@@ -266,45 +271,47 @@ export default function GetPollInfo ({ account, contractInteraction, loadSpecifi
               }
   
               {poll.type === c.RANKED_POLL_TYPE
-                ?<div className="table-wrapper text-center ml-auto mr-auto">
-                  <table>
-                    <thead>
-                      <tr>
-                        <th>Place</th>
+                ?<div className="center-content">
+                    <div className="table-wrapper mb-4">
+                    <table>
+                      <thead>
+                        <tr>
+                          <th>Place</th>
+                          {poll.options.map((option, key) => {
+    
+                            let newKey = key + 1
+    
+                            return(
+                              <th key={key}>{newKey}</th>
+                            )
+                            
+                          })}
+                        </tr>
+                      </thead>
+                      <tbody>
+                      
                         {poll.options.map((option, key) => {
-  
-                          let newKey = key + 1
-  
+    
+                          let specificVotes = poll.currentResults[key].split(",")
+    
                           return(
-                            <th key={key}>{newKey}</th>
-                          )
-                          
-                        })}
-                      </tr>
-                    </thead>
-                    <tbody>
-                    
-                      {poll.options.map((option, key) => {
-  
-                        let specificVotes = poll.currentResults[key].split(",")
-  
-                        return(
-                          <tr key={key}>
-                            <td>{option}</td>
-  
-                            {specificVotes.map((specificOptionsVotes, key) => {
+                            <tr key={key}>
+                              <td>{option}</td>
+    
+                              {specificVotes.map((specificOptionsVotes, key) => {
+                                  
+                                return(
+                                  <td key={key}>{specificOptionsVotes}</td>
+                                )
                                 
-                              return(
-                                <td key={key}>{specificOptionsVotes}</td>
-                              )
-                              
-                            })}
-                          </tr>
-                        )
-                      })}
-                    </tbody>
-                  </table>
-                  <p>&nbsp;</p>
+                              })}
+                            </tr>
+                          )
+                        })}
+                      </tbody>
+                    </table>
+
+                  </div>
                 </div>
   
                 :<div>
@@ -316,7 +323,7 @@ export default function GetPollInfo ({ account, contractInteraction, loadSpecifi
                   }
                 </div>
               } 
-  
+               
               <p> {"Status: " + 
               (poll.open
                 ? "Open"

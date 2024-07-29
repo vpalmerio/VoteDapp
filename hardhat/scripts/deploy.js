@@ -85,26 +85,27 @@ async function main() {
     },
   };
 
-  let jsonData = { networkID: {} };
-  fs.readFile('contract_data.json', 'utf8', (err, data) => {
+  
+  fs.readFile('../src/contract_data.json', 'utf8', (err, data) => {
+    let jsonData = { networkID: {} };
     if (!err) {
       jsonData = JSON.parse(data);
+      //if there is an error, the file probbly doesn't exist, so we will just use the default jsonData
     }
-    //if there is an error, the file probbly doesn't exist
-  });
-
+    
+    jsonData.networkID[chainID] = contract_data;
   
-  jsonData.networkID[chainID] = contract_data;
-  
-  jsonData = JSON.stringify(jsonData);
+    jsonData = JSON.stringify(jsonData);
 
-  fs.writeFile('../src/contract_data.json', jsonData, (err) => {
-    if (err) {
-      console.log(err);
-    } else {
-      console.log('JSON data has been written to /src/contract_data.json');
-    }
+    fs.writeFile('../src/contract_data.json', jsonData, (err) => {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log('JSON data has been written to /src/contract_data.json');
+      }
+    });
   });
+  
 
   console.log(`VDTSale deployed to: ${tokenAddress}`);
   console.log(`VDStorage deployed to: ${storageAddress}`);

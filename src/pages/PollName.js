@@ -6,6 +6,12 @@ import BackButton from '../components/BackButton'
 
 import * as c from '../components/Constants'
 
+/*
+ * This page is used in the poll creation process, and is where the user writes the name of their poll.
+ * The page also checks the network to make sure that the name for the poll is available before letting the user continue.
+ * It is used in CreatePoll.js
+ */
+
 export default function PollName({ pollName, changePollName, changePage, talkToContractInteraction}) {
 
     const [pollNameInput, changePollNameInput] = React.useState(pollName)

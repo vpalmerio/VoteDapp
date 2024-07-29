@@ -3,6 +3,11 @@ import Jdenticon from './Jdenticon.js'
 import Sidebar from './Sidebar'
 import SmallSidebar from './SmallSidebar'
 
+/* 
+ * This component is the Navbar for the app. It is used in Main.js to display the Navbar at the top of the app, 
+ * and is displayed in nearly all pages.
+ */
+
 export default function Navbar(props) {
     
   return (

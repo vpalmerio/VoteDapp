@@ -1,5 +1,19 @@
 const fs = require('fs');
 
+/*
+ * This script deploys the VoteDapp contracts to the network specified in the hardhat.config.js file.
+ * It then writes the contract addresses and ABIs to the contract_data.json file in the src directory, 
+ * which is used by the frontend.
+ */
+
+/*
+ * NOTE: I tried to optimize the deployment script by making multiple async calls
+ * and then awaiting their promises later, however, I kept ending up with the error:
+ * Invariant violated: neither timeouts or failures
+ * I am not sure why this is happening, but I suspect it has to do with the fact that
+ * making multiple async calls at once without letting them complete causes timeout issues
+ */
+
 const { network } = require('hardhat');
 
 const VDTSaleModule = require("../ignition/modules/VoteDappTokenSale");

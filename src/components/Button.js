@@ -2,6 +2,12 @@ import React from 'react';
 
 import { useNavigate } from "react-router-dom";
 
+/*
+ * This component is used for almost all buttons across the app, and 
+ * can be used to navigate to a different page or run a function.
+ * This structure allows for easy customization of all buttons.
+ */
+
 export default function Button({ path, text, onClick, buttonType = '' }) {
 
     const handleClick = () => {

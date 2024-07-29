@@ -1,3 +1,7 @@
+/*
+ * This component is used in GetPollInfo.js to display the previous votes of the user and the total votes for each option.
+ */
+
 export default function DisplayVotes({ votes, options }) {
     return (
         <div className='center-content' >

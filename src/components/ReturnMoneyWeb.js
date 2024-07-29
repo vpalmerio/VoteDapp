@@ -1,3 +1,8 @@
+/*
+ * This component provides a form where the user can input the recipient of funds spent on a poll. 
+ * It is used more than once in PollFeatures.js
+ */
+
 export default function ReturnMoneyWeb({ 
     returnMoneyOnCompletionInput, changeRMOCI, pollRecipientInput, changePollRecipientInput, 
     sendFundsToMe, changeSendFundsToMe, account 

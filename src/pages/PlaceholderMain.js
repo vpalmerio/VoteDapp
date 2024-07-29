@@ -6,6 +6,11 @@ import {Helmet} from "react-helmet"
 import loader from '../media/loader.png'
 import AppPage from '../components/AppPage'
  
+/*
+ * This page is a fallback page incase a user is unable to connect to the blockchain network or 
+ * the user doesn't have a web3 wallet extension. It is used in App.js
+ */
+
 export default function PlaceholderMain(props) { 
 
       return (

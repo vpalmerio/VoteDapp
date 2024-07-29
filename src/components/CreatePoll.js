@@ -11,6 +11,12 @@ import * as c from './Constants'
 
 import { useParams } from "react-router-dom"
 
+/*
+ * This component handles the creation of a poll. 
+ * It is used to navigate between the different "pages" of the poll creation process, and 
+ * keeps track of the user's input when moving between pages.
+ */
+
 export default function CreatePoll ({ contractInteraction, isAddress, account, clearPollData }) {
 
     const { type } = useParams()

@@ -3,6 +3,11 @@ import PropTypes from 'prop-types';
 
 const jdenticon = require('jdenticon');
 
+/*
+ * This component provides nice icons for addresses in the App, 
+ * and is used across the app including poll cards and the navbar.
+ */
+
 const Jdenticon = ({ value = 'test', size = '100%' }) => {
   const icon = useRef(null);
   useEffect(() => {

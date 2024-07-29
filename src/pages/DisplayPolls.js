@@ -4,6 +4,12 @@ import AppPage from '../components/AppPage'
 import LoadScreen from '../components/LoadScreen'
 import PollCards from '../components/PollCards'
 
+/*
+ * This page displays polls in a single column with each poll being represetned in a card. 
+ * It is used for showing the polls a user participated in and polls the user owns, since those two features are extremely similar.
+ * This component is used in Main.js
+ */
+
 export default function DisplayPolls ({ 
     pollNames, polls, contractInteraction, loadPollData, 
     pollProperty, pageTitle, pageDescription,

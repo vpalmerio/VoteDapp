@@ -3,6 +3,11 @@ import Button from "../components/Button"
 
 import * as c from "../components/Constants"
 
+/*
+ * This page is part of the poll creation process. It is the final page where the user can review the 
+ * details of the poll they are about to create. It is used in CreatePoll.js
+ */
+
 export default function PollCompletion({ 
     pollName, pollDescription, pollOptions, pollMaxVotesInput, pollVoteCostInput, 
     returnMoneyOnCompletionInput, pollPrivatePollInput, pollRestrictedVotersArrayInput, 

@@ -5,6 +5,11 @@ import Button from '../components/Button'
 
 import * as c from '../components/Constants'
 
+/*
+ * This page is used in the poll creation process, and is where the user writes a short description for their poll.
+ * It is used in CreatePoll.js
+ */
+
 export default function Polldesc({ pollDescription, changePollDescription, changePage }) {
 
     const [pollDescriptionInput, changePollDescriptionInput] = React.useState(pollDescription)

@@ -2,6 +2,12 @@ import React from 'react';
 
 import loader from '../media/loader.png'
 
+/*
+ * This component provides a loading bar at the bottom of the page, with a description of what is happening. 
+ * This component is mainly used when the app is loading the blockchain state and when the user is waiting 
+ * for a transaction to be mined.
+ */ 
+
 export default function LoadBar(props) {
 
     return (

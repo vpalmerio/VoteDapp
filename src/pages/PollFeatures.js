@@ -6,6 +6,11 @@ import ReturnMoneyWeb from '../components/ReturnMoneyWeb';
 
 import * as c from '../components/Constants'
 
+/*
+ * This page is used in the poll creation process and is lets users add more features to their poll. 
+ * It is used in CreatePoll.js
+ */
+
 export default function PollFeatures({ 
     type, costsMoney, costsMoneyBool, pollVoteCostInput, changeVoteCostInput, 
     returnMoneyOnCompletionInput, changeRMOCI, pollRecipientInput, changePollRecipientInput, 

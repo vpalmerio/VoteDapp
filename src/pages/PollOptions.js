@@ -5,6 +5,11 @@ import Button from '../components/Button'
 
 import * as c from '../components/Constants'
 
+/*
+ * This page is used in the poll creation process, and is where the user writes the options for their poll (ex. Yes, No, Maybe).
+ * It is used in CreatePoll.js
+ */
+
 export default function PollOptions({ pollOptions, changePollOptions, changePage }) {
 
     const [pollOptionsInput, changePollOptionsInput] = React.useState(pollOptions)

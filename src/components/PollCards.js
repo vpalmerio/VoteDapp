@@ -4,6 +4,11 @@ import Jdenticon from './Jdenticon.js'
 
 import * as c from './Constants'
 
+/*
+ * This component is used to display a list of polls in a card format, where each poll gets a card with its information.
+ * It is used in DisplayPolls.js, Explore.js, and AppHome.js
+ */
+
 export default function PollCards({ pollArray, contractInteraction, maxWidth = '800px'}) {
     
     return (

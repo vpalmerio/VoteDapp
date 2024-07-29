@@ -1,3 +1,8 @@
+/*
+ * This component is used to display a large heading and a smaller subheading in a nice blue card at the top of the page.
+ * It is used in Home.js, PollTypeDesc.js, and WrongPage.js
+ */
+
 export default function Jumbotron({ bigText, smallText }) {
 
     return (

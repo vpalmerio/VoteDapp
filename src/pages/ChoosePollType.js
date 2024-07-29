@@ -5,6 +5,12 @@ import Button from '../components/Button'
 import BackButton from "../components/BackButton";
 import * as c from '../components/Constants';
 
+/*
+ * This page is for users to choose the poll type they want to create when creating a poll.
+ * The user is sent to this page when the press the "Create Poll" button in AppHome.js It is used in Main.js
+ * It is displayed at the c.CHOOSE_POLL_TYPE_LINK link.
+ */
+
 export default function ChoosePollType() {
 
     const navigate = useNavigate();

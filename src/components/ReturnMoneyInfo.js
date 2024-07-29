@@ -1,3 +1,7 @@
+/*
+ * This component provides information on what happens to the money spent in a poll after it is over. 
+ * It is used more than once in GetPollInfo.js
+ */
 
 export default function ReturnMoneyInfo({ returnMoneyOnCompletion, recipient}) {
     return (

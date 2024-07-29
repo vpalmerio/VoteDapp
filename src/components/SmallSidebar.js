@@ -4,6 +4,11 @@ import { Nav, NavDropdown } from 'react-bootstrap'
 
 import * as c from './Constants'
 
+/*
+ * This component is a sidebar that provides buttons to navigate to different pages in the app. It is used in Navbar.js
+ * It is meant for smaller screens, and is not displayed on bigger screens.
+ */ 
+
 export default function Smallsidebar() {
   
     const navigate = useNavigate()

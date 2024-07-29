@@ -5,6 +5,11 @@ import {Helmet} from "react-helmet";
 import Footer from '../components/Footer'
 import Jumbotron from '../components/Jumbotron';
 
+/*
+ * This page is used is a info page that explains the different poll types and how they work. 
+ * It has no web3 interactions. This component is used in App.js
+ */
+
 export default function Polldesc() { 
 
     return (

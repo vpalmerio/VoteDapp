@@ -1,6 +1,10 @@
 import AppPage from '../components/AppPage'
 import Button from '../components/Button'
 
+/*
+ * This is the 404 page of the "blockchain"/"web3" part of the application. It is used in Main.js
+ */
+
 export default function AppWrongPage () {
 
     return (

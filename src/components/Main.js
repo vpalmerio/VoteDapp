@@ -15,6 +15,11 @@ import Navbar from './Navbar'
 
 import * as c from './Constants'
 
+/*
+ * This component is used by App.js to render the main content of the app. 
+ * It contains the routing for different pages of the app as well as the Navbar component for the whole app.
+ */
+
 export default function Main(props) { 
 
       return (

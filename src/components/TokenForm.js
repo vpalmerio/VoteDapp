@@ -2,6 +2,10 @@ import React from 'react'
 
 import Button from '../components/Button'
 
+/*
+ * This component is used in the ManageVDA page to allow the user to input the amount of tokens they want to buy or sell.
+ */ 
+
 export default function TokenForm({ tokenFunction, action, placeholder, tokenPrice, buttonText  }) {
 
     const [amountOfTokensInput, changeAOTI] = React.useState(0)

@@ -6,6 +6,11 @@ import ballotbox from '../media/ballotbox.png'
 
 import * as c from '../components/Constants'
 
+/*
+ * This is the home page of the "blockchain"/"web3" part of the application. It is used in Main.js
+ * It is the first page the user sees when they connect their wallet. It is displayed at c.APP_LINK link.
+ */
+
 export default function AppHome ({ contractInteraction, getRecentPolls, homePagePolls }) {
   
     if(homePagePolls===null) {

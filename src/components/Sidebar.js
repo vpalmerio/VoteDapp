@@ -3,6 +3,11 @@ import {Nav} from "react-bootstrap";
 import Button from './Button'
 import * as c from './Constants'
 
+/*
+ * This component is a sidebar that provides buttons to navigate to different pages in the app. It is used in Navbar.js
+ * It is meant for bigger screens, and is not displayed on smaller screens.
+ */ 
+
 export default function Sidebar() {
 
     return ( 

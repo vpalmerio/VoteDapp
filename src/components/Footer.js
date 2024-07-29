@@ -1,3 +1,7 @@
+/*
+ * This component is used in the Home.js and PollTypeDesc.js to provide easy access to the app's Github and Discord. 
+ */
+
 export default function Footer() {
 
     return (

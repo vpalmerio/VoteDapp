@@ -15,6 +15,14 @@ import WrongPage from '../pages/WrongPage'
 
 import * as c from './Constants'
 
+/*
+ * This is the main component of the application. It is responsible for loading the 
+ * blockchain data and passing it down to the other components. It contains functions for 
+ * interacting with the blockchain through the browser extension wallet to retreive info 
+ * and send transactions.
+ */
+
+
 // The below is used to enable BigInt in the browser
 /* global BigInt */
 
@@ -1020,6 +1028,5 @@ class App extends Component {
     }
   }
 }
-        
 
 export default withRouter(App);

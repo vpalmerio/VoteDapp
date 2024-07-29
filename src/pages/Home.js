@@ -9,6 +9,12 @@ import Footer from '../components/Footer'
 
 import * as c from '../components/Constants'
 
+/*
+ * This is the home page of the website. It is the first page the user sees when they visit the website. 
+ * There is no web3 interaction on this page. It is more of a landing/info page.
+ * This component is used in Main.js
+ */
+
 export default function Home() {
 
 	return(
@@ -16,7 +22,7 @@ export default function Home() {
 	  <div className="container-fluid">
       <p></p>
       <Jumbotron
-        bigText='VoteDapp (Goerli Testnet)'
+        bigText='VoteDapp'
         smallText='Decentralized, free, open. VoteDapp is an easy to use poll interface on the ethereum network for anyone, anywhere.'
       ></Jumbotron>
       <div className="text-center py-4">

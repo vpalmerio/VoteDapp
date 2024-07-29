@@ -4,6 +4,10 @@ import AppPage from '../components/AppPage'
 import BackButton from '../components/BackButton'
 import TokenForm from '../components/TokenForm'
 
+/*
+ * This page is where people can buy and sell their VDA tokens for Ether. The component is used in Main.js
+ */
+
 export default function ManageVDA ({ accountBalance, tokenPrice, contractInteraction, buyToken}) {
 
     const sellToken = (amountOfTokens) => {

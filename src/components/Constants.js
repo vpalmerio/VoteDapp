@@ -1,4 +1,9 @@
 
+/*
+ * This file is used to store constants, including links to each page, in the app. 
+ * This allows for easy changes to the app's link structure.
+ */
+
 // Poll types (used across the app)
 export const REGULAR_POLL_TYPE = "regular"
 export const QUADRATIC_POLL_TYPE = "quadratic"

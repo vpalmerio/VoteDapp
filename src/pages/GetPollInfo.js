@@ -15,6 +15,13 @@ import LoadScreen from '../components/LoadScreen'
 
 import * as c from '../components/Constants'
 
+/*
+ * This page is used to display information about a specific poll. 
+ * Users can vote on the poll through this page if they are eligible.
+ * Users can also see the results of the poll and get their money back from a poll on this page.
+ * This component is used in Main.js
+ */
+
 // The below is used to enable BigInt in the browser
 /* global BigInt */
 

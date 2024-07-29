@@ -5,6 +5,12 @@ import PollCards from '../components/PollCards'
 import loader from '../media/loader.png'
 import BackButton from '../components/BackButton'
 
+/*
+ * This page is used for people to explore different polls on the platform. 
+ * It has a search function as well as a randomize function.
+ * This component is used in Main.js
+ */
+
 export default function Explore ({ searchPolls, setPollNames, contractInteraction }) {
 
     const [pollNames, changePollNames] = React.useState([])

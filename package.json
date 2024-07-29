@@ -1,12 +1,13 @@
 {
   "name": "votedapp",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Easy to access ethereum poll website",
   "dependencies": {
     "bootstrap": "^5.3.3",
     "chai": "5.1.1",
     "chai-as-promised": "8.0.0",
     "chai-bignumber": "3.1.0",
+    "dotenv": "^16.4.5",
     "identicon.js": "^2.3.3",
     "react": "^18.3.1",
     "react-bootstrap": "^2.10.4",

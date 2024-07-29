@@ -36,7 +36,7 @@ class App extends Component {
         await this.loadBlockchainData()
       } catch(err){
         this.setState({ loading: true, loadingDescription:
-          "Failed to connect to contracts. Please make sure you have MetaMask or another web3 wallet extension installed and are on the Goerli testnet. Get Goerli testnet eth at https://goerli-faucet.slock.it/. Once properly set up, please refresh the page",
+          "Failed to connect to contracts. Please make sure you have MetaMask or another web3 wallet extension installed and are on the Scroll Sepolia testnet or Ethereum Mainnnet. Once on the correct network, please refresh the page",
           failedToLoad: true
         })
         return false

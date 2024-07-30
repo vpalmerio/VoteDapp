@@ -36,7 +36,7 @@ class App extends Component {
         await this.loadBlockchainData()
       } catch(err){
         this.setState({ loading: true, loadingDescription:
-          "Failed to connect to contracts. Please make sure you have MetaMask or another web3 wallet extension installed and are on the Scroll Sepolia testnet or Ethereum Mainnnet. Once on the correct network, please refresh the page",
+          "Failed to connect to contracts. Please make sure you have MetaMask or another web3 wallet extension installed and are on the Scroll Sepolia testnet. Get Sepolia testnet ETH here: https://www.infura.io/faucet/sepolia . Once on the correct network, please refresh the page",
           failedToLoad: true
         })
         return false

@@ -269,6 +269,7 @@ export default function GetPollInfo ({ account, contractInteraction, loadSpecifi
                     ? <p className='fw-bold'> {"Order of options you voted for: " + poll.previousVotes} </p>
   
                     : <DisplayVotes
+                      title="Your vote(s):"
                       votes={poll.previousVotes}
                       options={poll.options}
                     ></DisplayVotes>
@@ -324,6 +325,7 @@ export default function GetPollInfo ({ account, contractInteraction, loadSpecifi
                 :<div>
                   {poll.currentResults.length > 0
                     && <DisplayVotes
+                      title="Total votes so far:"
                       votes={poll.currentResults}
                       options={poll.options}
                     ></DisplayVotes>

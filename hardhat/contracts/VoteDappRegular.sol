@@ -4,16 +4,12 @@ pragma abicoder v2;
 import "./VoteDappTokenSaleV2.sol";
 import "./VoteDappStorageV2.sol";
 
-import "./SafeMath.sol";
-
 
 //Notes:
 //if someone were to make their vote cost zero, then anybody could put as much votes as maxVotes allows
 //Poll is open upon creation in this contract
 
 contract VoteDappRegular {
-    
-    using SafeMath for uint256;
     
     //stores voter data
     struct _voterData {
@@ -142,7 +138,7 @@ contract VoteDappRegular {
             if (keccak256(abi.encodePacked(arrOptions[x])) == keccak256(abi.encodePacked(option))) {
                 break;
             }
-            if (x==arrOptions.length.sub(1)) {
+            if (x == (arrOptions.length - 1)) {
                 revert("Not an option");
             }
         }
@@ -159,16 +155,16 @@ contract VoteDappRegular {
         uint256 v = 0;
         
         for(uint256 a = 0; a<arrOptions.length; a++) {
-            v = v.add(Polls[pollName].options[arrOptions[a]].Votes[msg.sender]);
+            v = v + Polls[pollName].options[arrOptions[a]].Votes[msg.sender];
         }
         
-        v = v.add(votes);
+        v = v + votes;
         require(v <= Polls[pollName].maxVotes, "You have specified too much votes than you are allowed.");
         
         //used to transact VOTT from voter to this contract
         if (Polls[pollName].cost > 0) {
             
-            uint256 c = Polls[pollName].cost.mul(votes);
+            uint256 c = Polls[pollName].cost * votes;
             
             //checks if sender has enough money
             require(token.balanceOf(msg.sender) >= c, "You do not have enough VOTT coins."); 
@@ -181,10 +177,10 @@ contract VoteDappRegular {
         }
         //adds the amount of votes used for the specific option to the Vote mapping in the option data for the voters address
         //used for getYourMoney
-        Polls[pollName].options[option].Votes[msg.sender] = Polls[pollName].options[option].Votes[msg.sender].add(votes);
+        Polls[pollName].options[option].Votes[msg.sender] = Polls[pollName].options[option].Votes[msg.sender] + votes;
         
         //adds amount of votes to vote counter in option data (used to count total votes)
-        Polls[pollName].options[option].votes = Polls[pollName].options[option].votes.add(votes);
+        Polls[pollName].options[option].votes = Polls[pollName].options[option].votes + votes;
         
         //trigger event
         emit pollVoted(pollName, option, msg.sender);
@@ -210,13 +206,13 @@ contract VoteDappRegular {
             for(uint256 i = 0; i<winners.length; i++) {
                 
                 //get total votes for the winners
-                totalWinnerVotes = totalWinnerVotes.add(Polls[pollName].options[winners[i]].votes); 
+                totalWinnerVotes = totalWinnerVotes + Polls[pollName].options[winners[i]].votes; 
                 
             }
             
             address recipient = Polls[pollName].recipient;
           
-            require(token.transfer(recipient, totalWinnerVotes.mul(Polls[pollName].cost)), "Transaction failed."); 
+            require(token.transfer(recipient, totalWinnerVotes * Polls[pollName].cost), "Transaction failed."); 
             
         } 
         
@@ -241,7 +237,7 @@ contract VoteDappRegular {
         uint256 v = 0;
         
         for(uint256 a = 0; a<arrOptions.length; a++) {
-            v = v.add(Polls[pollName].options[arrOptions[a]].Votes[msg.sender]);
+            v = v + Polls[pollName].options[arrOptions[a]].Votes[msg.sender];
         }
         
         //get the winners
@@ -250,15 +246,13 @@ contract VoteDappRegular {
         if(!Polls[pollName].returnMoneyOnCompletion) {
             //for each winner, subtract the votes submitted by the voter
             for(uint256 i = 0; i<winners.length; i++) {
-                v = v.sub(Polls[pollName].options[winners[i]].Votes[msg.sender]);
+                v = v - Polls[pollName].options[winners[i]].Votes[msg.sender];
                 //sorts through all the winners and subtracts the votes that were put in for the winners
             }
         }
         
         //pay back all the VOTT the voter spent for the votes he submitted in which the option did not win
-        require(token.transfer(msg.sender, v.mul(Polls[pollName].cost)), "Transaction failed."); 
-        
-        
+        require(token.transfer(msg.sender, v * Polls[pollName].cost), "Transaction failed."); 
     }
     
     //view functions (for web3)
@@ -285,7 +279,7 @@ contract VoteDappRegular {
         uint256 v = 0;
         
         for(uint256 a = 0; a<arrOptions.length; a++) {
-            v = v.add(Polls[pollName].options[arrOptions[a]].Votes[msg.sender]);
+            v = v + Polls[pollName].options[arrOptions[a]].Votes[msg.sender];
         }
         
         //get the winners
@@ -294,7 +288,7 @@ contract VoteDappRegular {
         if(!Polls[pollName].returnMoneyOnCompletion) {
             //for each winner, subtract the votes submitted by the voter
             for(uint256 i = 0; i<winners.length; i++) {
-                v = v.sub(Polls[pollName].options[winners[i]].Votes[msg.sender]);
+                v = v - Polls[pollName].options[winners[i]].Votes[msg.sender];
                 //sorts through all the winners and subtracts the votes that were put in for the winners
             }
         }
@@ -312,7 +306,7 @@ contract VoteDappRegular {
             if (keccak256(abi.encodePacked(arrOptions[x])) == keccak256(abi.encodePacked(option))) {
                 break;
             }
-            if (x==arrOptions.length.sub(1)) {
+            if (x == (arrOptions.length - 1)) {
                 revert("Not an option");
             }
         }
@@ -332,7 +326,7 @@ contract VoteDappRegular {
         uint256 v = 0;
         
         for(uint256 a = 0; a<arrOptions.length; a++) {
-            v = v.add(Polls[pollName].options[arrOptions[a]].Votes[voter]);
+            v = v + Polls[pollName].options[arrOptions[a]].Votes[voter];
         }
         
         return v;
@@ -346,7 +340,7 @@ contract VoteDappRegular {
             if (keccak256(abi.encodePacked(arrOptions[x])) == keccak256(abi.encodePacked(option))) {
                 break;
             }
-            if (x==arrOptions.length.sub(1)) {
+            if (x == (arrOptions.length - 1)) {
                 revert("Not an option");
             }
         }
@@ -403,7 +397,7 @@ contract VoteDappRegular {
         for (uint256 i=0; i<votesPerOption.length; i++) {
             if(largestamountofvotes == Polls[pollName].options[Polls[pollName].arrOptions[i]].votes) {
                 winners[e] = Polls[pollName].arrOptions[i]; //adds option to an array and returns whole array (for ties)
-                e = e.add(1); //increments for the next winner (if there is a tie of two or more)
+                e = e + 1; //increments for the next winner (if there is a tie of two or more)
             }
         }
         return winners;

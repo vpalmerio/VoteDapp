@@ -1,11 +1,7 @@
 pragma solidity ^0.8.26;
 pragma abicoder v2;
 
-import "./SafeMath.sol";
-
 contract VoteDappToken {
-
-    using SafeMath for uint256;
 
     string  public name = "VoteDapp Token";
     string  public symbol = "VDA";
@@ -46,13 +42,13 @@ contract VoteDappToken {
 
 
     function buyTokens(uint256 amount) external payable {
-        require(msg.value == amount.mul(tokenPrice), "You did not send the correct amount of ether.");
+        require(msg.value == (amount * tokenPrice), "You did not send the correct amount of ether.");
 
-        balanceOf[msg.sender] = balanceOf[msg.sender].add(amount);
+        balanceOf[msg.sender] = balanceOf[msg.sender] + amount;
 
-        tokensSold = tokensSold.add(amount);
+        tokensSold = tokensSold + amount;
 
-        tokensInCirculation = tokensInCirculation.add(amount);
+        tokensInCirculation = tokensInCirculation + amount;
 
         emit Sell(msg.sender, amount);
     }
@@ -62,12 +58,12 @@ contract VoteDappToken {
 
         require(balanceOf[msg.sender] >= amount, "You do not have that much tokens.");
 
-        balanceOf[msg.sender] = balanceOf[msg.sender].sub(amount);
+        balanceOf[msg.sender] = balanceOf[msg.sender] - amount;
 
         //tranfers in units of wei
-        payable(msg.sender).transfer(amount.mul(tokenPrice));
+        payable(msg.sender).transfer(amount * tokenPrice);
 
-        tokensInCirculation = tokensInCirculation.sub(amount);
+        tokensInCirculation = tokensInCirculation - amount;
 
         return true;
 
@@ -79,8 +75,8 @@ contract VoteDappToken {
         require(balanceOf[msg.sender] >= _value, "You don't have enough tokens.");
 
 
-        balanceOf[msg.sender] = balanceOf[msg.sender].sub(_value);
-        balanceOf[_to] = balanceOf[_to].add(_value);
+        balanceOf[msg.sender] = balanceOf[msg.sender] - _value;
+        balanceOf[_to] = balanceOf[_to] + _value;
 
         emit Transfer(msg.sender, _to, _value);
 
@@ -101,10 +97,10 @@ contract VoteDappToken {
         require(_value <= balanceOf[_from]); //checks if source has enough money
         require(_value <= allowance[_from][msg.sender]); //checks if spender is allowed to spend this amount
 
-        balanceOf[_from] = balanceOf[_from].sub(_value); //takes money away from source
-        balanceOf[_to] = balanceOf[_to].add(_value); //gives money to address
+        balanceOf[_from] = balanceOf[_from] - _value; //takes money away from source
+        balanceOf[_to] = balanceOf[_to] + _value; //gives money to address
 
-        allowance[_from][msg.sender] = allowance[_from][msg.sender].sub(_value); //takes away the allowance from the spender
+        allowance[_from][msg.sender] = allowance[_from][msg.sender] - _value; //takes away the allowance from the spender
 
         emit Transfer(_from, _to, _value);
 

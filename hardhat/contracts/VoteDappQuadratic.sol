@@ -4,8 +4,6 @@ pragma abicoder v2;
 import "./VoteDappTokenSaleV2.sol";
 import "./VoteDappStorageV2.sol";
 
-import "./SafeMath.sol";
-
 
 //Notes:
 //for qvoting, people could vote for another option, but would still have to pay more money for their next vote
@@ -14,8 +12,6 @@ import "./SafeMath.sol";
 
 
 contract VoteDappQuadratic {
-
-    using SafeMath for uint256;
 
     //stores voter data
     struct _voterData {
@@ -137,7 +133,7 @@ contract VoteDappQuadratic {
             if (keccak256(abi.encodePacked(arrOptions[x])) == keccak256(abi.encodePacked(option))) {
                 break;
             }
-            if (x==arrOptions.length.sub(1)) {
+            if (x == (arrOptions.length - 1)) {
                 revert("Not an option");
             }
         }
@@ -152,11 +148,11 @@ contract VoteDappQuadratic {
         uint256 previousAmountPaid = 0;
         
         for(uint256 a = 0; a<arrOptions.length; a++) {
-            previousAmountPaid = previousAmountPaid.add(Polls[pollName].options[arrOptions[a]].Payments[msg.sender]);
+            previousAmountPaid = previousAmountPaid + Polls[pollName].options[arrOptions[a]].Payments[msg.sender];
         }
         
         uint256 previousTotalVotes = findVotes(previousAmountPaid);
-        uint256 v = previousTotalVotes.add(votes);
+        uint256 v = previousTotalVotes + votes;
         require(v <= Polls[pollName].maxVotes, "You have specified too much votes than you are allowed.");
         
         //get the price for the new votes
@@ -170,11 +166,11 @@ contract VoteDappQuadratic {
         
         //Polls[pollName].voterData[msg.sender].moneyPaid = Polls[pollName].voterData[msg.sender].moneyPaid.add(c); //sets the payments number to how much the person paid for so far
         
-        Polls[pollName].options[option].Payments[msg.sender] = Polls[pollName].options[option].Payments[msg.sender].add(c); //sets the payments for the specific option
+        Polls[pollName].options[option].Payments[msg.sender] = Polls[pollName].options[option].Payments[msg.sender] + c; //sets the payments for the specific option
         
-        Polls[pollName].options[option].amount = Polls[pollName].options[option].amount.add(votes); //sets the votes for the option
+        Polls[pollName].options[option].amount = Polls[pollName].options[option].amount + votes; //sets the votes for the option
         
-        Polls[pollName].options[option].amountPaid = Polls[pollName].options[option].amountPaid.add(c); //sets the votes for the option
+        Polls[pollName].options[option].amountPaid = Polls[pollName].options[option].amountPaid + c; //sets the votes for the option
         
         emit pollVoted(pollName, option, msg.sender);
     }
@@ -189,7 +185,7 @@ contract VoteDappQuadratic {
             string [] memory winners = requestWinner(pollName);
             uint256 totalAmountforPayment = 0;
             for(uint256 i = 0; i<winners.length; i++) {
-                totalAmountforPayment = totalAmountforPayment.add(Polls[pollName].options[winners[i]].amountPaid);
+                totalAmountforPayment = totalAmountforPayment + Polls[pollName].options[winners[i]].amountPaid;
                 //if there are ties, the owner gets the money from all the options that tied
             }
             
@@ -218,14 +214,14 @@ contract VoteDappQuadratic {
         uint256 c = 0;
         
         for(uint256 a = 0; a<arrOptions.length; a++) {
-            c = c.add(Polls[pollName].options[arrOptions[a]].Payments[msg.sender]);
+            c = c + Polls[pollName].options[arrOptions[a]].Payments[msg.sender];
         }
         //c = all the money some paid in the poll
         
         if(!Polls[pollName].returnMoneyOnCompletion) {
             string [] memory winners = requestWinner(pollName);
             for(uint256 i = 0; i<winners.length; i++) {
-                c = c.sub(Polls[pollName].options[winners[i]].Payments[msg.sender]);
+                c = c - Polls[pollName].options[winners[i]].Payments[msg.sender];
                 //sorts through all the winners and subtracts the amount that was put in by the voter for the winners
             }
         }
@@ -248,13 +244,13 @@ contract VoteDappQuadratic {
         uint256 c = 0;
         
         for(uint256 a = 0; a<arrOptions.length; a++) {
-            c = c.add(Polls[pollName].options[arrOptions[a]].Payments[msg.sender]);
+            c = c + Polls[pollName].options[arrOptions[a]].Payments[msg.sender];
         }
         
         if(!Polls[pollName].returnMoneyOnCompletion) {
             string [] memory winners = requestWinner(pollName);
             for(uint256 i = 0; i<winners.length; i++) {
-                c = c.sub(Polls[pollName].options[winners[i]].Payments[msg.sender]);
+                c = c - Polls[pollName].options[winners[i]].Payments[msg.sender];
                 //sorts through all the winners and subtracts the amount that was put in by the voter for the winners
             }
         }
@@ -267,7 +263,7 @@ contract VoteDappQuadratic {
     function findCost(uint256 n, uint256 b) pure public returns (uint256) {
         uint256 c = 0;
         for (uint256 i=n + b; i>b; i--) { //b is used if the person has already voted and wants to get more votes
-            c = c.add(i);
+            c = c + i;
         }
         return c;
     }
@@ -320,7 +316,7 @@ contract VoteDappQuadratic {
             if (keccak256(abi.encodePacked(arrOptions[x])) == keccak256(abi.encodePacked(option))) {
                 break;
             }
-            if (x==arrOptions.length.sub(1)) {
+            if (x == (arrOptions.length - 1)) {
                 revert("Not an option");
             }
         }
@@ -335,7 +331,7 @@ contract VoteDappQuadratic {
         uint256 c = 0;
         
         for(uint256 a = 0; a<arrOptions.length; a++) {
-            c = c.add(Polls[pollName].options[arrOptions[a]].Payments[voter]);
+            c = c + Polls[pollName].options[arrOptions[a]].Payments[voter];
         }
         
         
@@ -389,7 +385,7 @@ contract VoteDappQuadratic {
         for (uint256 i=0; i<Polls[pollName].arrOptions.length; i++) {
             if(largestamountofvotes == Polls[pollName].options[Polls[pollName].arrOptions[i]].amount) {
                 winners[e] = Polls[pollName].arrOptions[i]; //adds option to an array and returns whole array (for ties)
-                e = e.add(1); //increments for the next winner (if there is a tie of two or more)
+                e = e + 1; //increments for the next winner (if there is a tie of two or more)
             }
         }
         return winners;

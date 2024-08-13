@@ -42,8 +42,4 @@ contract VoteDappStorage {
         
         return true;
     }
-    
-    
-    
-    
 }

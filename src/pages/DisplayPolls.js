@@ -1,4 +1,5 @@
 import React from 'react';
+import { useEffect } from 'react';
 
 import AppPage from '../components/AppPage'
 import LoadScreen from '../components/LoadScreen'
@@ -16,16 +17,23 @@ export default function DisplayPolls ({
     noPollDescription, pollsExistDescription 
 }) {
   
+    //Reset state if page changes between participated and owned polls or vice versa
+    useEffect(() => {
+      changeLoadedPolls(false);
+      changePollArray([]);
+    }, [pageTitle]); //reset state if pageTitle changes
+
     /* Workaround is used to update state because react doesn't detect changes in arrays */
     const [loadedPolls, changeLoadedPolls] = React.useState(false)
     const [pollArray, changePollArray] = React.useState([])
-  
+    
     if (polls !== null && polls.length !== 0 && 
       pollArray.length === 0 && loadedPolls === false
     ) {
       var array = []
       for(let i = 0; i < pollNames.length; i++) {
         let poll = polls.get(pollNames[i])
+        
         if(poll[pollProperty] === true) {
           array.push(poll)
         }
@@ -33,7 +41,7 @@ export default function DisplayPolls ({
       changePollArray(array)
       changeLoadedPolls(true)
     }
-     
+ 
     if(polls===null) {
       loadPollData()
       return (

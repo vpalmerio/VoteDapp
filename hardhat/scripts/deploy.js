@@ -11,7 +11,8 @@ const fs = require('fs');
  * and then awaiting their promises later, however, I kept ending up with the error:
  * Invariant violated: neither timeouts or failures
  * I am not sure why this is happening, but I suspect it has to do with the fact that
- * making multiple async calls at once without letting them complete causes timeout issues
+ * making multiple async calls to initiate transactions at once without letting them 
+ * complete causes timeout issues
  */
 
 const { network } = require('hardhat');
@@ -24,43 +25,67 @@ const VDStorageModule = require("../ignition/modules/VoteDappStorage");
 
 const ONE_GWEI = 1_000_000_000n;
 
+const GAS_PRICE_UPPER_LIMIT = 0.8;
+const GAS_PRICE_CHECK_INTERVAL_MS = 10000;
+const ENABLE_GAS_PRICE_CHECK = false;
+
+async function waitGasPriceUpperLimit() {
+  console.log(`Waiting for gas price to drop below ${GAS_PRICE_UPPER_LIMIT}...`);
+  console.log(`Checking every ${GAS_PRICE_CHECK_INTERVAL_MS} ms`);
+
+  do {
+    await new Promise(r => setTimeout(r, GAS_PRICE_CHECK_INTERVAL_MS));
+    
+    let gasPriceWei = parseInt(await network.provider.send('eth_gasPrice'));
+    
+    gasPrice = ethers.formatUnits(gasPriceWei, 'gwei');
+    console.log(`Gas price: ${gasPrice} gwei`);
+    
+  } while (gasPrice > GAS_PRICE_UPPER_LIMIT);
+}
+
+async function deploy(contractModule, parameters) {
+  if (ENABLE_GAS_PRICE_CHECK) {
+    await waitGasPriceUpperLimit();
+  }
+
+  let contract = await hre.ignition.deploy(contractModule, parameters || {});
+
+  return contract;
+}
+
 async function main() {
 
   const tokenPrice = ONE_GWEI;
 
-  const { VDTSale } = await hre.ignition.deploy(VDTSaleModule, {
-    parameters: { VDTSale: { tokenPrice } },
-  });
-
+  const { VDTSale } = await deploy(VDTSaleModule, { parameters: { VDTSale: { tokenPrice } } });
+  console.log("VDTSale deployed");
   const tokenAddress = await VDTSale.getAddress();
 
-  const { VDStorage } = await hre.ignition.deploy(VDStorageModule);
-
+  const { VDStorage } = await deploy(VDStorageModule);
+  console.log("VDStorage deployed");
   const storageAddress = await VDStorage.getAddress();
 
-  const { VDQuadratic } = await hre.ignition.deploy(VDQuadraticModule, {
-    parameters: { VDQuadratic: { tokenAddress, storageAddress} },
-  });
-
+  const { VDQuadratic } = await deploy(VDQuadraticModule, { parameters: { VDQuadratic: { tokenAddress, storageAddress} }});
+  console.log("VDQuadratic deployed");
   const VDQAddress = await VDQuadratic.getAddress();
 
-  const { VDRegular } = await hre.ignition.deploy(VDRegularModule, {
-    parameters: { VDRegular: { tokenAddress, storageAddress} },
-  });
-
+  const { VDRegular } = await deploy(VDRegularModule, { parameters: { VDRegular: { tokenAddress, storageAddress} }});
+  console.log("VDRegular deployed");
   const VDRAddress = await VDRegular.getAddress();
 
-  const { VDRanked } = await hre.ignition.deploy(VDRankedModule, {
-    parameters: { VDRanked: {  storageAddress} },
-  });
-
+  const { VDRanked } = await deploy(VDRankedModule, { parameters: { VDRanked: {storageAddress} }});
+  console.log("VDRanked deployed");
   const VDRankedAddress = await VDRanked.getAddress();
 
+  if (ENABLE_GAS_PRICE_CHECK) {
+    await waitGasPriceUpperLimit();
+  }
   VDStorage.addPollType([VDQAddress, VDRAddress, VDRankedAddress]);
+  console.log("Poll types added to VDStorage");
 
   const chainID = parseInt(await network.provider.send('eth_chainId'));
-  console.log(chainID);
-
+  
   let contract_data = {
     networkID: chainID,
     VoteDappToken: {

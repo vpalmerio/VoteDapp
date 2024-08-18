@@ -36,7 +36,7 @@ class App extends Component {
         await this.loadBlockchainData()
       } catch(err){
         this.setState({ loading: true, loadingDescription:
-          "Failed to connect to contracts. Please make sure you have MetaMask or another web3 wallet extension installed and are on the Scroll Sepolia testnet. Get Sepolia testnet ETH here: https://www.infura.io/faucet/sepolia . Once on the correct network, please refresh the page",
+          "Failed to connect to contracts. Please make sure you have MetaMask or another web3 wallet extension installed and are on Ethereum mainnet or the Scroll Sepolia testnet. Get Sepolia testnet ETH here: https://www.infura.io/faucet/sepolia . Once on the correct network, please refresh the page",
           failedToLoad: true
         })
         return false
@@ -65,7 +65,7 @@ class App extends Component {
   async loadBlockchainData() {
     this.setState({ loading: true, 
       loadingBlockchain: true, 
-      loadingDescription: "Connecting to blockchain... (make sure you are connected to the Goerli network!)",
+      loadingDescription: "Connecting to blockchain...",
       polls: null
     })
 
@@ -77,7 +77,7 @@ class App extends Component {
     const networkID = Number(await web3.eth.net.getId())
 
     let data = contractData.networkID[networkID]
-
+    
     if(data === undefined) {
       throw new Error("Current network ID not found in contract data")
     }
@@ -117,268 +117,35 @@ class App extends Component {
 
   async loadPollData() {
 
-      this.setState({ loading: true, loadingDescription: "Loading polls..."})
-
-      this.setState({ polls: [], pollNames: [] })
-      
-      let newlistofPolls = []
-
-      let polls = new Map()
-
-      //if listofPolls.length === undefined, for loop will not run
-
-      //load regular polls
-      const listofPollsReg = await this.state.DappRegular.methods.getPollList().call()
-
-      for (let i = 0; i < listofPollsReg.length; i++) {
-          
-          let owner = await this.state.DappRegular.methods.getPollOwner(listofPollsReg[i]).call()
-
-          if(owner !== this.state.nullAddress) {
-
-            let owned
-
-            if(owner === this.state.account) {
-              owned = true
-            }
-
-            const votesUsed = await this.state.DappRegular.methods.trackTotalVotes(listofPollsReg[i], this.state.account).call()
-
-            let participated
-
-            if (votesUsed > 0) {
-                participated = true
-            }
-            
-            if(owned || participated) {
-
-              newlistofPolls.push(listofPollsReg[i])
-
-              let poll = await this.state.DappRegular.methods.Polls(listofPollsReg[i]).call()
-
-              poll.name = listofPollsReg[i]
-
-              poll.type = c.REGULAR_POLL_TYPE
-
-              poll.typeState = this.state.DappRegular
-
-              if (owner) {
-                poll.owned = true
-              }
-
-              if(participated) {
-                poll.participated = true;
-              }
-
-              if (poll.open === false) {
-                poll.moneyOwed = await poll.typeState.methods.checkGetYourMoney(poll.name).call({ from: this.state.account })
-              } else {
-                poll.moneyOwed = 0
-              }
-
-              const Options = await poll.typeState.methods.requestOptions(listofPollsReg[i]).call().catch((err => {console.log("error: ", err)}))
-
-              if(Options !== undefined) {
-
-                poll.options = Options
-                poll.displayOptions = Options.join(", ")
-
-              } else {
-                poll.options = "Could not retrieve options"
-              }
-
-              //find eligibility
-              let returnEligibility = await this.checkVoteEligibility(poll)
-
-              poll.eligibility = returnEligibility[0]
-
-              poll.canVote = returnEligibility[1]
-
-              if(!poll.open) {
-                //find winner
-                let winners = await poll.typeState.methods.requestWinner(poll.name).call()
-
-                let concatinatedWinners = winners.join(', ')
-
-                if(concatinatedWinners === ", " || concatinatedWinners === "") {
-                  concatinatedWinners = "No one has voted yet."
-                }
-                poll.winner = concatinatedWinners
-              }
-
-              polls.set(listofPollsReg[i], poll)
-            }
-          }
-      }
-
-      //load quadratic polls
-      const listofPollsQuadratic = await this.state.DappQuadratic.methods.getPollList().call()
-
-      for (let i = 0; i < listofPollsQuadratic.length; i++) {
- 
-          let owner = await this.state.DappQuadratic.methods.getPollOwner(listofPollsQuadratic[i]).call()
-
-          if(owner !== this.state.nullAddress) {
-
-            let owned
-
-            if(owner === this.state.account) {
-              owned = true
-            }
-
-            const votesUsed = await this.state.DappQuadratic.methods.trackTotalPayments(listofPollsQuadratic[i], this.state.account).call()
-
-            let participated
-
-            if(votesUsed > 0) {
-              participated = true
-            }
-          
-            if(owned || participated) {
-
-              newlistofPolls.push(listofPollsQuadratic[i])
-
-              let poll = await this.state.DappQuadratic.methods.Polls(listofPollsQuadratic[i]).call()
-
-              poll.name = listofPollsQuadratic[i]
-
-              poll.type = c.QUADRATIC_POLL_TYPE
-
-              poll.typeState = this.state.DappQuadratic
-
-              if (participated) {
-                poll.participated = true
-              }
-
-              if (owned) {
-                poll.owned = true
-              }
-
-              if (poll.open === false) {
-                poll.moneyOwed = await poll.typeState.methods.checkGetYourMoney(poll.name).call({ from: this.state.account })
-              } else {
-                poll.moneyOwed = 0
-              }
-
-              const Options = await poll.typeState.methods.requestOptions(listofPollsQuadratic[i]).call().catch((err => {}))
-
-              if(Options !== undefined) {
-                
-                poll.options = Options
-                poll.displayOptions = Options.join(", ")
-
-              } else {
-                poll.options = "Could not retrieve options"
-              }
-
-              let returnEligibility = await this.checkVoteEligibility(poll)
-
-              poll.eligibility = returnEligibility[0]
-
-              poll.canVote = returnEligibility[1]
-
-              if(!poll.open) {
-                //find winner
-                let winners = await poll.typeState.methods.requestWinner(poll.name).call()
-
-                let concatinatedWinners = winners.join(', ')
-
-                if(concatinatedWinners === ", " || concatinatedWinners === "") {
-                  concatinatedWinners = "No one has voted yet."
-                }
-
-                poll.winner = concatinatedWinners
-              }
-              polls.set(listofPollsQuadratic[i], poll)
-            }
-          }
-      }
-
-      const listofPollsRanked = await this.state.DappRanked.methods.getPollList().call()
-
-      for (let i = 0; i < listofPollsRanked.length; i++) {
-
-        let owner = await this.state.DappRanked.methods.getPollOwner(listofPollsRanked[i]).call()
-
-        if(owner !== this.state.nullAddress) {
-
-          let owned
-
-          if(owner === this.state.account) {
-            owned = true
-          }
-
-          const arrayofChoices = await this.state.DappRanked.methods.trackSpecificVotes(listofPollsRanked[i], this.state.account).call()
-
-          let participated
-
-          if (arrayofChoices.length > 0) {
-            participated = true
-          }
-        
-          if(owned || participated) {
-
-            newlistofPolls.push(listofPollsRanked[i])
-
-            let poll = await this.state.DappRanked.methods.Polls(listofPollsRanked[i]).call()
-
-            poll.name = listofPollsRanked[i]
-
-            poll.type = c.RANKED_POLL_TYPE
-
-            poll.typeState = this.state.DappRanked
-
-            poll.previousVotes = arrayofChoices
-
-            if (owned) {
-              poll.owned = true
-            }
-
-            if (participated) {
-              poll.participated = true
-            }
-
-            const Options = await poll.typeState.methods.requestOptions(listofPollsRanked[i]).call().catch((err => {}))
-
-            if(Options !== undefined) {
-              
-              poll.options = Options
-
-              poll.displayOptions = Options.join(", ")
-              
-            } else {
-              poll.options = "Could not retrieve options"
-            }
-
-            let returnEligibility = await this.checkVoteEligibility(poll)
-
-            poll.eligibility = returnEligibility[0]
-
-            poll.canVote = returnEligibility[1]
-
-            if(!poll.open) {
-              
-              let winners = await poll.typeState.methods.requestWinner(poll.name).call()
-
-              let concatinatedWinners = winners.join(', ')
-
-              if(concatinatedWinners === ", " || concatinatedWinners === "") {
-                concatinatedWinners = "No one has voted yet."
-              }
-
-              poll.winner = concatinatedWinners
-            }
-            polls.set(listofPollsRanked[i], poll)
-          }
+    let newlistofPolls = []
+    let polls = new Map()
+    let listOfListOfPolls = []
+
+    const listofPollsReg = await this.state.DappRegular.methods.getPollList().call()
+    const listofPollsQuadratic = await this.state.DappQuadratic.methods.getPollList().call()
+    const listofPollsRanked = await this.state.DappRanked.methods.getPollList().call()
+
+    listOfListOfPolls.push(listofPollsReg)
+    listOfListOfPolls.push(listofPollsQuadratic)
+    listOfListOfPolls.push(listofPollsRanked)
+
+    for (let i = 0; i < listOfListOfPolls.length; i++) {
+      for (let j = 0; j < listOfListOfPolls[i].length; j++) {
+        let listofPolls = listOfListOfPolls[i]
+        let result = await this.loadSpecificPoll(listofPolls[j])
+        let poll = result[0]
+
+        if (poll.owned || poll.participated) {
+          newlistofPolls.push(listofPolls[j])
+          polls.set(listofPolls[j], poll)
         }
       }
-
-      this.setState({ polls })
-
-      this.setState({ pollNames: newlistofPolls })
-
-      this.setState({ loading: false, loadingDescription: "Loading..." })
     }
+
+    this.setState({ polls })
+    this.setState({ pollNames: newlistofPolls })
+    this.setState({ loading: false, loadingDescription: "Loading..." })
+  }
 
   async loadSpecificPoll(pollName) {
 
@@ -413,9 +180,9 @@ class App extends Component {
             poll.participated = true
           }
         } else if(poll.type === c.QUADRATIC_POLL_TYPE) {
-          const votesUsed = await poll.typeState.methods.trackTotalPayments(poll.name, this.state.account).call()
+          const previousPayments = await poll.typeState.methods.trackTotalPayments(poll.name, this.state.account).call()
 
-          if (votesUsed > 0) {
+          if (previousPayments > 0) {
             poll.participated = true
           }
         } else if(poll.type === c.RANKED_POLL_TYPE) {
@@ -736,7 +503,7 @@ class App extends Component {
         return ["You cannot pay for any of your votes (" + _votesAvailable + " vote available). Purchase VDA at 'Manage VDA' in the Sidebar.", false]
       }
 
-      /* Does not work because of misuse of findVotes (doesn't account for is user already voted) */
+      /* Does not work because of misuse of findVotes (doesn't account for whether user already voted) */
       
       // let amountOfPossibleVotes = 0
       // for(let i = voterBalance; i > 0; i--) {

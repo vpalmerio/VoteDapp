@@ -4,12 +4,9 @@ pragma abicoder v2;
 import "./VoteDappTokenSaleV2.sol";
 import "./VoteDappStorageV2.sol";
 
-
 //Notes:
 //for qvoting, people could vote for another option, but would still have to pay more money for their next vote
 //Poll is open upon creation in this contract
-
-
 
 contract VoteDappQuadratic {
 

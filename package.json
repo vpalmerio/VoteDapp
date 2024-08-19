@@ -1,6 +1,6 @@
 {
   "name": "votedapp",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Easy to access ethereum poll website",
   "dependencies": {
     "bootstrap": "^5.3.3",
